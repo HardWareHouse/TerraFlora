@@ -1,0 +1,52 @@
+services:
+  client:
+    image: node:20.0.0-alpine
+    user: node
+    entrypoint: sh -c
+    working_dir: /home/node
+    command: '"npm install && npm run dev"'
+    ports:
+      - 5173:5173
+    volumes:
+      - ./client:/home/node
+
+  server:
+    image: node:20.0.0-alpine
+    user: node
+    tty: true
+    stdin_open: true
+    working_dir: /home/node
+    entrypoint: sh -c
+    command: '"npm install && npm run dev"'
+    ports:
+      - 8000:8000
+    volumes:
+      - ./server:/home/node
+
+  postgres:
+    image: postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_USER: root
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: app
+
+  mongo: 
+    image: mongo
+    ports:
+      - 127.0.0.1:27017:27017
+    volumes:
+      - mongo-data:/data/db
+      - ./SampleCollections:/SampleCollections
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=root
+      - MONGO_INITDB_ROOT_PASSWORD=password
+    working_dir: /SampleCollections
+
+volumes:
+  mongo-data: {}
+  postgres-data: {}
+
