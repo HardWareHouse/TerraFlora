@@ -1,11 +1,12 @@
-import User from '../modelsBDD/User.js';
-import Facture from '../modelsBDD/Facture.js';
-import Commande from '../modelsBDD/Commande.js';
-import Panier from '../modelsBDD/Panier.js';
-import Promotion from '../modelsBDD/Promotion.js';
-import Categorie from '../modelsBDD/Categorie.js';
-import Produit from '../modelsBDD/Produit.js';
-import DemandeRGPD from '../modelsBDD/DemandeRGPD.js';
+import User from './modelsBDD/User.js';
+import Facture from './modelsBDD/Facture.js';
+import Commande from './modelsBDD/Commande.js';
+import Panier from './modelsBDD/Panier.js';
+import Promotion from './modelsBDD/Promotion.js';
+import Categorie from './modelsBDD/Categorie.js';
+import Produit from './modelsBDD/Produit.js';
+import DemandeRGPD from './modelsBDD/DemandeRGPD.js';
+import Paiement from './modelsBDD/Paiement.js';
 
 // Associations
 User.hasMany(Facture, { foreignKey: 'userId' });
@@ -37,3 +38,6 @@ Commande.belongsTo(Produit, { foreignKey: 'produitId' });
 
 Facture.belongsTo(User, { foreignKey: 'clientId' });
 Facture.belongsTo(User, { foreignKey: 'userId' });
+
+Paiement.belongsTo(Produit, { foreignKey: 'produitId' });
+Produit.hasMany(Paiement, { foreignKey: 'produitId' });
