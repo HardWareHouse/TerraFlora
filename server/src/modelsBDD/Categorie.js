@@ -16,8 +16,14 @@ const Categorie = sequelize.define('Categorie', {
         type: DataTypes.TEXT,
         allowNull: true
     },
+    produitId: {
+        type: DataTypes.UUID,
+        allowNull: false
+    },
+    createdAt: DataTypes.DATE,
+    updatedAt: DataTypes.DATE,
 }, {
-    tableName: 'Categories'
+    tableName: 'Categories',
 });
 
 export default Categorie;

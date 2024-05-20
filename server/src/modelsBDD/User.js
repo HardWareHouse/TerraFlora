@@ -30,15 +30,15 @@ const User = sequelize.define('User', {
     },
     telephone: {
         type: DataTypes.STRING,
-        allowNull: true
+        allowNull: false
     },
     adresseLivraison: {
         type: DataTypes.STRING,
-        allowNull: true
+        allowNull: false
     },
     adresseFacturation: {
         type: DataTypes.STRING,
-        allowNull: true
+        allowNull: false
     },
     role: {
         type: DataTypes.STRING,

@@ -34,7 +34,8 @@ const Produit = sequelize.define('Produit', {
     },
     pourcentagePromotion: {
         type: DataTypes.INTEGER,
-        defaultValue: 0
+        defaultValue: 0,
+        allowNull: true
     },
     categorieId: {
         type: DataTypes.UUID,
