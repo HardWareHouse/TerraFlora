@@ -5,7 +5,6 @@ const Produit = sequelize.define('Produit', {
     id: {
         type: DataTypes.UUID,
         defaultValue: DataTypes.UUIDV4,
-        allowNull: false,
         primaryKey: true
     },
     nom: {
@@ -36,11 +35,7 @@ const Produit = sequelize.define('Produit', {
         type: DataTypes.INTEGER,
         defaultValue: 0,
         allowNull: true
-    },
-    categorieId: {
-        type: DataTypes.UUID,
-        allowNull: false
-    },
+    }
 }, {
     tableName: 'Produits'
 });

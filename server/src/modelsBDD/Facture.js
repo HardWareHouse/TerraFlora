@@ -5,7 +5,6 @@ const Facture = sequelize.define('Facture', {
     id: {
         type: DataTypes.UUID,
         defaultValue: DataTypes.UUIDV4,
-        allowNull: false,
         primaryKey: true
     },
     numero: {
@@ -27,16 +26,7 @@ const Facture = sequelize.define('Facture', {
     total: {
         type: DataTypes.FLOAT,
         allowNull: false
-    },
-    clientId: {
-        type: DataTypes.UUID,
-        allowNull: false
-    },
-    userId: {
-        type: DataTypes.UUID,
-        allowNull: false
-    },
-    createdAt: DataTypes.DATE,
+    }
 }, {
     tableName: 'Factures'
 });

@@ -1,5 +1,6 @@
 import { DataTypes } from 'sequelize';
 import { sequelize } from '../database.js';
+import MethodePaiement from './MethodePaiement.js';
 
 const Paiement = sequelize.define('Paiement', {
     id: {
@@ -16,14 +17,13 @@ const Paiement = sequelize.define('Paiement', {
         type: DataTypes.FLOAT,
         allowNull: false
     },
-    methodePaiement: {
-        type: DataTypes.STRING,
-        allowNull: false
-    },
-    produitId: {
+    methodePaiementId: {
         type: DataTypes.UUID,
-        allowNull: false
-    },
+        references: {
+            model: MethodePaiement,
+            key: 'id'
+        }
+    }
 }, {
     tableName: 'Paiements'
 });

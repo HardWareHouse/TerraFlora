@@ -5,7 +5,6 @@ const User = sequelize.define('User', {
     id: {
         type: DataTypes.UUID,
         defaultValue: DataTypes.UUIDV4,
-        allowNull: false,
         primaryKey: true
     },
     nom: {
@@ -32,14 +31,6 @@ const User = sequelize.define('User', {
         type: DataTypes.STRING,
         allowNull: false
     },
-    adresseLivraison: {
-        type: DataTypes.STRING,
-        allowNull: false
-    },
-    adresseFacturation: {
-        type: DataTypes.STRING,
-        allowNull: false
-    },
     role: {
         type: DataTypes.STRING,
         allowNull: false,
@@ -58,9 +49,6 @@ const User = sequelize.define('User', {
         defaultValue: false
     }
 }, {
-    timestamps: true,
-    createdAt: 'created_at',
-    updatedAt: 'updated_at'
 });
 
 export default User;

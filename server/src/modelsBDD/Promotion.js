@@ -5,7 +5,6 @@ const Promotion = sequelize.define('Promotion', {
     id: {
         type: DataTypes.UUID,
         defaultValue: DataTypes.UUIDV4,
-        allowNull: false,
         primaryKey: true
     },
     remise: {
@@ -19,11 +18,7 @@ const Promotion = sequelize.define('Promotion', {
     dateDebut: {
         type: DataTypes.DATE,
         allowNull: false
-    },
-    produitId: {
-        type: DataTypes.UUID,
-        allowNull: false
-    },
+    }
 }, {
     tableName: 'Promotions'
 });
