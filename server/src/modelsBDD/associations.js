@@ -7,37 +7,47 @@ import Categorie from './modelsBDD/Categorie.js';
 import Produit from './modelsBDD/Produit.js';
 import DemandeRGPD from './modelsBDD/DemandeRGPD.js';
 import Paiement from './modelsBDD/Paiement.js';
+import Adresse from './modelsBDD/Adresse.js';
+import MethodePaiement from './modelsBDD/MethodePaiement.js';
 
 // Associations
-User.hasMany(Facture, { foreignKey: 'userId' });
-Facture.belongsTo(User, { foreignKey: 'userId' });
 
-User.hasMany(Commande, { foreignKey: 'userId' });
-Commande.belongsTo(User, { foreignKey: 'userId' });
+// User associations
+User.hasMany(Facture, { foreignKey: 'userId', sourceKey: 'id' });
+Facture.belongsTo(User, { foreignKey: 'userId', targetKey: 'id' });
 
-User.hasMany(Panier, { foreignKey: 'userId' });
-Panier.belongsTo(User, { foreignKey: 'userId' });
+User.hasMany(Commande, { foreignKey: 'userId', sourceKey: 'id' });
+Commande.belongsTo(User, { foreignKey: 'userId', targetKey: 'id' });
 
-User.hasMany(DemandeRGPD, { foreignKey: 'userId' });
-DemandeRGPD.belongsTo(User, { foreignKey: 'userId' });
+User.hasOne(Panier, { foreignKey: 'userId', sourceKey: 'id' });
+Panier.belongsTo(User, { foreignKey: 'userId', targetKey: 'id' });
 
-Panier.hasMany(Commande, { foreignKey: 'panierId' });
-Commande.belongsTo(Panier, { foreignKey: 'panierId' });
+User.hasMany(DemandeRGPD, { foreignKey: 'userId', sourceKey: 'id' });
+DemandeRGPD.belongsTo(User, { foreignKey: 'userId', targetKey: 'id' });
 
-Panier.belongsToMany(Produit, { through: 'Panier_Produits', foreignKey: 'panierId' });
-Produit.belongsToMany(Panier, { through: 'Panier_Produits', foreignKey: 'produitId' });
+User.hasMany(Adresse, { foreignKey: 'userId', sourceKey: 'id' });
+Adresse.belongsTo(User, { foreignKey: 'userId', targetKey: 'id' });
 
-Produit.hasMany(Promotion, { foreignKey: 'produitId' });
-Promotion.belongsTo(Produit, { foreignKey: 'produitId' });
+// Panier associations
+Panier.hasOne(Commande, { foreignKey: 'panierId', sourceKey: 'id' });
+Commande.belongsTo(Panier, { foreignKey: 'panierId', targetKey: 'id' });
 
-Categorie.hasMany(Produit, { foreignKey: 'categorieId' });
-Produit.belongsTo(Categorie, { foreignKey: 'categorieId' });
+Panier.belongsToMany(Produit, { through: 'Panier_Produits', foreignKey: 'panierId', sourceKey: 'id' });
+Produit.belongsToMany(Panier, { through: 'Panier_Produits', foreignKey: 'produitId', sourceKey: 'id' });
 
-Produit.hasMany(Commande, { foreignKey: 'produitId' });
-Commande.belongsTo(Produit, { foreignKey: 'produitId' });
+// Produit associations
+Produit.hasMany(Promotion, { foreignKey: 'produitId', sourceKey: 'id' });
+Promotion.belongsTo(Produit, { foreignKey: 'produitId', targetKey: 'id' });
 
-Facture.belongsTo(User, { foreignKey: 'clientId' });
-Facture.belongsTo(User, { foreignKey: 'userId' });
+Categorie.hasMany(Produit, { foreignKey: 'categorieId', sourceKey: 'id' });
+Produit.belongsTo(Categorie, { foreignKey: 'categorieId', targetKey: 'id' });
 
-Paiement.belongsTo(Produit, { foreignKey: 'produitId' });
-Produit.hasMany(Paiement, { foreignKey: 'produitId' });
+Produit.hasMany(Paiement, { foreignKey: 'produitId', sourceKey: 'id' });
+Paiement.belongsTo(Produit, { foreignKey: 'produitId', targetKey: 'id' });
+
+// Facture associations
+Facture.belongsTo(User, { foreignKey: 'userId', targetKey: 'id' });
+
+// Paiement associations
+MethodePaiement.hasMany(Paiement, { foreignKey: 'methodePaiementId', sourceKey: 'id' });
+Paiement.belongsTo(MethodePaiement, { foreignKey: 'methodePaiementId', targetKey: 'id' });
