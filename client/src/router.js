@@ -1,9 +1,18 @@
-import { createRouter, createWebHistory } from 'vue-router';
-import Home from './pages/homePage.vue'; 
+import { createRouter, createWebHistory } from "vue-router";
+import Home from "./pages/homePage.vue";
+import Product from "./pages/productPage.vue";
 
 const routes = [
-  { path: '/', component: Home },
-  // Ajoutez d'autres routes ici
+  {
+    path: "/",
+    name: "Home",
+    component: Home,
+  },
+  {
+    path: "/product",
+    name: "Product",
+    component: Product,
+  },
 ];
 
 const router = createRouter({

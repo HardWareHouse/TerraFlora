@@ -10,6 +10,9 @@
     "watch": "npx tailwindcss -i ./src/styles.css -o ./src/styles.css --watch"
   },
   "dependencies": {
+    "@fortawesome/fontawesome-svg-core": "^6.5.2",
+    "@fortawesome/free-solid-svg-icons": "^6.5.2",
+    "@fortawesome/vue-fontawesome": "^3.0.8",
     "vue": "^3.3.11",
     "vue-router": "^4.3.2"
   },
