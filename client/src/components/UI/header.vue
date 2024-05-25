@@ -1,21 +1,21 @@
 <template>
     <header class="border-b border-gray-200">
-      <div class="container mx-auto flex items-center justify-between py-2 px-4">
-        <div class="text-sm text-gray-600">
-          Welcome to Floda online store
+      <div class="container mx-auto flex items-center justify-between py-2 px-4 h-10">
+        <div class="text-[13px] text-gray-600 leading-none">
+          Welcome to Terra Flora online store
         </div>
         <div class="flex items-center space-x-4">
-          <div class="flex items-center space-x-1">
-            <span>Language:</span>
-            <select v-model="language" class="text-sm border-none focus:outline-none">
+          <div class="flex items-center space-x-1 text-[13px] text-gray-600 leading-none border-l border-gray-200">
+            Language:
+            <select v-model="language" class="text-[13px] text-gray-600 leading-none focus:outline-none">
               <option value="en">English</option>
               <option value="fr">French</option>
               <!-- Ajoutez d'autres langues ici -->
             </select>
           </div>
-          <div class="flex items-center space-x-1">
-            <span>Currency:</span>
-            <select v-model="currency" class="text-sm border-none focus:outline-none">
+          <div class="flex items-center space-x-1 text-[13px] text-gray-600 leading-none">
+            Currency:
+            <select v-model="currency" class="ttext-[13px] text-gray-600 leading-none focus:outline-none">
               <option value="usd">$ USD</option>
               <option value="eur">€ EUR</option>
               <!-- Ajoutez d'autres devises ici -->
@@ -23,12 +23,13 @@
           </div>
         </div>
       </div>
-      <div class="container mx-auto flex items-center justify-between py-4 px-4">
-        <div class="text-3xl font-bold">Floda</div>
-        <nav class="flex space-x-6 text-sm">
-          <a href="#" class="text-red-500">HOME</a>
+        <p class="border-t border-gray-200 w-full"></p>
+      <div class="container mx-auto flex items-center justify-between py-8 px-4">
+        <div class="text-3xl font-bold">Terra Flora</div>
+        <nav class="flex space-x-6 text-sm font-medium">
+          <a href="#" class="text-red-600">HOME</a>
           <div class="relative group">
-            <a href="#" class="text-gray-700">PAGES</a>
+            <a href="#" class="text-gray-700">PAGES</a>&nbsp;<i class="bi bi-chevron-down"></i>
             <div class="absolute hidden group-hover:block bg-white shadow-md mt-1 p-2 space-y-2">
               <a href="#" class="block text-gray-700">About Us</a>
               <a href="#" class="block text-gray-700">Contact Us</a>
@@ -36,7 +37,7 @@
             </div>
           </div>
           <div class="relative group">
-            <a href="#" class="text-gray-700">SHOP</a>
+            <a href="#" class="text-gray-700">SHOP</a>&nbsp;<i class="bi bi-chevron-down"></i>
             <div class="absolute hidden group-hover:block bg-white shadow-md mt-1 p-2 space-y-2">
               <a href="#" class="block text-gray-700">All Products</a>
               <a href="#" class="block text-gray-700">Categories</a>
@@ -44,7 +45,7 @@
             </div>
           </div>
           <div class="relative group">
-            <a href="#" class="text-gray-700">BLOG</a>
+            <a href="#" class="text-gray-700">BLOG</a>&nbsp;<i class="bi bi-chevron-down"></i>
             <div class="absolute hidden group-hover:block bg-white shadow-md mt-1 p-2 space-y-2">
               <a href="#" class="block text-gray-700">Latest Posts</a>
               <a href="#" class="block text-gray-700">Categories</a>
@@ -53,17 +54,11 @@
           </div>
           <a href="#" class="text-gray-700">CONTACT US</a>
         </nav>
-        <div class="flex space-x-4 text-gray-700">
-          <a href="#"><i class="fas fa-search"></i></a>
-          <a href="#"><i class="fas fa-user"></i></a>
-          <a href="#" class="relative">
-            <i class="fas fa-heart"></i>
-            <span class="absolute top-0 right-0 bg-red-500 text-white text-xs rounded-full px-1">0</span>
-          </a>
-          <a href="#" class="relative">
-            <i class="fas fa-shopping-cart"></i>
-            <span class="absolute top-0 right-0 bg-red-500 text-white text-xs rounded-full px-1">2</span>
-          </a>
+        <div class="flex space-x-4 text-gray-700 align-center">
+          <a href="#"><i class="bi bi-search" style="font-size: 1.2rem;"></i></a>
+          <a href="#"><i class="bi bi-person" style="font-size: 1.4rem;"></i></a>
+          <a href="#"><i class="bi bi-heart" style="font-size: 1.2rem;"></i></a>
+          <a href="#"><i class="bi bi-cart" style="font-size: 1.2rem;"></i></a>
         </div>
       </div>
     </header>

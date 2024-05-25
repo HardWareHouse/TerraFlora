@@ -3,7 +3,6 @@ import Home from './pages/homePage.vue';
 
 const routes = [
   { path: '/', component: Home },
-  // Ajoutez d'autres routes ici
 ];
 
 const router = createRouter({
