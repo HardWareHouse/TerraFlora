@@ -12,13 +12,16 @@
         </div>
       </div>
       <div class="product-list grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-        <div v-for="product in products" :key="product.id" class="product border p-4 rounded">
-          <div class="product-image">
+        <div v-for="product in products" :key="product.id" class="product border p-4 rounded hover:shadow-lg transition-shadow">
+          <div class="product-image relative">
             <img :src="product.image" alt="Product Image" class="w-full h-48 object-cover rounded" />
+            <span v-if="product.new" class="absolute top-0 left-0 bg-red-600 text-white text-xs px-2 py-1 rounded-br-lg">NEW</span>
+            <span v-if="product.discount" class="absolute top-0 right-0 bg-green-600 text-white text-xs px-2 py-1 rounded-bl-lg">{{ product.discount }}% OFF</span>
           </div>
-          <div class="product-info mt-4">
+          <div class="product-info mt-4 text-center">
             <h3 class="text-lg font-semibold">{{ product.name }}</h3>
             <p class="text-gray-500">${{ product.price }}</p>
+            <p v-if="product.originalPrice" class="line-through text-gray-400">${{ product.originalPrice }}</p>
           </div>
         </div>
       </div>
