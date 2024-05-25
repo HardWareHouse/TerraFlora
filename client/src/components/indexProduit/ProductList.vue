@@ -32,15 +32,15 @@
   
   //à changer pour plus tard
   const products = ref([
-    { id: 1, name: 'Flowers daisy pink stick', price: 40, image: '/path/to/image1.jpg' },
-    { id: 2, name: 'Jasmine flowers white', price: 20, image: '/path/to/image2.jpg' },
-    { id: 3, name: 'Blossom bouquet flower', price: 35, image: '/path/to/image3.jpg' },
-    { id: 4, name: 'Orchid flowers purple', price: 25, image: '/path/to/image4.jpg' },
-    { id: 5, name: 'Rose flowers red', price: 30, image: '/path/to/image5.jpg' },
-    { id: 6, name: 'Hyacinth flowers blue', price: 45, image: '/path/to/image6.jpg' },
-    { id: 7, name: 'Bouquet flowers mix', price: 50, image: '/path/to/image7.jpg' },
-    { id: 8, name: 'Blossom bouquet flower', price: 35, image: '/path/to/image8.jpg' },
-    { id: 9, name: 'Orchid flowers purple', price: 25, image: '/path/to/image9.jpg'},
+    { id: 1, name: 'Flowers daisy pink stick', price: 40, image: '/images/flower.webp' },
+    { id: 2, name: 'Jasmine flowers white', price: 20, image: '/images/flower.webp' },
+    { id: 3, name: 'Blossom bouquet flower', price: 35, image: '/images/flower.webp' },
+    { id: 4, name: 'Orchid flowers purple', price: 25, image: '/images/flower.webp' },
+    { id: 5, name: 'Rose flowers red', price: 30, image: '/images/flower.webp' },
+    { id: 6, name: 'Hyacinth flowers blue', price: 45, image: '/images/flower.webp' },
+    { id: 7, name: 'Bouquet flowers mix', price: 50, image: '/images/flower.webp' },
+    { id: 8, name: 'Blossom bouquet flower', price: 35, image: '/images/flower.webp' },
+    { id: 9, name: 'Orchid flowers purple', price: 25, image: '/images/flower.webp'},
   ]);
   </script>
   
