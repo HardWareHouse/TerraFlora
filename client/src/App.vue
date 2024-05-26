@@ -13,12 +13,15 @@ import Footer from './components/UI/footer.vue'
 
 <style>
 @import url("https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.3/font/bootstrap-icons.css");
-
+@import url('https://fonts.googleapis.com/css2?family=Yesteryear&display=swap');
 #app {
   font-family: "Roboto", sans-serif;
   /* -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50; */
+}
+.container {
+    max-width: 1200px;
 }
 </style>
