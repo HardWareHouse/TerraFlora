@@ -1,52 +1,48 @@
 <template>
-    <Carousel :wrap-around="true">
-      <Slide v-for="slide in 3" :key="slide" >
-        <div class="carousel__item">{{ slide }}</div>
-      </Slide>
-  
-      <template #addons>
-        <Navigation />
-        <Pagination />
-      </template>
+    <Carousel :autoplay="2000" :wrap-around="true">
+        <Slide v-for="(slide, index) in slides" :key="index">
+            <div class="relative w-full h-full">
+                <img class="w-full h-[510px] object-cover" :src="slide.src" :alt="slide.alt" />
+                <div class="absolute top-36 left-20 text-left text-white">
+                    <h2 class="text-[#CC2121] font-bold text-xl">{{ slide.title }}</h2>
+                    <h1 class="font-bold text-4xl text-black">{{ slide.mainText }}</h1>
+                    <p class="mt-4">
+                        <button class="bg-[#CC2121] text-white font-bold py-2 px-4">
+                            {{ slide.buttonText }}
+                        </button>
+                    </p>
+                </div>
+            </div>
+        </Slide>
+        <template #addons>
+            <Navigation />
+            <Pagination />
+        </template>
     </Carousel>
-  </template>
-  
-  <script>
-  import { defineComponent } from 'vue'
-  import { Carousel, Navigation, Pagination, Slide } from 'vue3-carousel'
-  
-  import 'vue3-carousel/dist/carousel.css'
-  
-  export default defineComponent({
-    name: 'Basic',
-    components: {
-      Carousel,
-      Slide,
-      Pagination,
-      Navigation,
+</template>
+
+<script setup>
+import { ref } from 'vue';
+import { Carousel, Navigation, Pagination, Slide } from 'vue3-carousel';
+import 'vue3-carousel/dist/carousel.css';
+
+import slide1 from '../../assets/homePage/home1-slide1.jpg';
+import slide2 from '../../assets/homePage/home1-slide2.jpg';
+
+const slides = ref([
+    {
+        src: slide1,
+        alt: 'Slide 1',
+        title: 'Valentine Gift',
+        mainText: 'Fresh Your Mind & Feeling Love',
+        buttonText: 'Shop Now'
     },
-  })
-  </script>
-  
-  <style>
-  .carousel__item {
-    min-height: 200px;
-    width: 100%;
-    color: var(--vc-clr-white);
-    font-size: 20px;
-    border-radius: 8px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
-  
-  .carousel__slide {
-    padding: 10px;
-  }
-  
-  .carousel__prev,
-  .carousel__next {
-    box-sizing: content-box;
-    border: 5px solid white;
-  }
-  </style>
+    {
+        src: slide2,
+        alt: 'Slide 2',
+        title: 'Valentine Gift',
+        mainText: 'Fresh Your Mind & Feeling Love',
+        buttonText: 'Shop Now'
+    }
+]);
+</script>

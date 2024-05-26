@@ -1,5 +1,7 @@
 <template>
-  <carousel />
+    <carousel />
+    <br>
+    <br>
 </template>
 
 <script setup>
