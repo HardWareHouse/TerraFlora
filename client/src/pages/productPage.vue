@@ -119,7 +119,7 @@ document.addEventListener("DOMContentLoaded", initializeQuantityButtons);
     </div>
   </div>
 </template>
-<style>
+<style scoped>
 .carousel {
   width: 66%;
 }
