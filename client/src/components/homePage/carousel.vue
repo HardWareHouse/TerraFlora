@@ -7,9 +7,7 @@
                     <h2 class="text-[#CC2121] font-bold text-xl text-[30px] font-['Yesteryear']">{{ slide.title }}</h2>
                     <h1 class="font-bold text-4xl text-black">{{ slide.mainText }}</h1>
                     <p class="mt-10">
-                        <button class="bg-[#CC2121] text-white font-bold py-2 px-4">
-                            {{ slide.buttonText }}
-                        </button>
+                        <p class="bg-[#CC2121] text-white font-bold py-2 px-4 w-28"><RouterLink to="/shop">{{ slide.buttonText }}</RouterLink></p>
                     </p>
                 </div>
             </div>
@@ -28,6 +26,7 @@ import 'vue3-carousel/dist/carousel.css';
 
 import slide1 from '../../assets/homePage/home1-slide1.jpg';
 import slide2 from '../../assets/homePage/home1-slide2.jpg';
+import { RouterLink } from 'vue-router';
 
 const slides = ref([
     {
