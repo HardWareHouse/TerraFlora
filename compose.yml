@@ -34,6 +34,12 @@ services:
       POSTGRES_PASSWORD: password
       POSTGRES_DB: app
 
+  adminer:
+    image: adminer
+    restart: unless-stopped
+    ports:
+      - 8080:8080
+
   mongo: 
     image: mongo
     ports:
