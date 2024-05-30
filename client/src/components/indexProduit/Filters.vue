@@ -85,7 +85,6 @@ input[type="range"].range-slider::-webkit-slider-runnable-track {
   width: 100%;
   height: 8px;
   cursor: pointer;
-  animate: 0.2s;
   background: #ddd;
   border-radius: 10px;
 }
@@ -108,7 +107,6 @@ input[type="range"].range-slider::-moz-range-track {
   width: 100%;
   height: 8px;
   cursor: pointer;
-  animate: 0.2s;
   background: #ddd;
   border-radius: 10px;
 }
