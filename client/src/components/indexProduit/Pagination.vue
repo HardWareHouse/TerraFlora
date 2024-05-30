@@ -10,7 +10,7 @@
       v-for="page in totalPages" 
       :key="page" 
       @click="goToPage(page)"
-      :class="{'bg-blue-500 text-white': currentPage === page, 'bg-white text-blue-500': currentPage !== page}"
+      :class="{'bg-red-500 text-white': currentPage === page, 'bg-white text-red-500': currentPage !== page}"
       class="px-4 py-2 mx-1 border rounded">
       {{ page }}
     </button>
@@ -61,7 +61,7 @@ const goToPage = (page) => {
 }
 
 .pagination button:hover:not(:disabled) {
-  background-color: #3b82f6;
+  background-color: #e3342f;
   color: white;
 }
 

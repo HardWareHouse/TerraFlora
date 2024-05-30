@@ -16,6 +16,7 @@
     "primevue": "^3.52.0",
     "vue": "^3.3.11",
     "vue-router": "^4.3.2",
+    "vue-slider-component": "^3.2.24",
     "vue3-carousel": "^0.3.3"
   },
   "devDependencies": {
