@@ -1,42 +1,44 @@
 <template>
-  <div class="filters p-4 border-r border-gray-200">
-    <h2 class="text-lg font-semibold mb-4">Categories</h2>
-    <ul class="space-y-2">
+  <div class="filters p-6 border-r border-gray-300 bg-gray-50">
+    <h2 class="text-xl font-bold mb-6 text-gray-800">Categories</h2>
+    <ul class="space-y-3">
       <li v-for="category in categories" :key="category" class="flex items-center space-x-2">
-        <input type="checkbox" :value="category" v-model="selectedCategories" class="form-checkbox h-4 w-4 text-red-600" />
-        <span>{{ category }}</span>
+        <input type="checkbox" :value="category" v-model="selectedCategories" class="form-checkbox h-5 w-5 text-red-600 border-gray-300 rounded focus:ring-0" />
+        <span class="text-gray-700">{{ category }}</span>
       </li>
     </ul>
 
-    <h2 class="text-lg font-semibold my-4">Price</h2>
-    <input type="range" v-model="priceRange" min="0" max="1000" step="10" class="w-full range-slider" />
-    <div class="flex justify-between mt-2">
-      <span>$0</span>
-      <span>\${{ priceRange }}</span>
+    <h2 class="text-xl font-bold my-6 text-gray-800">Price</h2>
+    <div class="relative w-full my-4">
+      <input type="range" v-model="priceRange" min="0" max="1000" step="10" class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer range-slider" />
+      <div class="flex justify-between mt-2 text-gray-700">
+        <span>$0</span>
+        <span>\${{ priceRange }}</span>
+      </div>
     </div>
-    <button @click="applyFilter" class="mt-4 px-4 py-2 bg-red-600 text-white rounded">Filter</button>
+    <button @click="applyFilter" class="w-full mt-4 px-4 py-2 bg-red-600 text-white font-semibold rounded shadow hover:bg-red-700 transition duration-300">Filter</button>
 
-    <h2 class="text-lg font-semibold my-4">Brand</h2>
-    <ul class="space-y-2">
+    <h2 class="text-xl font-bold my-6 text-gray-800">Brand</h2>
+    <ul class="space-y-3">
       <li v-for="brand in brands" :key="brand" class="flex items-center space-x-2">
-        <input type="checkbox" :value="brand" v-model="selectedBrands" class="form-checkbox h-4 w-4 text-red-600" />
-        <span>{{ brand }}</span>
+        <input type="checkbox" :value="brand" v-model="selectedBrands" class="form-checkbox h-5 w-5 text-red-600 border-gray-300 rounded focus:ring-0" />
+        <span class="text-gray-700">{{ brand }}</span>
       </li>
     </ul>
 
-    <h2 class="text-lg font-semibold my-4">Color</h2>
-    <ul class="space-y-2">
+    <h2 class="text-xl font-bold my-6 text-gray-800">Color</h2>
+    <ul class="space-y-3">
       <li v-for="color in colors" :key="color" class="flex items-center space-x-2">
-        <input type="checkbox" :value="color" v-model="selectedColors" class="form-checkbox h-4 w-4 text-red-600" />
-        <span>{{ color }}</span>
+        <input type="checkbox" :value="color" v-model="selectedColors" class="form-checkbox h-5 w-5 text-red-600 border-gray-300 rounded focus:ring-0" />
+        <span class="text-gray-700">{{ color }}</span>
       </li>
     </ul>
 
-    <h2 class="text-lg font-semibold my-4">Size</h2>
-    <ul class="space-y-2">
+    <h2 class="text-xl font-bold my-6 text-gray-800">Size</h2>
+    <ul class="space-y-3">
       <li v-for="size in sizes" :key="size" class="flex items-center space-x-2">
-        <input type="checkbox" :value="size" v-model="selectedSizes" class="form-checkbox h-4 w-4 text-red-600" />
-        <span>{{ size }}</span>
+        <input type="checkbox" :value="size" v-model="selectedSizes" class="form-checkbox h-5 w-5 text-red-600 border-gray-300 rounded focus:ring-0" />
+        <span class="text-gray-700">{{ size }}</span>
       </li>
     </ul>
   </div>
@@ -71,31 +73,56 @@ const applyFilter = () => {
 
 <style scoped>
 .filters {
-  width: 250px;
+  width: 300px;
 }
 
 input[type="range"].range-slider {
   -webkit-appearance: none;
+  appearance: none;
+}
+
+input[type="range"].range-slider::-webkit-slider-runnable-track {
   width: 100%;
-  height: 6px;
-  background: #ddd;
+  height: 8px;
   cursor: pointer;
-  outline: none;
+  animate: 0.2s;
+  background: #ddd;
+  border-radius: 10px;
 }
 
 input[type="range"].range-slider::-webkit-slider-thumb {
   -webkit-appearance: none;
-  appearance: none;
-  width: 16px;
-  height: 16px;
+  width: 20px;
+  height: 20px;
   background: #d9534f;
   border-radius: 50%;
+  cursor: pointer;
+  box-shadow: 0 0 2px 0 rgba(0,0,0,0.2);
+}
+
+input[type="range"].range-slider:focus::-webkit-slider-runnable-track {
+  background: #ccc;
+}
+
+input[type="range"].range-slider::-moz-range-track {
+  width: 100%;
+  height: 8px;
+  cursor: pointer;
+  animate: 0.2s;
+  background: #ddd;
+  border-radius: 10px;
 }
 
 input[type="range"].range-slider::-moz-range-thumb {
-  width: 16px;
-  height: 16px;
+  width: 20px;
+  height: 20px;
   background: #d9534f;
   border-radius: 50%;
+  cursor: pointer;
+  box-shadow: 0 0 2px 0 rgba(0,0,0,0.2);
+}
+
+input[type="range"].range-slider:focus::-moz-range-track {
+  background: #ccc;
 }
 </style>
