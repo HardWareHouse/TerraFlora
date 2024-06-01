@@ -1,6 +1,7 @@
 <template>
   <carousel />
   <banner-section />
+  <SearchOverlay v-if="showSearch" @close="showSearch = false" />
   <top-seller />
   <banner-section-bottom />
   <new-product/>
@@ -9,9 +10,17 @@
 </template>
 
 <script setup>
-  import carousel from "../components/homePage/carousel.vue";
-  import bannerSection from "../components/homePage/bannerSection.vue";
-  import topSeller from "../components/homePage/topSeller.vue";
-  import bannerSectionBottom from "../components/homePage/bannerSectionBottom.vue";
-  import newProduct from "../components/homePage/newProductShowcase.vue";
+import { ref } from 'vue';
+import carousel from "../components/homePage/carousel.vue";
+import bannerSection from "../components/homePage/bannerSection.vue";
+import topSeller from "../components/homePage/topSeller.vue";
+import bannerSectionBottom from "../components/homePage/bannerSectionBottom.vue";
+import newProduct from "../components/homePage/newProductShowcase.vue";
+import SearchOverlay from '../components/homePage/searchBar.vue';
 </script>
+
+<style scoped>
+.container {
+  max-width: 1200px;
+}
+</style>

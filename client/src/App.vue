@@ -1,14 +1,23 @@
 <template>
   <div id="app">
-    <Header></Header>
+    <Header @toggle-search="toggleSearch" />
     <router-view></router-view>
+    <SearchOverlay v-if="showSearch" @close="toggleSearch"/>
     <Footer></Footer>
   </div>
 </template>
 
 <script setup>
+import { ref } from 'vue';
 import Header from './components/UI/header.vue'
 import Footer from './components/UI/footer.vue'
+import SearchOverlay from './components/homePage/searchBar.vue';
+
+const showSearch = ref(false);
+
+function toggleSearch() {
+  showSearch.value = !showSearch.value;
+}
 </script>
 
 <style>

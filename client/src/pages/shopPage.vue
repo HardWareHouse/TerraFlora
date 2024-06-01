@@ -9,9 +9,9 @@
 </template>
 
 <script setup>
-import Breadcrumbs from '../components/indexProduit/Breadcrumbs.vue';
-import Filters from '../components/indexProduit/Filters.vue';
-import ProductList from '../components/indexProduit/ProductList.vue';
+import Breadcrumbs from '../components/shopPage/Breadcrumbs.vue';
+import Filters from '../components/shopPage/Filters.vue';
+import ProductList from '../components/shopPage/ProductList.vue';
 </script>
 
 <style scoped>
