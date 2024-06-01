@@ -1,15 +1,12 @@
 <script setup>
-export default {
-  data() {
-    return {
-      activeTab: 'dashboard'
-    };
-  },
-  methods: {
-    selectTab(tab) {
-      this.activeTab = tab;
-    }
-  }
+import { ref } from 'vue';
+
+// Définition de l'état réactif avec ref
+const activeTab = ref('dashboard');
+
+// Définition de la méthode selectTab
+const selectTab = (tab) => {
+  activeTab.value = tab;
 };
 </script>
   

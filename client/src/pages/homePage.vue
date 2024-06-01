@@ -10,7 +10,6 @@
 </template>
 
 <script setup>
-import { ref } from 'vue';
 import carousel from "../components/homePage/carousel.vue";
 import bannerSection from "../components/homePage/bannerSection.vue";
 import topSeller from "../components/homePage/topSeller.vue";
