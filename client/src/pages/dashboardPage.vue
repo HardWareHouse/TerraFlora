@@ -1,5 +1,7 @@
+<script setup>
+  import breadcrumb from "../components/dashboard/Breadcrumb.vue";
+</script>
+
 <template>
-    <p>
-        Hello
-    </p>
+   <breadcrumb />
 </template>
