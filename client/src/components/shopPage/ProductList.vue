@@ -1,6 +1,20 @@
 <template>
   <div class="product-list-container p-4 flex-1">
     <div class="flex justify-between items-center mb-4">
+      <div class="flex space-x-2">
+        <button
+          @click="viewMode = 'grid'"
+          :class="{'bg-red-600 text-white': viewMode === 'grid', 'bg-white text-red-600': viewMode !== 'grid'}"
+          class="px-4 py-2 border rounded hover:bg-red-500 hover:text-white transition">
+          <i class="bi bi-grid-fill"></i>
+        </button>
+        <button
+          @click="viewMode = 'list'"
+          :class="{'bg-red-600 text-white': viewMode === 'list', 'bg-white text-red-600': viewMode !== 'list'}"
+          class="px-4 py-2 border rounded hover:bg-red-500 hover:text-white transition">
+          <i class="bi bi-list-ul"></i>
+        </button>
+      </div>
       <div>Showing {{ startItem }}–{{ endItem }} of {{ products.length }} Results</div>
       <div>
         Sort By:
@@ -11,7 +25,8 @@
         </select>
       </div>
     </div>
-    <div class="product-list grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+
+    <div v-if="viewMode === 'grid'" class="product-list grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
       <div v-for="product in paginatedProducts" :key="product.id"
         class="product border p-4 rounded hover:shadow-lg transition-shadow">
         <div class="product-image relative">
@@ -29,6 +44,36 @@
         </div>
       </div>
     </div>
+
+    <div v-else class="product-list space-y-6">
+      <div v-for="product in paginatedProducts" :key="product.id"
+        class="product flex border p-4 rounded hover:shadow-lg transition-shadow">
+        <div class="product-image relative w-1/3">
+          <img :src="product.image" alt="Product Image" class="w-full h-48 object-cover rounded" />
+          <span v-if="product.new"
+            class="absolute top-0 left-0 bg-red-600 text-white text-xs px-2 py-1 rounded-br-lg">NEW</span>
+          <span v-if="product.discount"
+            class="absolute top-0 right-0 bg-green-600 text-white text-xs px-2 py-1 rounded-bl-lg">{{ product.discount
+            }}% OFF</span>
+        </div>
+        <div class="product-info ml-4 w-2/3">
+          <h3 class="text-lg font-semibold">{{ product.name }}</h3>
+          <p class="text-gray-500">${{ product.price }}</p>
+          <p v-if="product.originalPrice" class="line-through text-gray-400">${{ product.originalPrice }}</p>
+          <p class="mt-2 text-gray-700">Lorem ipsum dolor sit amet consectetur, adipisicing elit. Unde perspiciatis quod numquam, sit
+            fugiat, deserunt ipsa mollitia sunt quam corporis ullam rem, accusantium adipisci officia eaque.</p>
+          <div class="flex space-x-2 mt-4">
+            <button class="px-4 py-2 bg-red-600 text-white rounded shadow hover:bg-red-700 transition duration-300">
+              Add to Cart
+            </button>
+            <button class="px-4 py-2 bg-white text-red-600 border border-red-600 rounded hover:bg-red-100 transition duration-300">
+              <i class="bi bi-heart"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <Pagination :totalItems="products.length" v-model:modelValue="currentPage" :itemsPerPage="itemsPerPage" />
   </div>
 </template>
@@ -40,6 +85,7 @@ import Pagination from './Pagination.vue';
 const sortBy = ref('relevance');
 const currentPage = ref(1);
 const itemsPerPage = ref(5);
+const viewMode = ref('grid'); // State for view mode (grid or list)
 
 const products = ref([
   { id: 1, name: 'A', price: 40, image: '/images/flower.webp' },
