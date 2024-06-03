@@ -1,6 +1,6 @@
 services:
   client:
-    image: node:20.0.0-alpine
+    image: node:20-alpine
     user: node
     entrypoint: sh -c
     working_dir: /home/node
@@ -11,7 +11,7 @@ services:
       - ./client:/home/node
 
   server:
-    image: node:20.0.0-alpine
+    image: node:20-alpine
     user: node
     tty: true
     stdin_open: true
