@@ -4,6 +4,7 @@ import Product from "./pages/productPage.vue";
 import Shop from "./pages/shopPage.vue";
 import Wishlist from "./pages/wishlistPage.vue";
 import Dashboard from "./pages/dashboardPage.vue";
+import loginRegister from "./pages/loginRegister.vue";
 
 const routes = [
   {
@@ -30,6 +31,11 @@ const routes = [
     path: "/dashboard",
     name: "Dashboard",
     component: Dashboard,
+  },
+  {
+    path: "/loginRegister",
+    name: "loginRegister",
+    component: loginRegister,
   },
 ];
 
