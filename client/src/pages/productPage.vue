@@ -1,8 +1,6 @@
 <script setup>
-import { defineComponent } from "vue";
+import { ref } from "vue";
 import { Carousel, Navigation, Pagination, Slide } from "vue3-carousel";
-import InputNumber from "primevue/inputnumber";
-
 import "vue3-carousel/dist/carousel.css";
 
 const images = [
@@ -19,63 +17,28 @@ const images = [
     alt: "Image 3",
   },
 ];
-/*--------- quantity change js start ---------*/
-// Function to handle quantity changes
-function handleQuantityChange(event) {
-  const button = event.target;
-  const input = button.parentElement.querySelector("input");
-  const oldValue = parseFloat(input.value);
 
-  let newVal;
-  if (button.classList.contains("inc")) {
-    newVal = oldValue + 1;
-  } else {
-    // Don't allow decrementing below zero
-    newVal = oldValue > 0 ? oldValue - 1 : 0;
+// Define a reactive state for quantity
+const quantity = ref(1);
+
+// Method to handle incrementing the quantity
+const incrementQuantity = () => {
+  quantity.value += 1;
+};
+
+// Method to handle decrementing the quantity
+const decrementQuantity = () => {
+  if (quantity.value > 1) {
+    quantity.value -= 1;
   }
-
-  input.value = newVal;
-}
-
-// Function to initialize quantity buttons
-function initializeQuantityButtons() {
-  const qtyContainers = document.querySelectorAll(".pro-qty");
-
-  qtyContainers.forEach((container) => {
-    // Create decrement button
-    const decButton = document.createElement("span");
-    decButton.classList.add("dec", "qtybtn");
-    decButton.textContent = "-";
-
-    // Create increment button
-    const incButton = document.createElement("span");
-    incButton.classList.add("inc", "qtybtn");
-    incButton.textContent = "+";
-
-    // Prepend decrement button
-    container.insertBefore(decButton, container.firstChild);
-    // Append increment button
-    container.appendChild(incButton);
-
-    // Add event listeners to the buttons
-    decButton.addEventListener("click", handleQuantityChange);
-    incButton.addEventListener("click", handleQuantityChange);
-  });
-}
-
-// Initialize the quantity buttons on document load
-document.addEventListener("DOMContentLoaded", initializeQuantityButtons);
-
-/*--------- quantity change js end ---------*/
-
-// import carousel from "../components/homePage/carousel.vue";
+};
 </script>
 
 <template>
   <div id="productPage">
     <div class="flex mt-16 ml-10">
       <Carousel>
-        <Slide v-for="image in images" :key="alt">
+        <Slide v-for="image in images" :key="image.alt">
           <img class="carousel__item" :src="image.src" :alt="image.alt" />
         </Slide>
 
@@ -105,7 +68,11 @@ document.addEventListener("DOMContentLoaded", initializeQuantityButtons);
         <div class="quantity-cart-box flex items-center mx-auto mt-8">
           <h5 class="mr-2">Quantity:</h5>
           <div class="quantity mr-2">
-            <div class="pro-qty"><input type="text" value="1" /></div>
+            <div class="pro-qty">
+              <span class="dec qtybtn" @click="decrementQuantity">-</span>
+              <input type="text" :value="quantity" readonly />
+              <span class="inc qtybtn" @click="incrementQuantity">+</span>
+            </div>
           </div>
           <div class="action_link">
             <a
@@ -115,10 +82,84 @@ document.addEventListener("DOMContentLoaded", initializeQuantityButtons);
             >
           </div>
         </div>
+        <div class="useful-links flex mx-auto mt-5">
+          <div class="flex flex-col align-middle">
+            <a
+              href="#"
+              data-bs-toggle="tooltip"
+              data-bs-original-title="Compare"
+              ><svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke-width="1.5"
+                stroke="currentColor"
+                class="size-4"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0 3.181 3.183a8.25 8.25 0 0 0 13.803-3.7M4.031 9.865a8.25 8.25 0 0 1 13.803-3.7l3.181 3.182m0-4.991v4.99"
+                />
+              </svg>
+              <p class="text-sm text-center">Compare</p></a
+            >
+          </div>
+          <div class="flex flex-col align-middle">
+            <a
+              href="#"
+              data-bs-toggle="tooltip"
+              data-bs-original-title="Wishlist"
+              ><svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke-width="1.5"
+                stroke="currentColor"
+                class="size-4"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12Z"
+                />
+              </svg>
+              <p class="text-sm text-center">Wishlist</p></a
+            >
+          </div>
+        </div>
       </div>
     </div>
+    <h2 class="text-3xl font-thin mb-4 text-center">Related Products</h2>
+    <Carousel :items-to-show="2.5" :wrap-around="true" class="mx-auto">
+      <Slide v-for="image in images" :key="image.alt" class="m-5">
+        <div class="flex flex-col">
+          <h5>{{ image.alt }}</h5>
+          <img class="carousel__item" :src="image.src" :alt="image.alt" />
+        </div>
+      </Slide>
+
+      <template #addons>
+        <Navigation />
+      </template>
+    </Carousel>
   </div>
 </template>
+<script>
+import { defineComponent } from "vue";
+import { Carousel, Navigation, Slide } from "vue3-carousel";
+
+import "vue3-carousel/dist/carousel.css";
+
+export default defineComponent({
+  name: "WrapAround",
+  components: {
+    Carousel,
+    Slide,
+    Navigation,
+  },
+});
+</script>
 <style scoped>
 .carousel {
   width: 66%;
@@ -165,14 +206,4 @@ document.addEventListener("DOMContentLoaded", initializeQuantityButtons);
   text-align: center;
   background-color: transparent;
 }
-
-/* .carousel__slide {
-  padding: 10px;
-} */
-
-/* .carousel__prev,
-.carousel__next {
-  box-sizing: content-box;
-  border: 5px solid white;
-} */
 </style>
