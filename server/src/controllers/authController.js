@@ -2,6 +2,16 @@ import User from '../modelsBDD/User.js';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 
+const isPasswordValid = (password) => {
+    const minLength = 12;
+    const hasUpperCase = /[A-Z]/.test(password);
+    const hasLowerCase = /[a-z]/.test(password);
+    const hasNumbers = /\d/.test(password);
+    const hasSpecialChar = /[!@#$%^&*(),.?":{}|<>]/.test(password);
+    
+    return password.length >= minLength && hasUpperCase && hasLowerCase && hasNumbers && hasSpecialChar;
+  };
+
 export const register = async (req, res) => {
   try {
     const { nom, prenom, email, email_cfg, password, password_cfg, telephone, role, haveConsented } = req.body;
@@ -16,6 +26,9 @@ export const register = async (req, res) => {
     return res.status(400).json({ msg: "Il faut remplir tous les champs !" });
   }
   
+  if (!isPasswordValid(password)) {
+    return res.status(400).json({ msg: "Le mot de passe doit contenir au moins 12 caractères, incluant des symboles, chiffres, lettres minuscules et majuscules." });
+  }
 
   const existingUser = await User.findOne({ where: { email } });
     
