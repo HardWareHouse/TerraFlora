@@ -2,6 +2,9 @@ import { createRouter, createWebHistory } from "vue-router";
 import Home from "./pages/homePage.vue";
 import Product from "./pages/productPage.vue";
 import Shop from "./pages/shopPage.vue";
+import Wishlist from "./pages/wishlistPage.vue";
+import Dashboard from "./pages/dashboardPage.vue";
+import loginRegister from "./pages/loginRegister.vue";
 
 const routes = [
   {
@@ -19,11 +22,27 @@ const routes = [
     name: "Shop",
     component: Shop,
   },
+  {
+    path: "/wishlist",
+    name: "Wishlist",
+    component: Wishlist,
+  },
+  {
+    path: "/dashboard",
+    name: "Dashboard",
+    component: Dashboard,
+  },
+  {
+    path: "/loginRegister",
+    name: "loginRegister",
+    component: loginRegister,
+  },
 ];
 
 const router = createRouter({
   history: createWebHistory(),
   routes,
+  linkActiveClass: "text-red-600",
 });
 
 export default router;
