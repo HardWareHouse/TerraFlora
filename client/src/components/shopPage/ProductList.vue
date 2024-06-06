@@ -28,7 +28,7 @@
 
     <div v-if="viewMode === 'grid'" class="product-list grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
       <div v-for="product in paginatedProducts" :key="product.id"
-        class="product border p-4 rounded hover:shadow-lg transition-shadow">
+        class="product border p-4 rounded hover:shadow-lg transition-shadow relative">
         <div class="product-image relative">
           <img :src="product.image" alt="Product Image" class="w-full h-48 object-cover rounded" />
           <span v-if="product.new"
@@ -36,6 +36,17 @@
           <span v-if="product.discount"
             class="absolute top-0 right-0 bg-green-600 text-white text-xs px-2 py-1 rounded-bl-lg">{{ product.discount
             }}% OFF</span>
+          <!-- Buttons to appear on hover -->
+          <div class="absolute right-0 top-0 bottom-0 flex flex-col items-center justify-center space-y-2 opacity-0 hover:opacity-100 transition-opacity">
+            <button class="relative bg-red-600 text-white p-2 rounded-full shadow-lg hover:bg-red-700 transition duration-300">
+              <i class="bi bi-cart"></i>
+              <span class="absolute right-full mr-2 bg-red-600 text-white px-2 py-1 rounded z-10">Add to Cart</span>
+            </button>
+            <button class="relative bg-white text-red-600 p-2 border border-red-600 rounded-full shadow-lg hover:bg-red-100 transition duration-300">
+              <i class="bi bi-heart"></i>
+              <span class="absolute right-full mr-2 bg-red-600 text-white px-2 py-1 rounded z-10">Add to Wishlist</span>
+            </button>
+          </div>
         </div>
         <div class="product-info mt-4 text-center">
           <h3 class="text-lg font-semibold">{{ product.name }}</h3>
@@ -140,7 +151,25 @@ const endItem = computed(() => Math.min(currentPage.value * itemsPerPage.value, 
   transition: transform 0.2s;
 }
 
-.product-image img:hover {
+.product-image:hover img {
   transform: scale(1.05);
+}
+
+.product-image:hover .absolute {
+  opacity: 1;
+}
+
+.absolute {
+  transition: opacity 0.2s;
+  opacity: 0;
+}
+
+button span {
+  display: none;
+}
+
+button:hover span {
+  display: inline-block;
+  z-index: 10;
 }
 </style>
