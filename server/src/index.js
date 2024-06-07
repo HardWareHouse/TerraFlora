@@ -1,12 +1,13 @@
 import express from 'express';
 import { connectToDatabase, sequelize } from './dataBase.js';
-import '../src/modelsBDD/associations.js';
+import './mongo.js';
+import '../src/modelsSQL/associations.js';
 import userRouter from './routes/user.js';
 import authRouter from './routes/auth.js';
+import produitRouter from './routes/produit.js';
 import bodyParser from 'body-parser';
 import cors from 'cors';
 import dotenv from 'dotenv';
-import { indexRouter } from './routes/index.js';
 
 dotenv.config();
 
@@ -18,7 +19,7 @@ server.use(cors());
 
 server.use('/users', userRouter);
 server.use('/auth', authRouter);
-server.use("/", indexRouter);
+server.use('/produits', produitRouter);
 
 server.listen(8000, '0.0.0.0', () => {
   console.log('Server listening on port 8000');
