@@ -1,14 +1,14 @@
-import User from '../modelsBDD/User.js';
-import Facture from '../modelsBDD/Facture.js';
-import Commande from '../modelsBDD/Commande.js';
-import Panier from '../modelsBDD/Panier.js';
-import Promotion from '../modelsBDD/Promotion.js';
-import Categorie from '../modelsBDD/Categorie.js';
-import Produit from '../modelsBDD/Produit.js';
-import DemandeRGPD from '../modelsBDD/DemandeRGPD.js';
-import Paiement from '../modelsBDD/Paiement.js';
-import Adresse from '../modelsBDD/Adresse.js';
-import MethodePaiement from '../modelsBDD/MethodePaiement.js';
+import User from './User.js';
+import Facture from './Facture.js';
+import Commande from './Commande.js';
+import Panier from './Panier.js';
+import Promotion from './Promotion.js';
+import Categorie from './Categorie.js';
+import Produit from './Produit.js';
+import DemandeRGPD from './DemandeRGPD.js';
+import Paiement from './Paiement.js';
+import Adresse from './Adresse.js';
+import MethodePaiement from './MethodePaiement.js';
 
 // Associations
 
