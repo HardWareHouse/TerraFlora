@@ -38,7 +38,7 @@
   
   <script setup>
   import { ref } from 'vue'
-  import axios from 'axios'
+  //import axios from 'axios'
   import { useRoute } from 'vue-router'
   
   const password = ref('')
