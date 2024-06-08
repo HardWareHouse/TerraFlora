@@ -6,6 +6,7 @@ import Wishlist from "./pages/wishlistPage.vue";
 import Dashboard from "./pages/dashboardPage.vue";
 import loginRegister from "./pages/loginRegister.vue";
 import notFound from "./pages/notFound.vue";
+import ResetPassword from './pages/resetPassword.vue';
 
 const routes = [
   {
@@ -38,11 +39,17 @@ const routes = [
     name: "loginRegister",
     component: loginRegister,
   },
+  {
+    path: '/reset-password/:token',
+    name: 'ResetPassword',
+    component: ResetPassword,
+  },
   { 
     path: '/:pathMatch(.*)*', 
     name: 'notFound', 
     component: notFound 
   },
+
 ];
 
 const router = createRouter({
