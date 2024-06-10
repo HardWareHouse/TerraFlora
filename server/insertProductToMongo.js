@@ -18,10 +18,7 @@ async function insertProductToMongo(){
     let products = await ProduitSQL.findAll({
         include: Categorie
     });
-    // console.log(products[0]);
-    for(let product of products){
-        
-    }
+
     await ProduitMongo.create(products.map(product => ({
         nom: product.nom,
         description: product.description,
