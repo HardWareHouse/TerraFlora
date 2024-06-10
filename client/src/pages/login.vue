@@ -4,7 +4,7 @@
 </template>
 
 <script setup>
-import Breadcrumbs from '../components/loginRegister/login/breadCrumbs.vue';
+import Breadcrumbs from '../components/loginRegister/login/breadCrumbsLogin.vue';
 import formLogin from '../components/loginRegister/login/formLogin.vue';
 </script>
 
