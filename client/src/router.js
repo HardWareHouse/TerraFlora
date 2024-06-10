@@ -52,7 +52,7 @@ const routes = [
     component: Register,
   },
   {
-    path: '/reset-password/:token',
+    path: '/resetPassword',
     name: 'ResetPassword',
     component: ResetPassword,
   },

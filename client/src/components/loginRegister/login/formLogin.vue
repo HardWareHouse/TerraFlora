@@ -24,15 +24,20 @@
                         <label for="remember_me" class="block ml-2 text-sm text-gray-900">Remember Me</label>
                     </div>
                     <div class="text-sm">
-                        <a href="/register" class="font-medium text-red-600 hover:text-red-500">Forget Password ?</a>
+                        <a href="/resetPassword" class="font-medium text-red-600 hover:text-red-500">Forget Password?</a>
                     </div>
                 </div>
+                <div class="flex items-end text-sm w-full">
+                        Pas de compte ?<a href="/register" class="font-medium text-red-600 hover:text-red-500">&nbsp; Enregistrer-vous ?</a>
+                    </div>
                 <div>
                     <button type="submit"
                         class="relative flex justify-center px-4 py-2 text-md font-medium text-white bg-red-600 border border-transparent group hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500">
                         Login
                     </button>
                 </div>
+                <div v-if="success" class="text-green-500">{{ success }}</div>
+                <div v-if="error" class="text-red-500">{{ error }}</div>
             </form>
         </div>
     </div>
@@ -56,7 +61,7 @@ const handleSubmit = async () => {
         success.value = 'Login successful!'
         error.value = ''
     } catch (err) {
-        error.value = err.response.data.error || 'An error occurred.'
+        error.value = err.response?.data?.error || 'An error occurred.'
         success.value = ''
     }
 }
