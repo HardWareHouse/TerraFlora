@@ -4,7 +4,8 @@ import Product from "./pages/productPage.vue";
 import Shop from "./pages/shopPage.vue";
 import Wishlist from "./pages/wishlistPage.vue";
 import Dashboard from "./pages/dashboardPage.vue";
-import loginRegister from "./pages/loginRegister.vue";
+import Login from "./pages/login.vue";
+import Register from "./pages/register.vue";
 import notFound from "./pages/notFound.vue";
 import ResetPassword from './pages/resetPassword.vue';
 
@@ -35,9 +36,14 @@ const routes = [
     component: Dashboard,
   },
   {
-    path: "/loginRegister",
-    name: "loginRegister",
-    component: loginRegister,
+    path: "/login",
+    name: "login",
+    component: Login,
+  },
+  {
+    path: "/register",
+    name: "register",
+    component: Register,
   },
   {
     path: '/reset-password/:token',
