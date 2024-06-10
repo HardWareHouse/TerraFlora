@@ -1,4 +1,5 @@
 import { createRouter, createWebHistory } from "vue-router";
+import Admin from './pages/adminDashboardPage.vue'
 import Home from "./pages/homePage.vue";
 import Product from "./pages/productPage.vue";
 import Shop from "./pages/shopPage.vue";
@@ -14,6 +15,11 @@ const routes = [
     path: "/",
     name: "Home",
     component: Home,
+  },
+  {
+    path: "/admin",
+    name: "Admib",
+    component: Admin,
   },
   {
     path: "/product",
