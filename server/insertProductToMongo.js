@@ -21,24 +21,19 @@ async function insertProductToMongo() {
         include: Categorie
     });
 
-    for (let product of products) {
-        // Generate a new ObjectId for each category
-        let categoryId = new ObjectId();
-        
-        await ProduitMongo.create({
-            nom: product.nom,
-            description: product.description,
-            prix: product.prix,
-            stock: product.stock,
-            marque: product.marque,
-            isPromotion: product.isPromotion,
-            pourcentagePromotion: product.pourcentagePromotion,
-            categorie: {
-                _id: categoryId,
-                nom: product.Categorie.nom
-            }
-        });
-    }
+    await ProduitMongo.create(products.map(product => ({
+        nom: product.nom,
+        description: product.description,
+        prix: product.prix,
+        stock: product.stock,
+        marque: product.marque,
+        isPromotion: product.isPromotion,
+        pourcentagePromotion: product.pourcentagePromotion,
+        categorie:{
+            _id: product.Categorie.id,
+            nom: product.Categorie.nom
+        }
+    })));
 }
 
 insertProductToMongo().then(() => {

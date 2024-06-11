@@ -19,7 +19,5 @@ import SearchOverlay from '../components/homePage/searchBar.vue';
 </script>
 
 <style scoped>
-.container {
-  max-width: 1200px;
-}
+
 </style>

@@ -32,6 +32,7 @@ export const login = async (req, res) => {
     }
 
     const isMatch = await bcrypt.compare(password, user.password);
+
     if (!isMatch) {
       return res.status(401).json({ message: 'Invalid email or password' });
     }
@@ -40,7 +41,7 @@ export const login = async (req, res) => {
 
     res.status(200).json({ token, user });
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    res.status(400).json({ error: error.message });
   }
 };
 
@@ -49,7 +50,7 @@ export const register = async (req, res) => {
     const { nom, prenom, email, email_cfg, password, password_cfg, telephone, role, haveConsented } = req.body;
     
     if (email !== email_cfg || password !== password_cfg) {
-      return res.status(500).json({
+      return res.status(400).json({
         msg: "Les confirmations ne sont pas bonnes!"
       });
     }
@@ -89,7 +90,7 @@ export const register = async (req, res) => {
 
     res.status(201).json({ newUser, msg: "Utilisateur créé avec succès. Veuillez vérifier votre email pour confirmer votre compte." });
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    res.status(400).json({ error: error.message });
   }
 };
 
@@ -97,11 +98,6 @@ export const confirmEmail = async (req, res) => {
   try {
     const { token } = req.params;
 
-    // eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImUyMWYyOTY5LTg1MDgtNGMyOC1iNTk2LWFmMGFlZDU2ZmE3ZCIsImlhdCI6MTcxNzcwMDkyOCwiZXhwIjoxNzE3NzA0NTI4fQ.jj8yA5hCunh-PumbheBlpclZiwv7Wz98fHjId28cV0I
-    // eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImUyMWYyOTY5LTg1MDgtNGMyOC1iNTk2LWFmMGFlZDU2ZmE3ZCIsImlhdCI6MTcxNzcwMDkyOCwiZXhwIjoxNzE3NzA0NTI4fQ.jj8yA5hCunh-PumbheBlpclZiwv7Wz98fHjId28cV0I
-
-    // eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImUyMWYyOTY5LTg1MDgtNGMyOC1iNTk2LWFmMGFlZDU2ZmE3ZCIsImlhdCI6MTcxNzcwMDk4NCwiZXhwIjoxNzE3NzA0NTg0fQ.kPyYADdxwLrgKt40nMTEod_RzWd95rBTyuQM-WnYryE
-    // eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImUyMWYyOTY5LTg1MDgtNGMyOC1iNTk2LWFmMGFlZDU2ZmE3ZCIsImlhdCI6MTcxNzcwMDk4NCwiZXhwIjoxNzE3NzA0NTg0fQ.kPyYADdxwLrgKt40nMTEod_RzWd95rBTyuQM-WnYryE
     const decoded = jwt.verify(token, process.env.JWT_SECRET_KEY);
     const user = await User.findByPk(decoded.id);
 
@@ -118,10 +114,10 @@ export const confirmEmail = async (req, res) => {
 
     res.status(200).json({ msg: 'Email confirmé avec succès.' });
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    res.status(400).json({ error: error.message });
   }
 };
-// ///////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////
 
 export const forgotPassword = async (req, res) => {
   try {
@@ -132,7 +128,7 @@ export const forgotPassword = async (req, res) => {
       return res.status(400).json({ msg: 'Utilisateur non trouvé.' });
     }
 
-    // Génération du token
+    // Génération du tokenDemandesRGPD
     const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET_KEY, { expiresIn: '1h' });
 
     // Envoi de l'email de réinitialisation
@@ -140,7 +136,7 @@ export const forgotPassword = async (req, res) => {
 
     res.status(200).json({ msg: 'Email de réinitialisation envoyé.' });
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    res.status(400).json({ error: error.message });
   }
 };
 
@@ -169,7 +165,7 @@ export const resetPassword = async (req, res) => {
 
     res.status(200).json({ msg: 'Mot de passe réinitialisé avec succès.' });
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    res.status(400).json({ error: error.message });
   }
 };
 

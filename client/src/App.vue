@@ -33,4 +33,8 @@ function toggleSearch() {
 .container {
     max-width: 1200px;
 }
+
+label {
+  margin-bottom: 0px !important;
+}
 </style>
