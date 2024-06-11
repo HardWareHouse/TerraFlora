@@ -85,7 +85,3 @@ enter-vue:
 	$(EXEC_VUE) sh
 .PHONY: enter-vue
 
-sync-db-mongo:
-sync-db-mongo:
-	docker-compose exec -T server node insertProductToMongo.js
-.PHONY: sync-db-mongo
