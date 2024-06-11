@@ -3,8 +3,9 @@ import mongoose from 'mongoose';
 import ProduitMongo from './src/modelsMongo/Produit.mongo.js';
 import ProduitSQL from './src/modelsSQL/Produit.js';
 import Categorie from './src/modelsSQL/Categorie.js';
+import { ObjectId } from 'mongodb';
 
-async function insertProductToMongo(){
+async function insertProductToMongo() {
     await mongoose.connect(
         process.env.MONGODB_CONNECTION_STRING,
         {
@@ -15,26 +16,29 @@ async function insertProductToMongo(){
           },
         },
       );
+
     let products = await ProduitSQL.findAll({
         include: Categorie
     });
-    // console.log(products[0]);
-    for(let product of products){
+
+    for (let product of products) {
+        // Generate a new ObjectId for each category
+        let categoryId = new ObjectId();
         
+        await ProduitMongo.create({
+            nom: product.nom,
+            description: product.description,
+            prix: product.prix,
+            stock: product.stock,
+            marque: product.marque,
+            isPromotion: product.isPromotion,
+            pourcentagePromotion: product.pourcentagePromotion,
+            categorie: {
+                _id: categoryId,
+                nom: product.Categorie.nom
+            }
+        });
     }
-    await ProduitMongo.create(products.map(product => ({
-        nom: product.nom,
-        description: product.description,
-        prix: product.prix,
-        stock: product.stock,
-        marque: product.marque,
-        isPromotion: product.isPromotion,
-        pourcentagePromotion: product.pourcentagePromotion,
-        categorie:{
-            _id: product.Categorie.id,
-            nom: product.Categorie.nom
-        }
-    })));
 }
 
 insertProductToMongo().then(() => {

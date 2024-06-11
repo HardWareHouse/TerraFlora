@@ -19,7 +19,7 @@ server.use(cors());
 
 server.use('/users', userRouter);
 server.use('/auth', authRouter);
-server.use('/produits', produitRouter);
+server.use('/product', produitRouter);
 
 server.listen(8000, '0.0.0.0', () => {
   console.log('Server listening on port 8000');

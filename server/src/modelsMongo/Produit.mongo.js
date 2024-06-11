@@ -1,11 +1,7 @@
 import mongoose from 'mongoose';
+import { v4 as uuidv4 } from 'uuid';
 
 const produitSchema = new mongoose.Schema({
-    _id: {
-        type: mongoose.Schema.Types.UUID,
-        default: () => new mongoose.Types.UUID(),
-        primaryKey: true
-    },
     nom: {
         type: String,
         required: true
@@ -38,7 +34,8 @@ const produitSchema = new mongoose.Schema({
     categorie:{
         type: {
             _id: {
-                type: mongoose.Schema.Types.UUID,
+                type: String,
+                default: uuidv4,
                 required: true
             },
             nom: {
@@ -53,8 +50,6 @@ const produitSchema = new mongoose.Schema({
 });
 
 produitSchema.index({nom: "text", description: "text"}, {name: "searchIndex"});
-// produitSchema.index({"$**": "text"}, {name: "searchIndex"});
-
 
 const Produit = mongoose.model('Produit', produitSchema);
 
