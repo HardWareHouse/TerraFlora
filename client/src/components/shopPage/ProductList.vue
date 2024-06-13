@@ -26,9 +26,7 @@
       </div>
     </div>
 
-    <div class="filters-container mb-4 flex flex-row">
-      <Filters @filter="applyFilter" />
-      <div v-if="viewMode === 'grid'" class="product-list grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+    <div v-if="viewMode === 'grid'" class="product-list grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
       <div v-for="product in paginatedProducts" :key="product.id"
         class="product border p-4 rounded hover:shadow-lg transition-shadow relative">
         <div class="product-image relative">
@@ -36,8 +34,7 @@
           <span v-if="product.isPromotion"
             class="absolute top-0 left-0 bg-red-600 text-white text-xs px-2 py-1 rounded-br-lg">PROMOTION</span>
           <span v-if="product.pourcentagePromotion"
-            class="absolute top-0 right-0 bg-green-600 text-white text-xs px-2 py-1 rounded-bl-lg">{{ product.pourcentagePromotion
-            }}% OFF</span>
+            class="absolute top-0 right-0 bg-green-600 text-white text-xs px-2 py-1 rounded-bl-lg">{{ product.pourcentagePromotion }}% OFF</span>
           <div class="absolute right-0 top-0 bottom-0 flex flex-col items-center justify-center space-y-2 opacity-0 hover:opacity-100 transition-opacity">
             <button class="relative bg-red-600 text-white p-2 rounded-full shadow-lg hover:bg-red-700 transition duration-300">
               <i class="bi bi-cart"></i>
@@ -56,7 +53,7 @@
       </div>
     </div>
 
-    <div v-else class="product-list space-y-6 w-3/4">
+    <div v-else class="product-list space-y-6">
       <div v-for="product in paginatedProducts" :key="product.id"
         class="product flex border p-4 rounded hover:shadow-lg transition-shadow">
         <div class="product-image relative w-1/3">
@@ -64,8 +61,7 @@
           <span v-if="product.isPromotion"
             class="absolute top-0 left-0 bg-red-600 text-white text-xs px-2 py-1 rounded-br-lg">PROMOTION</span>
           <span v-if="product.pourcentagePromotion"
-            class="absolute top-0 right-0 bg-green-600 text-white text-xs px-2 py-1 rounded-bl-lg">{{ product.pourcentagePromotion
-            }}% OFF</span>
+            class="absolute top-0 right-0 bg-green-600 text-white text-xs px-2 py-1 rounded-bl-lg">{{ product.pourcentagePromotion }}% OFF</span>
         </div>
         <div class="product-info ml-4 w-2/3">
           <h3 class="text-lg font-semibold">{{ product.nom }}</h3>
@@ -83,30 +79,30 @@
       </div>
     </div>
 
-    
-    </div>
     <Pagination :totalItems="filteredProducts.length" v-model:modelValue="currentPage" :itemsPerPage="itemsPerPage" />
-    
   </div>
 </template>
 
 <script setup>
-import { ref, computed, onMounted } from 'vue';
+import { ref, computed, watch } from 'vue';
 import Pagination from './Pagination.vue';
 import Filters from './Filters.vue';
 import axios from 'axios';
+
+const props = defineProps({
+  filters: Object
+});
 
 const sortBy = ref('relevance');
 const currentPage = ref(1);
 const itemsPerPage = ref(5);
 const viewMode = ref('grid');
 const products = ref([]);
-const filters = ref({});
 
 const fetchProducts = async () => {
   try {
     const response = await axios.get('http://localhost:8000/product/filter', {
-      params: filters.value
+      params: props.filters
     });
     products.value = response.data;
   } catch (error) {
@@ -114,17 +110,10 @@ const fetchProducts = async () => {
   }
 };
 
-const applyFilter = (newFilters) => {
-  filters.value = newFilters;
-  fetchProducts();
-};
-
-onMounted(() => {
-  fetchProducts();
-});
+watch(() => props.filters, fetchProducts, { immediate: true });
 
 const filteredProducts = computed(() => {
-  return products.value.filter(product => product.prix <= filters.value.maxPrix);
+  return products.value.filter(product => product.prix <= props.filters.maxPrix);
 });
 
 const paginatedProducts = computed(() => {
