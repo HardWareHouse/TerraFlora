@@ -1,7 +1,8 @@
 import User from '../modelsSQL/User.js';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
-import { sendConfirmationEmail, sendResetPasswordEmail } from '../emailConfig.js';
+import rateLimit from 'express-rate-limit';
+import { sendConfirmationEmail, sendResetPasswordEmail, sendAccountBlockedEmail } from '../emailConfig.js';
 
 const isPasswordValid = (password) => {
   const minLength = 12;
@@ -11,6 +12,12 @@ const isPasswordValid = (password) => {
   const hasSpecialChar = /[!@#$%^&*(),.?":{}|<>]/.test(password);
   
   return password.length >= minLength && hasUpperCase && hasLowerCase && hasNumbers && hasSpecialChar;
+};
+
+const isPasswordExpired = (lastUpdatedPassword) => {
+  const now = new Date();
+  const diffInDays = Math.floor((now - lastUpdatedPassword) / (1000 * 60 * 60 * 24));
+  return diffInDays >= 60;
 };
 
 export const login = async (req, res) => {
@@ -35,6 +42,12 @@ export const login = async (req, res) => {
 
     if (!isMatch) {
       return res.status(401).json({ message: 'Invalid email or password' });
+    }
+
+    if (isPasswordExpired(user.lastUpdatedPassword)) {
+      const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET_KEY, { expiresIn: '1h' });
+      await sendResetPasswordEmail(user, token);
+      return res.status(401).json({ message: 'Your password has expired. A reset link has been sent to your email.' });
     }
 
     const token = jwt.sign({ id: user.id, email: user.email, role: user.role }, process.env.JWT_SECRET_KEY, { expiresIn: '1h' });
@@ -80,6 +93,7 @@ export const register = async (req, res) => {
       role, 
       haveConsented,
       isVerified: false,
+      lastUpdatedPassword: new Date(),
     });
 
     // Generate confirmation token
@@ -117,7 +131,23 @@ export const confirmEmail = async (req, res) => {
     res.status(400).json({ error: error.message });
   }
 };
-/////////////////////////////////////////////////////////////////
+
+export const checkPasswordExpiry = async (req, res, next) => {
+  try {
+    const { email } = req.body;
+    const user = await User.findOne({ where: { email } });
+
+    if (user && isPasswordExpired(user.lastUpdatedPassword)) {
+      const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET_KEY, { expiresIn: '1h' });
+      await sendResetPasswordEmail(user, token);
+      return res.status(401).json({ message: 'Your password has expired. A reset link has been sent to your email.' });
+    }
+
+    next();
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
+};
 
 export const forgotPassword = async (req, res) => {
   try {
@@ -161,6 +191,7 @@ export const resetPassword = async (req, res) => {
     }
 
     user.password = await bcrypt.hash(password, 5);
+    user.lastUpdatedPassword = new Date();
     await user.save();
 
     res.status(200).json({ msg: 'Mot de passe réinitialisé avec succès.' });
@@ -169,7 +200,6 @@ export const resetPassword = async (req, res) => {
   }
 };
 
-// Fonction pour afficher la page de réinitialisation du mot de passe
 export const resetPasswordPage = (req, res) => {
   const { token } = req.params;
   res.send(`
@@ -183,3 +213,20 @@ export const resetPasswordPage = (req, res) => {
     </form>
   `);
 };
+
+export const loginLimiter = rateLimit({
+  windowMs: 3 * 60 * 1000, 
+  max: 3, 
+  handler: async (req, res) => {
+      const { email } = req.body;
+      const user = await User.findOne({ where: { email } });
+
+      if (user) {
+          await sendAccountBlockedEmail(user);
+      }
+
+      res.status(429).json({
+          message: "Trop de tentatives de connexion. Votre compte est temporairement bloqué et sera débloqué dans 10 minutes."
+      });
+  }
+});
