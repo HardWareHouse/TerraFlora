@@ -22,6 +22,14 @@ const produitSchema = new mongoose.Schema({
         type: String,
         required: true
     },
+    couleur: {
+        type: String,
+        required: true
+    },
+    taille: {
+        type: String,
+        required: true
+    },
     isPromotion: {
         type: Boolean,
         default: false

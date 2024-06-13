@@ -27,6 +27,8 @@ async function insertProductToMongo() {
         prix: product.prix,
         stock: product.stock,
         marque: product.marque,
+        couleur: product.couleur,
+        taille: product.taille,
         isPromotion: product.isPromotion,
         pourcentagePromotion: product.pourcentagePromotion,
         categorie:{
