@@ -41,3 +41,14 @@ export const sendResetPasswordEmail = (user, token) => {
   return transporter.sendMail(mailOptions);
 };
 
+export const sendAccountBlockedEmail = (user) => {
+  const mailOptions = {
+    from: process.env.BREVO_USER,
+    to: user.email,
+    subject: 'Account Temporarily Blocked',
+    html: `<h2>Hello ${user.nom}</h2>
+           <p>Due to multiple failed login attempts, your account has been temporarily blocked for 10 minutes. Please try again later.</p>`
+  };
+
+  return transporter.sendMail(mailOptions);
+};
