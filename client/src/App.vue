@@ -1,8 +1,9 @@
 <template>
   <div id="app">
-    <Header @toggle-search="toggleSearch" />
+    <Header @toggle-search="toggleSearch" @toggle-basket="toggleBasket"/>
     <router-view></router-view>
     <SearchOverlay v-if="showSearch" @close="toggleSearch"/>
+    <BasketBar v-if="showBasket" @close="toggleBasket"/>
     <Footer></Footer>
   </div>
 </template>
@@ -11,12 +12,17 @@
 import { ref } from 'vue';
 import Header from './components/UI/header.vue'
 import Footer from './components/UI/footer.vue'
-import SearchOverlay from './components/homePage/searchBar.vue';
+import SearchOverlay from './components/UI/searchBar.vue';
+import BasketBar from './components/UI/basket.vue';
 
 const showSearch = ref(false);
+const showBasket = ref(false);
 
 function toggleSearch() {
   showSearch.value = !showSearch.value;
+}
+function toggleBasket() {
+  showBasket.value = !showBasket.value;
 }
 </script>
 

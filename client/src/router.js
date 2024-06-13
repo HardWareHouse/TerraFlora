@@ -5,6 +5,7 @@ import Product from "./pages/productPage.vue";
 import Shop from "./pages/shopPage.vue";
 import Wishlist from "./pages/wishlistPage.vue";
 import Dashboard from "./pages/dashboardPage.vue";
+import Basket from "./pages/basketPage.vue";
 import Login from "./pages/login.vue";
 import Register from "./pages/register.vue";
 import notFound from "./pages/notFound.vue";
@@ -18,7 +19,7 @@ const routes = [
   },
   {
     path: "/admin",
-    name: "Admib",
+    name: "Admin",
     component: Admin,
   },
   {
@@ -40,6 +41,11 @@ const routes = [
     path: "/dashboard",
     name: "Dashboard",
     component: Dashboard,
+  },
+  {
+    path: "/basket",
+    name: "Basket",
+    component: Basket,
   },
   {
     path: "/login",
