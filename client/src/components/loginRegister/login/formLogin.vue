@@ -36,35 +36,25 @@
                         Login
                     </button>
                 </div>
-                <div v-if="success" class="text-green-500">{{ success }}</div>
-                <div v-if="error" class="text-red-500">{{ error }}</div>
+                <div v-if="authStore.success" class="text-green-500">{{ authStore.success }}</div>
+                <div v-if="authStore.error" class="text-red-500">{{ authStore.error }}</div>
             </form>
         </div>
     </div>
 </template>
 
 <script setup>
-import { ref } from 'vue'
-import axios from 'axios'
+import { ref } from 'vue';
+import { useAuthStore } from '../../../pinia/auth.js'; 
 
-const email = ref('')
-const password = ref('')
-const error = ref('')
-const success = ref('')
+const authStore = useAuthStore();
 
-const handleSubmit = async () => {
-    try {
-        const response = await axios.post('http://localhost:8000/auth/login', {
-            email: email.value,
-            password: password.value
-        })
-        success.value = 'Login successful!'
-        error.value = ''
-    } catch (err) {
-        error.value = err.response?.data?.error || 'An error occurred.'
-        success.value = ''
-    }
-}
+const email = ref('');
+const password = ref('');
+
+const handleSubmit = () => {
+    authStore.login(email.value, password.value);
+};
 </script>
 
 <style scoped>
