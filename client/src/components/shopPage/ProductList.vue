@@ -26,11 +26,9 @@
       </div>
     </div>
 
-    <div class="filters-container mb-4">
+    <div class="filters-container mb-4 flex flex-row">
       <Filters @filter="applyFilter" />
-    </div>
-
-    <div v-if="viewMode === 'grid'" class="product-list grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div v-if="viewMode === 'grid'" class="product-list grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
       <div v-for="product in paginatedProducts" :key="product.id"
         class="product border p-4 rounded hover:shadow-lg transition-shadow relative">
         <div class="product-image relative">
@@ -58,7 +56,7 @@
       </div>
     </div>
 
-    <div v-else class="product-list space-y-6">
+    <div v-else class="product-list space-y-6 w-3/4">
       <div v-for="product in paginatedProducts" :key="product.id"
         class="product flex border p-4 rounded hover:shadow-lg transition-shadow">
         <div class="product-image relative w-1/3">
@@ -85,7 +83,10 @@
       </div>
     </div>
 
+    
+    </div>
     <Pagination :totalItems="filteredProducts.length" v-model:modelValue="currentPage" :itemsPerPage="itemsPerPage" />
+    
   </div>
 </template>
 

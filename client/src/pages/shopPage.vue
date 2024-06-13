@@ -2,7 +2,6 @@
     <Breadcrumbs />
     <div class="shop-page max-w-7xl mx-auto py-8">
         <div class="flex">
-            <Filters />
             <ProductList />
         </div>
     </div>
@@ -10,7 +9,6 @@
 
 <script setup>
 import Breadcrumbs from '../components/shopPage/Breadcrumbs.vue';
-import Filters from '../components/shopPage/Filters.vue';
 import ProductList from '../components/shopPage/ProductList.vue';
 </script>
 
