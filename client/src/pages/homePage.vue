@@ -15,7 +15,7 @@ import bannerSection from "../components/homePage/bannerSection.vue";
 import topSeller from "../components/homePage/topSeller.vue";
 import bannerSectionBottom from "../components/homePage/bannerSectionBottom.vue";
 import newProduct from "../components/homePage/newProductShowcase.vue";
-import SearchOverlay from '../components/homePage/searchBar.vue';
+import SearchOverlay from '../components/UI/searchBar.vue';
 </script>
 
 <style scoped>
