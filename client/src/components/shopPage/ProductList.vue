@@ -15,7 +15,7 @@
           <i class="bi bi-list-ul"></i>
         </button>
       </div>
-      <div>Showing {{ startItem }}–{{ endItem }} of {{ products.length }} Results</div>
+      <div>Showing {{ startItem }}–{{ endItem }} of {{ filteredProducts.length }} Results</div>
       <div>
         Trier par:
         <select v-model="sortBy" class="border p-1 rounded">
@@ -24,6 +24,10 @@
           <option value="model">Marque</option>
         </select>
       </div>
+    </div>
+
+    <div class="filters-container mb-4">
+      <Filters @filter="applyFilter" />
     </div>
 
     <div v-if="viewMode === 'grid'" class="product-list grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -81,13 +85,14 @@
       </div>
     </div>
 
-    <Pagination :totalItems="products.length" v-model:modelValue="currentPage" :itemsPerPage="itemsPerPage" />
+    <Pagination :totalItems="filteredProducts.length" v-model:modelValue="currentPage" :itemsPerPage="itemsPerPage" />
   </div>
 </template>
 
 <script setup>
 import { ref, computed, onMounted } from 'vue';
 import Pagination from './Pagination.vue';
+import Filters from './Filters.vue';
 import axios from 'axios';
 
 const sortBy = ref('relevance');
@@ -95,28 +100,40 @@ const currentPage = ref(1);
 const itemsPerPage = ref(5);
 const viewMode = ref('grid');
 const products = ref([]);
+const filters = ref({});
 
 const fetchProducts = async () => {
   try {
-    const response = await axios.get('http://localhost:8000/product');
+    const response = await axios.get('http://localhost:8000/product/filter', {
+      params: filters.value
+    });
     products.value = response.data;
   } catch (error) {
     console.error('Error fetching products:', error);
   }
 };
 
+const applyFilter = (newFilters) => {
+  filters.value = newFilters;
+  fetchProducts();
+};
+
 onMounted(() => {
   fetchProducts();
+});
+
+const filteredProducts = computed(() => {
+  return products.value.filter(product => product.prix <= filters.value.maxPrix);
 });
 
 const paginatedProducts = computed(() => {
   const start = (currentPage.value - 1) * itemsPerPage.value;
   const end = start + itemsPerPage.value;
-  return products.value.slice(start, end);
+  return filteredProducts.value.slice(start, end);
 });
 
 const startItem = computed(() => (currentPage.value - 1) * itemsPerPage.value + 1);
-const endItem = computed(() => Math.min(currentPage.value * itemsPerPage.value, products.value.length));
+const endItem = computed(() => Math.min(currentPage.value * itemsPerPage.value, filteredProducts.value.length));
 </script>
 
 <style scoped>

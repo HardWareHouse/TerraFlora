@@ -73,3 +73,22 @@ export const deleteProduct = async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 };
+
+export const getFilteredProducts = async (req, res) => {
+  try {
+    const { categorie, marque, couleur, taille } = req.query;
+
+    const whereClause = {};
+
+    if (categorie) whereClause.categorieId = categorie.split(',');
+    if (marque) whereClause.marque = marque.split(',');
+    if (couleur) whereClause.couleur = couleur.split(',');
+    if (taille) whereClause.taille = taille.split(',');
+
+    const products = await Produit.findAll({ where: whereClause });
+
+    res.status(200).json(products);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};

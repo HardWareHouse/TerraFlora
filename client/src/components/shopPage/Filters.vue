@@ -2,9 +2,9 @@
   <div class="filters p-6 border-r border-gray-300 bg-gray-50">
     <h2 class="text-xl font-bold mb-6 text-gray-800">Categories</h2>
     <ul class="space-y-3">
-      <li v-for="category in categories" :key="category" class="flex items-center space-x-2">
-        <input type="checkbox" :value="category" v-model="selectedCategories" class="form-checkbox h-5 w-5 text-red-600 border-gray-300 rounded focus:ring-0" />
-        <span class="text-gray-700">{{ category }}</span>
+      <li v-for="category in categories" :key="category.id" class="flex items-center space-x-2">
+        <input type="checkbox" :value="category.id" v-model="selectedCategories" class="form-checkbox h-5 w-5 text-red-600 border-gray-300 rounded focus:ring-0" />
+        <span class="text-gray-700">{{ category.nom }}</span>
       </li>
     </ul>
 
@@ -45,9 +45,14 @@
 </template>
 
 <script setup>
-import { ref } from 'vue';
+import { ref, defineEmits } from 'vue';
 
-const categories = ref(['Fleurs coupées', 'Bouquets', 'Plantes en pot', 'Fleurs séchées']);
+const categories = ref([
+  { id: 'df777499-a0db-4b8e-968e-d511b9313e80', nom: 'Fleurs coupées' },
+  { id: '19ce17f0-70c8-4f8b-9d55-50e3a9510235', nom: 'Bouquets' },
+  { id: '7e2885cb-c3ef-465e-b911-94efdeece564', nom: 'Plantes en pot' },
+  { id: 'c8da4897-435d-4ab7-b7c7-c07d55a4be79', nom: 'Fleurs séchées' },
+]);
 const selectedCategories = ref([]);
 const priceRange = ref(500);
 
@@ -60,14 +65,17 @@ const selectedColors = ref([]);
 const sizes = ref(['S', 'M', 'L', 'XL']);
 const selectedSizes = ref([]);
 
+const emit = defineEmits(['filter']);
+
 const applyFilter = () => {
-  console.log('Applied filters:', {
-    selectedCategories: selectedCategories.value,
-    priceRange: priceRange.value,
-    selectedBrands: selectedBrands.value,
-    selectedColors: selectedColors.value,
-    selectedSizes: selectedSizes.value,
-  });
+  const filters = {
+    categorie: selectedCategories.value.join(','),
+    marque: selectedBrands.value.join(','),
+    couleur: selectedColors.value.join(','),
+    taille: selectedSizes.value.join(','),
+    maxPrix: priceRange.value
+  };
+  emit('filter', filters);
 };
 </script>
 
