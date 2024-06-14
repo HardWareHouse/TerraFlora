@@ -114,9 +114,18 @@ const fetchProducts = async () => {
 
 watch(() => props.filters, fetchProducts, { immediate: true });
 watch(() => route.query.search, fetchProducts, { immediate: true });
+watch(sortBy, fetchProducts, { immediate: true });
 
 const filteredProducts = computed(() => {
-  return products.value.filter(product => product.prix <= props.filters.maxPrix);
+  let sortedProducts = products.value;
+  
+  if (sortBy.value === 'name') {
+    sortedProducts = [...sortedProducts].sort((a, b) => a.nom.localeCompare(b.nom));
+  } else if (sortBy.value === 'model') {
+    sortedProducts = [...sortedProducts].sort((a, b) => a.marque.localeCompare(b.marque));
+  }
+
+  return sortedProducts.filter(product => product.prix <= props.filters.maxPrix);
 });
 
 const paginatedProducts = computed(() => {
