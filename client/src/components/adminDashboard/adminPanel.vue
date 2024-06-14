@@ -1,10 +1,6 @@
 <template>
     <div class="container mx-auto px-4 py-8">
-      
-      <!-- CRUD sur l’ensemble des ressources -->
       <ResourcesCrud />
-  
-      <!-- Dashboard avec datavisualisation -->
       <Dashboard />
     </div>
   </template>
@@ -23,6 +19,5 @@
   </script>
   
   <style scoped>
-  /* styles spécifiques au panel d'administration */
   </style>
   
