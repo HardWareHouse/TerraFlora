@@ -1,4 +1,5 @@
 import Produit from '../modelsSQL/Produit.js';
+import { Op } from 'sequelize';
 import validator from 'validator';
 
 // Lire les informations d'un produit
@@ -74,16 +75,24 @@ export const deleteProduct = async (req, res) => {
   }
 };
 
+// Rechercher les produits filtrés
 export const getFilteredProducts = async (req, res) => {
   try {
-    const { categorie, marque, couleur, taille } = req.query;
+    const { categorie, marque, couleur, taille, search } = req.query;
 
     const whereClause = {};
 
-    if (categorie) whereClause.categorieId = categorie.split(',');
-    if (marque) whereClause.marque = marque.split(',');
-    if (couleur) whereClause.couleur = couleur.split(',');
-    if (taille) whereClause.taille = taille.split(',');
+    if (categorie) whereClause.categorieId = categorie;
+    if (marque) whereClause.marque = marque;
+    if (couleur) whereClause.couleur = couleur;
+    if (taille) whereClause.taille = taille;
+
+    if (search) {
+      whereClause[Op.or] = [
+        { nom: { [Op.iLike]: `%${search}%` } },
+        { description: { [Op.iLike]: `%${search}%` } }
+      ];
+    }
 
     const products = await Produit.findAll({ where: whereClause });
 

@@ -84,10 +84,10 @@
 </template>
 
 <script setup>
-import { ref, computed, watch } from 'vue';
+import { ref, computed, watch, onMounted } from 'vue';
 import Pagination from './Pagination.vue';
-import Filters from './Filters.vue';
 import axios from 'axios';
+import { useRoute } from 'vue-router';
 
 const props = defineProps({
   filters: Object
@@ -98,11 +98,13 @@ const currentPage = ref(1);
 const itemsPerPage = ref(5);
 const viewMode = ref('grid');
 const products = ref([]);
+const route = useRoute();
 
 const fetchProducts = async () => {
   try {
+    const searchQuery = route.query.search || '';
     const response = await axios.get('http://localhost:8000/product/filter', {
-      params: props.filters
+      params: { ...props.filters, search: searchQuery }
     });
     products.value = response.data;
   } catch (error) {
@@ -111,6 +113,7 @@ const fetchProducts = async () => {
 };
 
 watch(() => props.filters, fetchProducts, { immediate: true });
+watch(() => route.query.search, fetchProducts, { immediate: true });
 
 const filteredProducts = computed(() => {
   return products.value.filter(product => product.prix <= props.filters.maxPrix);
