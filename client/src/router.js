@@ -1,7 +1,6 @@
 import { createRouter, createWebHistory } from "vue-router";
 import Admin from './pages/adminDashboardPage.vue'
 import Home from "./pages/homePage.vue";
-import Product from "./pages/productPage.vue";
 import Shop from "./pages/shopPage.vue";
 import Wishlist from "./pages/wishlistPage.vue";
 import Dashboard from "./pages/dashboardPage.vue";
@@ -10,6 +9,7 @@ import Login from "./pages/login.vue";
 import Register from "./pages/register.vue";
 import notFound from "./pages/notFound.vue";
 import ResetPassword from './pages/resetPassword.vue';
+import ProductDetail from './pages/productDetail.vue'
 
 const routes = [
   {
@@ -23,14 +23,14 @@ const routes = [
     component: Admin,
   },
   {
-    path: "/product",
-    name: "Product",
-    component: Product,
-  },
-  {
     path: "/shop",
     name: "Shop",
     component: Shop,
+  },
+  {
+    path: '/product/:id',
+    name: 'ProductDetail',
+    component: ProductDetail,
   },
   {
     path: "/wishlist",

@@ -28,7 +28,7 @@
 
     <div v-if="viewMode === 'grid'" class="product-list grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
       <div v-for="product in paginatedProducts" :key="product.id"
-        class="product border p-4 rounded hover:shadow-lg transition-shadow relative">
+        class="product border p-4 rounded hover:shadow-lg transition-shadow relative" @click="goToProductDetail(product.id)">
         <div class="product-image relative">
           <img :src="product.image || '/images/flower.webp'" alt="Product Image" class="w-full h-48 object-cover rounded" />
           <span v-if="product.isPromotion"
@@ -36,11 +36,11 @@
           <span v-if="product.pourcentagePromotion"
             class="absolute top-0 right-0 bg-green-600 text-white text-xs px-2 py-1 rounded-bl-lg">{{ product.pourcentagePromotion }}% OFF</span>
           <div class="absolute right-0 top-0 bottom-0 flex flex-col items-center justify-center space-y-2 opacity-0 hover:opacity-100 transition-opacity">
-            <button class="relative bg-red-600 text-white p-2 rounded-full shadow-lg hover:bg-red-700 transition duration-300">
+            <button class="relative bg-red-600 text-white p-2 rounded-full shadow-lg hover:bg-red-700 transition duration-300" @click.stop="addToCart(product)">
               <i class="bi bi-cart"></i>
               <span class="absolute right-full mr-2 bg-red-600 text-white px-2 py-1 rounded z-10">Add to Cart</span>
             </button>
-            <button class="relative bg-white text-red-600 p-2 border border-red-600 rounded-full shadow-lg hover:bg-red-100 transition duration-300">
+            <button class="relative bg-white text-red-600 p-2 border border-red-600 rounded-full shadow-lg hover:bg-red-100 transition duration-300" @click.stop="addToWishlist(product)">
               <i class="bi bi-heart"></i>
               <span class="absolute right-full mr-2 bg-red-600 text-white px-2 py-1 rounded z-10">Add to Wishlist</span>
             </button>
@@ -55,7 +55,7 @@
 
     <div v-else class="product-list space-y-6">
       <div v-for="product in paginatedProducts" :key="product.id"
-        class="product flex border p-4 rounded hover:shadow-lg transition-shadow">
+        class="product flex border p-4 rounded hover:shadow-lg transition-shadow" @click="goToProductDetail(product.id)">
         <div class="product-image relative w-1/3">
           <img :src="product.image || '/images/flower.webp'" alt="Product Image" class="w-full h-48 object-cover rounded" />
           <span v-if="product.isPromotion"
@@ -68,10 +68,10 @@
           <p class="text-gray-500">${{ product.prix }}</p>
           <p class="mt-2 text-gray-700">{{ product.description }}</p>
           <div class="flex space-x-2 mt-4">
-            <button class="px-4 py-2 bg-red-600 text-white rounded shadow hover:bg-red-700 transition duration-300">
+            <button class="px-4 py-2 bg-red-600 text-white rounded shadow hover:bg-red-700 transition duration-300" @click.stop="addToCart(product)">
               Add to Cart
             </button>
-            <button class="px-4 py-2 bg-white text-red-600 border border-red-600 rounded hover:bg-red-100 transition duration-300">
+            <button class="px-4 py-2 bg-white text-red-600 border border-red-600 rounded hover:bg-red-100 transition duration-300" @click.stop="addToWishlist(product)">
               <i class="bi bi-heart"></i>
             </button>
           </div>
@@ -85,9 +85,9 @@
 
 <script setup>
 import { ref, computed, watch, onMounted } from 'vue';
+import { useRouter, useRoute } from 'vue-router';
 import Pagination from './Pagination.vue';
 import axios from 'axios';
-import { useRoute } from 'vue-router';
 
 const props = defineProps({
   filters: Object
@@ -99,6 +99,7 @@ const itemsPerPage = ref(5);
 const viewMode = ref('grid');
 const products = ref([]);
 const route = useRoute();
+const router = useRouter();
 
 const fetchProducts = async () => {
   try {
@@ -136,6 +137,18 @@ const paginatedProducts = computed(() => {
 
 const startItem = computed(() => (currentPage.value - 1) * itemsPerPage.value + 1);
 const endItem = computed(() => Math.min(currentPage.value * itemsPerPage.value, filteredProducts.value.length));
+
+function goToProductDetail(productId) {
+  router.push({ name: 'ProductDetail', params: { id: productId } });
+}
+
+function addToCart(product) {
+  console.log(`Adding ${product.nom} to cart`);
+}
+
+function addToWishlist(product) {
+  console.log(`Adding ${product.nom} to wishlist`);
+}
 </script>
 
 <style scoped>
