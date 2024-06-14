@@ -5,6 +5,7 @@ import '../src/modelsSQL/associations.js';
 import userRouter from './routes/user.js';
 import authRouter from './routes/auth.js';
 import produitRouter from './routes/produit.js';
+import emailPreferenceRoutes from './routes/emailPreference.js';
 import bodyParser from 'body-parser';
 import cors from 'cors';
 import dotenv from 'dotenv';
@@ -20,6 +21,7 @@ server.use(cors());
 server.use('/users', userRouter);
 server.use('/auth', authRouter);
 server.use('/product', produitRouter);
+server.use('/emailPreferences', emailPreferenceRoutes);
 
 server.listen(8000, '0.0.0.0', () => {
   console.log('Server listening on port 8000');

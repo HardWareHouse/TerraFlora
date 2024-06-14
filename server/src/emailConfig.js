@@ -52,3 +52,15 @@ export const sendAccountBlockedEmail = (user) => {
 
   return transporter.sendMail(mailOptions);
 };
+
+export const sendPreferenceUpdateEmail = (user, preference) => {
+  const mailOptions = {
+    from: process.env.BREVO_USER,
+    to: user.email,
+    subject: 'Mise à jour des préférences de notification',
+    html: `<h2>Bonjour ${user.nom}</h2>
+           <p>Vous avez activé les notifications pour les ${preference}. Vous recevrez désormais des e-mails concernant cette catégorie.</p>`
+  };
+
+  return transporter.sendMail(mailOptions);
+};
