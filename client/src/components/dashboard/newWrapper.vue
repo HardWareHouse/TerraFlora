@@ -11,8 +11,9 @@ const tabs = [
   { id: 'dashboard', icon: 'bi-speedometer2', label: 'Dashboard' },
   { id: 'orders', icon: 'bi-cart', label: 'Orders' },
   { id: 'download', icon: 'bi-cloud-download', label: 'Download' },
-  { id: 'address-edit', icon: 'bi-geo-alt-fill', label: 'Address' },
-  { id: 'account-info', icon: 'bi-person', label: 'Account Details' },
+  { id: 'addressEdit', icon: 'bi-geo-alt-fill', label: 'Address' },
+  { id: 'accountInfo', icon: 'bi-person', label: 'Account Details' },
+  { id: 'emailPreference', icon: 'bi-envelope-paper-fill', label: 'Email Preference' },
   { id: 'logout', icon: 'bi-box-arrow-left', label: 'Logout', link: 'login' },
 ];
 
@@ -28,8 +29,9 @@ const components = {
   dashboard: defineAsyncComponent(() => import('./wrapperComponents/Dashboard.vue')),
   orders: defineAsyncComponent(() => import('./wrapperComponents/Orders.vue')),
   download: defineAsyncComponent(() => import('./wrapperComponents/Downloads.vue')),
-  'address-edit': defineAsyncComponent(() => import('./wrapperComponents/AddressEdit.vue')),
-  'account-info': defineAsyncComponent(() => import('./wrapperComponents/AccountInfo.vue'))
+  addressEdit: defineAsyncComponent(() => import('./wrapperComponents/AddressEdit.vue')),
+  emailPreference: defineAsyncComponent(() => import('./wrapperComponents/emailPreference.vue')),
+  accountInfo: defineAsyncComponent(() => import('./wrapperComponents/AccountInfo.vue'))
 };
 
 const activeTabComponent = computed(() => components[activeTab.value] || 'div');
