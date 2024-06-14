@@ -1,6 +1,5 @@
 <script setup>
-  import breadcrumb from "../components/dashboard/breadcrumb.vue";
-  import wrapper from "../components/dashboard/wrapper.vue";
+  import breadcrumb from "../components/dashboard/breadcrumbDashboard.vue";
   import newWrapper from "../components/dashboard/newWrapper.vue";
 </script>
 
