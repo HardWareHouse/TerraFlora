@@ -1,5 +1,5 @@
 <template>
-  <div id="app">
+  <div id="app" @mousemove="updateActivity" @keydown="updateActivity">
     <Header @toggle-search="toggleSearch" @toggle-basket="toggleBasket"/>
     <router-view></router-view>
     <SearchOverlay v-if="showSearch" @close="toggleSearch"/>
@@ -9,21 +9,39 @@
 </template>
 
 <script setup>
-import { ref } from 'vue';
-import Header from './components/UI/header.vue'
-import Footer from './components/UI/footer.vue'
+import { ref, onMounted, onUnmounted } from 'vue';
+import { useCartStore } from './pinia/cart.js';
+import Header from './components/UI/header.vue';
+import Footer from './components/UI/footer.vue';
 import SearchOverlay from './components/UI/searchBar.vue';
 import BasketBar from './components/UI/basket.vue';
 
 const showSearch = ref(false);
 const showBasket = ref(false);
+const cartStore = useCartStore();
 
 function toggleSearch() {
   showSearch.value = !showSearch.value;
 }
+
 function toggleBasket() {
   showBasket.value = !showBasket.value;
 }
+
+function updateActivity() {
+  cartStore.updateLastActivity();
+  cartStore.saveCartToLocalStorage();
+}
+
+onMounted(() => {
+  document.addEventListener('mousemove', updateActivity);
+  document.addEventListener('keydown', updateActivity);
+});
+
+onUnmounted(() => {
+  document.removeEventListener('mousemove', updateActivity);
+  document.removeEventListener('keydown', updateActivity);
+});
 </script>
 
 <style>
@@ -31,10 +49,6 @@ function toggleBasket() {
 @import url('https://fonts.googleapis.com/css2?family=Yesteryear&display=swap');
 #app {
   font-family: "Roboto", sans-serif;
-  /* -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50; */
 }
 .container {
     max-width: 1200px;

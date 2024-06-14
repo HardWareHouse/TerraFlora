@@ -86,6 +86,7 @@
 <script setup>
 import { ref, computed, watch, onMounted } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
+import { useCartStore } from '../../pinia/cart.js';
 import Pagination from './Pagination.vue';
 import axios from 'axios';
 
@@ -100,6 +101,7 @@ const viewMode = ref('grid');
 const products = ref([]);
 const route = useRoute();
 const router = useRouter();
+const cartStore = useCartStore();
 
 const fetchProducts = async () => {
   try {
@@ -143,7 +145,7 @@ function goToProductDetail(productId) {
 }
 
 function addToCart(product) {
-  console.log(`Adding ${product.nom} to cart`);
+  cartStore.addToCart(product);
 }
 
 function addToWishlist(product) {

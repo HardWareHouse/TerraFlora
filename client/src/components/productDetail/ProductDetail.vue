@@ -42,39 +42,44 @@
     </div>
   </template>
   
-  <script setup>
-  import { ref, onMounted } from 'vue';
-  import { useRoute } from 'vue-router';
-  import axios from 'axios';
-  
-  const route = useRoute();
-  const product = ref({});
-  const quantity = ref(1);
-  
-  onMounted(async () => {
-    const productId = route.params.id;
-    try {
-      const response = await axios.get(`http://localhost:8000/product/${productId}`);
-      product.value = response.data;
-    } catch (error) {
-      console.error('Error fetching product:', error);
-    }
-  });
-  
-  const decreaseQuantity = () => {
-    if (quantity.value > 1) quantity.value--;
-  };
-  
-  const increaseQuantity = () => {
-    quantity.value++;
-  };
-  
-  const addToCart = () => {
-  };
-  
-  const addToWishlist = () => {
-  };
-  </script>
+<script setup>
+import { ref, onMounted } from 'vue';
+import { useRoute } from 'vue-router';
+import { useCartStore } from '../../pinia/cart.js';
+import axios from 'axios';
+
+const route = useRoute();
+const product = ref({});
+const quantity = ref(1);
+const cartStore = useCartStore();
+
+onMounted(async () => {
+  const productId = route.params.id;
+  try {
+    const response = await axios.get(`http://localhost:8000/product/${productId}`);
+    product.value = response.data;
+  } catch (error) {
+    console.error('Error fetching product:', error);
+  }
+});
+
+const decreaseQuantity = () => {
+  if (quantity.value > 1) quantity.value--;
+};
+
+const increaseQuantity = () => {
+  quantity.value++;
+};
+
+const addToCart = () => {
+  cartStore.addToCart(product.value, quantity.value);
+  console.log(`Added ${quantity.value} ${product.value.nom} to cart`);
+};
+
+const addToWishlist = () => {
+  console.log(`Added ${product.value.nom} to wishlist`);
+};
+</script>
   
   <style scoped>
   .product-detail-container {
@@ -91,4 +96,3 @@
     color: #718096;
   }
   </style>
-  

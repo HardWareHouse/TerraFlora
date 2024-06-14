@@ -7,10 +7,10 @@
       <ul>
         <li v-for="item in cartItems" :key="item.id" class="flex items-center justify-between py-4">
           <div class="flex items-center">
-            <img :src="item.image" alt="item.name" class="w-16 h-16 mr-4 rounded">
+            <img :src="item.image || '/images/flower.webp'" alt="item.nom" class="w-16 h-16 mr-4 rounded">
             <div>
-              <p class="text-sm font-semibold">{{ item.name }}</p>
-              <p class="text-xs text-gray-600">{{ item.quantity }} × ${{ item.price }}</p>
+              <p class="text-sm font-semibold">{{ item.nom }}</p>
+              <p class="text-xs text-gray-600">{{ item.quantity }} × ${{ item.prix }}</p>
             </div>
           </div>
           <i class="bi bi-x-lg cursor-pointer" @click="removeFromCart(item.id)"></i>
@@ -42,34 +42,34 @@
 </template>
 
 <script setup>
-import { ref, computed } from 'vue'
-import { useRouter } from 'vue-router'
-const emit = defineEmits(['close'])
+import { ref, computed } from 'vue';
+import { useRouter } from 'vue-router';
+import { useCartStore } from '../../pinia/cart.js';
+const emit = defineEmits(['close']);
 
-import slide1 from '../../assets/homePage/product-1.jpg'
-import slide2 from '../../assets/homePage/product-2.jpg'
-import router from '../../router';
+const cartStore = useCartStore();
+const router = useRouter();
 
-const cartItems = ref([
-  { id: 1, name: 'Flowers bouquet pink', price: 100, quantity: 1, image: slide1 },
-  { id: 2, name: 'Jasmine flowers white', price: 80, quantity: 1, image: slide2 }
-])
+const cartItems = computed(() => cartStore.items);
 
 const removeFromCart = (id) => {
-  cartItems.value = cartItems.value.filter(item => item.id !== id)
-}
+  cartStore.removeItem(id);
+};
 
 const subTotal = computed(() => {
-  return cartItems.value.reduce((total, item) => total + item.price * item.quantity, 0)
-})
-
-const vat = computed(() => (subTotal.value * 0.20).toFixed(2))
-const total = computed(() => (subTotal.value + 10 + parseFloat(vat.value)).toFixed(2))
+  return cartStore.cartTotal || 0;
+});
+const vat = computed(() => {
+  return (subTotal.value * 0.20).toFixed(2);
+});
+const total = computed(() => {
+  return (parseFloat(subTotal.value) + 10 + parseFloat(vat.value)).toFixed(2);
+});
 
 const viewCart = () => {
   router.push('/basket');
-  emit('close')
-}
+  emit('close');
+};
 </script>
 
 <style scoped>

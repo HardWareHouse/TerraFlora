@@ -20,14 +20,14 @@
         </thead>
         <tbody>
           <tr v-for="row in paginatedData" :key="row.id" class="border-2">
-            <td class="py-2 px-4 ">
-              <img :src="row.images" class="w-24 h-24 object-cover" />
+            <td class="py-2 px-4">
+              <img :src="row.image || '/images/flower.webp'" class="w-24 h-24 object-cover" />
             </td>
             <td class="py-2 px-4 border-x-2">
-              {{ row.product }}
+              {{ row.nom }}
             </td>
             <td class="py-2 px-4 border-x-2">
-              {{ row.price }}
+              {{ row.prix }}
             </td>
             <td class="py-2 px-4">
               <button @click="updateQuantity(row.id, row.quantity - 1)" class="px-2 py-1 text-black">-</button>
@@ -35,7 +35,7 @@
               <button @click="updateQuantity(row.id, row.quantity + 1)" class="px-2 py-1 text-black">+</button>
             </td>
             <td class="py-2 px-4 border-x-2">
-              {{ row.price * row.quantity }}
+              {{ (row.prix * row.quantity).toFixed(2) }}
             </td>
             <td class="py-2 px-4">
               <button @click="removeItem(row.id)" class="text-red-600">
@@ -62,11 +62,14 @@
 
 <script setup>
 import { ref, computed, watch } from 'vue';
+import { useCartStore } from '../../pinia/cart.js';
 
 const props = defineProps({
   data: Array,
   columns: Array
 });
+
+const cartStore = useCartStore();
 
 const sortKey = ref('');
 const sortOrder = ref('asc');
@@ -120,18 +123,11 @@ const nextPage = () => {
 };
 
 const removeItem = (id) => {
-  const index = props.data.findIndex(item => item.id === id);
-  if (index !== -1) {
-    props.data.splice(index, 1);
-  }
+  cartStore.removeItem(id);
 };
 
 const updateQuantity = (id, quantity) => {
-  if (quantity < 1) return;
-  const index = props.data.findIndex(item => item.id === id);
-  if (index !== -1) {
-    props.data[index].quantity = quantity;
-  }
+  cartStore.updateQuantity(id, quantity);
 };
 
 watch(() => props.data, () => {
