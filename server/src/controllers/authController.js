@@ -60,7 +60,7 @@ export const login = async (req, res) => {
 
 export const register = async (req, res) => {
   try {
-    const { nom, prenom, email, email_cfg, password, password_cfg, telephone, role, haveConsented } = req.body;
+    const { nom, prenom, email, email_cfg, password, password_cfg, telephone, role, haveConsented, wantsMailNewProduct, wantsMailRestockProduct, wantsMailChangingPrice, wantsMailNewsletter } = req.body;      
     
     if (email !== email_cfg || password !== password_cfg) {
       return res.status(400).json({
@@ -94,6 +94,10 @@ export const register = async (req, res) => {
       haveConsented,
       isVerified: false,
       lastUpdatedPassword: new Date(),
+      wantsMailNewProduct,
+      wantsMailRestockProduct,
+      wantsMailChangingPrice,
+      wantsMailNewsletter,
     });
 
     // Generate confirmation token

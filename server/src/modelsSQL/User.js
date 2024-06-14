@@ -44,6 +44,22 @@ const User = sequelize.define('User', {
     type: DataTypes.DATE,
     defaultValue: DataTypes.NOW
   },
+  wantsMailNewProduct: {  
+    type: DataTypes.BOOLEAN,
+    defaultValue: false 
+  },
+  wantsMailRestockProduct: {  
+    type: DataTypes.BOOLEAN,
+    defaultValue: false  
+  },
+  wantsMailChangingPrice: { 
+    type: DataTypes.BOOLEAN,
+    defaultValue: false
+  },
+  wantsMailNewsletter: {
+    type: DataTypes.BOOLEAN,
+    defaultValue: false
+  },
   isVerified: {
     type: DataTypes.BOOLEAN,
     defaultValue: false
