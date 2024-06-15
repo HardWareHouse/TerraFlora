@@ -90,6 +90,6 @@ export default {
 
 <style scoped>
 .chart-container {
-  height: 300px; /* Hauteur des graphiques */
+  height: 300px;
 }
 </style>

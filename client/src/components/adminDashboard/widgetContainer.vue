@@ -1,6 +1,5 @@
 <template>
     <div>
-      <!-- Bouton pour ajouter un nouveau widget -->
       <button @click="addNewWidget" class="bg-blue-500 text-white hover:text-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 px-4 py-2 rounded-md mb-4 mr-2">
         Ajouter un Widget
       </button>
@@ -8,7 +7,6 @@
         Supprimer un Widget
       </button>
   
-      <!-- Liste des widgets -->
       <div v-for="(widget, index) in widgets" :key="index" class="mb-4">
         <component :is="widget.component" @remove="removeWidget(index)" />
       </div>
