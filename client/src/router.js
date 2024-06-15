@@ -6,6 +6,7 @@ import Wishlist from "./pages/wishlistPage.vue";
 import Dashboard from "./pages/dashboardPage.vue";
 import loginRegister from "./pages/loginRegister.vue";
 import notFound from "./pages/notFound.vue";
+import Checkout from "./pages/checkoutPage.vue";
 
 const routes = [
   {
@@ -38,10 +39,15 @@ const routes = [
     name: "loginRegister",
     component: loginRegister,
   },
-  { 
-    path: '/:pathMatch(.*)*', 
-    name: 'notFound', 
-    component: notFound 
+  {
+    path: "/:pathMatch(.*)*",
+    name: "notFound",
+    component: notFound,
+  },
+  {
+    path: "/checkout",
+    name: "Checkout",
+    component: Checkout,
   },
 ];
 
