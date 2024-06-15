@@ -10,6 +10,7 @@ import Register from "./pages/register.vue";
 import notFound from "./pages/notFound.vue";
 import ResetPassword from "./pages/resetPassword.vue";
 import ProductDetail from "./pages/productDetail.vue";
+import Checkout from "./pages/checkoutPage.vue";
 
 const routes = [
   {
