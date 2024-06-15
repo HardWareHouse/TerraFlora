@@ -32,9 +32,9 @@
       </nav>
       <div class="flex space-x-4 text-gray-700 align-center">
         <a href="#" @click.prevent="$emit('toggle-search')"><i class="bi bi-search" style="font-size: 1.5rem;"></i></a>
-        <RouterLink to="/loginRegister"><i class="bi bi-person" style="font-size: 1.5rem;"></i></RouterLink>
+        <RouterLink to="/login"><i class="bi bi-person" style="font-size: 1.5rem;"></i></RouterLink>
         <RouterLink to="/wishlist"><i class="bi bi-heart" style="font-size: 1.5rem;"></i></RouterLink>
-        <a href="#"><i class="bi bi-cart" style="font-size: 1.5rem;"></i></a>
+        <a href="#" @click.prevent="$emit('toggle-basket')"><i class="bi bi-cart" style="font-size: 1.5rem;"></i></a>
       </div>
     </div>
   </header>

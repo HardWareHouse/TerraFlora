@@ -27,6 +27,14 @@ const Produit = sequelize.define('Produit', {
         type: DataTypes.STRING,
         allowNull: false
     },
+    couleur: {
+        type: DataTypes.STRING,
+        allowNull: false
+    },
+    taille: {
+        type: DataTypes.STRING,
+        allowNull: false
+    },
     isPromotion: {
         type: DataTypes.BOOLEAN,
         defaultValue: false
