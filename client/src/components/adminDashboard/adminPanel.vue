@@ -5,7 +5,7 @@
     
     <div class="bg-white shadow-md rounded-lg overflow-hidden mt-8">
       <div class="px-6 py-4">
-        <h2 class="text-xl font-semibold text-gray-800 mb-4">Widget</h2>
+        <h2 class="text-xl font-semibold text-gray-800 mb-3">Widget</h2>
         <WidgetContainer />
       </div>
     </div>

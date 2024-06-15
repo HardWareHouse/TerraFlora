@@ -1,15 +1,14 @@
 <template>
   <div>
-    <div class="mb-4">
-      <label for="resourceSelect" class="block text-sm font-bold text-gray-700">Sélectionner une ressource</label>
-      <select v-model="selectedResource" id="resourceSelect" class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md">
-        <option v-for="resource in availableResources" :key="resource" :value="resource">{{ resource }}</option>
-      </select>
-    </div>
-
     <div class="bg-white shadow-md rounded-lg overflow-hidden mb-8">
       <div class="px-6 py-4">
-        <h2 class="text-xl font-semibold text-gray-800 mb-2">Gestion des {{ selectedResource }}</h2>
+        <div class="mb-4">
+          <label for="resourceSelect" class="block text-xl font-bold text-gray-700">Gestion des ressources</label>
+          <select v-model="selectedResource" id="resourceSelect" class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md mt-3">
+            <option v-for="resource in availableResources" :key="resource" :value="resource">{{ resource }}</option>
+          </select>
+        </div>
+        <!-- <h2 class="text-sm font-semibold text-gray-800 mb-2">Les {{ selectedResource }}</h2> -->
         <table class="min-w-full bg-white">
           <thead>
             <tr class="w-full bg-gray-200">
@@ -46,20 +45,20 @@
 export default {
   data() {
     return {
-      selectedResource: 'Produit',
-      availableResources: ['Produit', 'Categorie', 'Utilisateur'],
+      selectedResource: 'Produits',
+      availableResources: ['Produits', 'Categories', 'Utilisateurs'],
       resourcesData: {
-        Produit: [
+        Produits: [
           { id: 1, name: 'Produit 1', createdAT: '2021-09-01'},
           { id: 2, name: 'Produit 2', createdAT: '2021-09-02'},
           { id: 3, name: 'Produit 3', createdAT: '2021-09-03'},
         ],
-        Categorie: [
+        Categories: [
           { id: 1, name: 'Categorie 1', createdAT: '2021-09-01'},
           { id: 2, name: 'Categorie 2', createdAT: '2021-09-02'},
           { id: 3, name: 'Categorie 3', createdAT: '2021-09-03'},
         ],
-        Utilisateur: [
+        Utilisateurs: [
           { id: 1, name: 'Utilisateur 1', createdAT: '2021-09-01'},
           { id: 2, name: 'Utilisateur 2', createdAT: '2021-09-02'},
           { id: 3, name: 'Utilisateur 3', createdAT: '2021-09-03'},
