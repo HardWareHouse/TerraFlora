@@ -2,13 +2,14 @@ import express from 'express';
 import { connectToDatabase, sequelize } from './dataBase.js';
 import './mongo.js';
 import '../src/modelsSQL/associations.js';
-import userRouter from './routes/user.js';
-import authRouter from './routes/auth.js';
-import produitRouter from './routes/produit.js';
-import emailPreferenceRoutes from './routes/emailPreference.js';
 import bodyParser from 'body-parser';
 import cors from 'cors';
 import dotenv from 'dotenv';
+import userRouter from './routes/user.js';
+import authRouter from './routes/auth.js';
+import adminRouter from './routes/admin.js';
+import produitRouter from './routes/produit.js';
+import emailPreferenceRoutes from './routes/emailPreference.js';
 
 dotenv.config();
 
@@ -20,6 +21,7 @@ server.use(cors());
 
 server.use('/users', userRouter);
 server.use('/auth', authRouter);
+server.use('/admin', adminRouter);
 server.use('/product', produitRouter);
 server.use('/emailPreferences', emailPreferenceRoutes);
 
