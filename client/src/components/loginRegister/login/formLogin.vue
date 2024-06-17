@@ -46,7 +46,9 @@
 <script setup>
 import { ref } from 'vue';
 import { useAuthStore } from '../../../pinia/auth.js'; 
+import { useRouter } from 'vue-router';
 
+const router = useRouter();
 const authStore = useAuthStore();
 
 const email = ref('');
@@ -54,6 +56,7 @@ const password = ref('');
 
 const handleSubmit = () => {
     authStore.login(email.value, password.value);
+    router.push('/dashboard');
 };
 </script>
 
