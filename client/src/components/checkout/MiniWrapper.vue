@@ -1,73 +1,74 @@
 <template>
   <div class="checkoutaccordion" id="checkOutAccordion">
     <div class="card">
-      <h3>
+      <h3
+        class="bg-gray-200 border-t-3 border-red-600 text-gray-900 text-sm font-medium uppercase"
+      >
         Returning Customer?
-        <span data-bs-toggle="collapse" data-bs-target="#logInaccordion"
+        <span
+          class="text-red-600 cursor-pointer transition duration-400 ml-2"
+          @click="toggleLoginAccordion"
           >Click Here To Login</span
         >
       </h3>
       <div
         id="logInaccordion"
-        class="collapse"
-        data-bs-parent="#checkOutAccordion"
+        v-show="showLoginAccordion"
+        class="border-t border-gray-300 p-4"
       >
         <div class="card-body">
-          <p>
+          <p class="mb-4">
             If you have shopped with us before, please enter your details in the
             boxes below. If you are a new customer, please proceed to the
             Billing &amp; Shipping section.
           </p>
-          <div class="login-reg-form-wrap mt-20">
-            <div class="row">
-              <div class="col-lg-7 m-auto">
+          <div class="login-reg-form-wrap mt-5">
+            <div class="flex justify-center">
+              <div class="w-full max-w-lg">
                 <form action="#" method="post">
-                  <div class="row">
-                    <div class="col-md-12">
-                      <div class="single-input-item">
-                        <input
-                          type="email"
-                          placeholder="Enter your Email"
-                          required
-                        />
-                      </div>
+                  <div class="space-y-4">
+                    <div class="single-input-item">
+                      <input
+                        type="email"
+                        class="w-full p-3 bg-gray-200 border border-gray-300 rounded"
+                        placeholder="Enter your Email"
+                        required
+                      />
                     </div>
-
-                    <div class="col-md-12">
-                      <div class="single-input-item">
-                        <input
-                          type="password"
-                          placeholder="Enter your Password"
-                          required
-                        />
-                      </div>
+                    <div class="single-input-item">
+                      <input
+                        type="password"
+                        class="w-full p-3 bg-gray-200 border border-gray-300 rounded"
+                        placeholder="Enter your Password"
+                        required
+                      />
                     </div>
                   </div>
 
-                  <div class="single-input-item">
-                    <div
-                      class="login-reg-form-meta d-flex align-items-center justify-content-between"
-                    >
-                      <div class="remember-meta">
-                        <div class="custom-control custom-checkbox">
+                  <div class="mt-4">
+                    <div class="flex justify-between items-center">
+                      <div>
+                        <label class="inline-flex items-center">
                           <input
                             type="checkbox"
-                            class="custom-control-input"
                             id="rememberMe"
-                            required
+                            class="border-gray-300"
                           />
-                          <label class="custom-control-label" for="rememberMe"
-                            >Remember Me</label
-                          >
-                        </div>
+                          <span class="ml-2">Remember Me</span>
+                        </label>
                       </div>
-
-                      <a href="#" class="forget-pwd">Forget Password?</a>
+                      <a href="#" class="text-red-600 text-xs"
+                        >Forget Password?</a
+                      >
                     </div>
                   </div>
 
-                  <div class="single-input-item">
-                    <button class="btn btn__bg">Login</button>
+                  <div class="single-input-item mt-4">
+                    <button
+                      class="btn btn__bg bg-red-600 text-white py-2 px-4 rounded"
+                    >
+                      Login
+                    </button>
                   </div>
                 </form>
               </div>
@@ -78,27 +79,34 @@
     </div>
 
     <div class="card">
-      <h3>
+      <h3
+        class="bg-gray-200 border-t-3 border-red-600 text-gray-900 text-sm font-medium uppercase"
+      >
         Have A Coupon?
-        <span data-bs-toggle="collapse" data-bs-target="#couponaccordion"
+        <span
+          class="text-red-600 cursor-pointer transition duration-400 ml-2"
+          @click="toggleCouponAccordion"
           >Click Here To Enter Your Code</span
         >
       </h3>
       <div
         id="couponaccordion"
-        class="collapse"
-        data-bs-parent="#checkOutAccordion"
+        v-show="showCouponAccordion"
+        class="border-t border-gray-300 p-4"
       >
         <div class="card-body">
           <div class="cart-update-option">
             <div class="apply-coupon-wrapper">
-              <form action="#" method="post" class="d-block d-md-flex">
+              <form action="#" method="post" class="block md:flex">
                 <input
                   type="text"
+                  class="p-3 bg-gray-200 border border-gray-300 rounded w-full md:w-auto mb-3 md:mb-0 md:mr-4 text-sm"
                   placeholder="Enter Your Coupon Code"
                   required
                 />
-                <button class="btn btn__bg">Apply Coupon</button>
+                <button class="bg-red-600 text-white rounded px-3 h-14">
+                  Apply Coupon
+                </button>
               </form>
             </div>
           </div>
@@ -112,20 +120,17 @@
 export default {
   data() {
     return {
-      showAccountCreate: false,
-      showShipToDifferent: false,
-      selectedPaymentMethod: null,
+      showLoginAccordion: false,
+      showCouponAccordion: false,
       showDropdown: false,
-      paymentMethods: [
-        { value: "creditcard", label: "Credit Card" },
-        { value: "paypal", label: "PayPal" },
-        // Add more payment methods here
-      ],
     };
   },
   methods: {
-    toggleDropdown() {
-      this.showDropdown = !this.showDropdown;
+    toggleLoginAccordion() {
+      this.showLoginAccordion = !this.showLoginAccordion;
+    },
+    toggleCouponAccordion() {
+      this.showCouponAccordion = !this.showCouponAccordion;
     },
   },
 };
@@ -192,6 +197,8 @@ export default {
   -o-transition: 0.4s;
   transition: 0.4s;
   margin-bottom: 30px;
+  width: 80%;
+  margin: 2rem auto;
 }
 
 .checkoutaccordion .card:last-child {
