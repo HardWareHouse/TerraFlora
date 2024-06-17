@@ -290,7 +290,7 @@
           <button
             @click="placeOrder"
             :disabled="!agreeTerms"
-            class="w-full mx-auto bg-red-500 text-white py-2 rounded-md"
+            class="w-3/4 mx-auto bg-red-500 text-white py-2 mb-4 rounded-md"
             :class="{ 'opacity-50 cursor-not-allowed': !agreeTerms }"
           >
             Place Order
