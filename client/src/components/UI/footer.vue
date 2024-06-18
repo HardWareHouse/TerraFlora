@@ -55,7 +55,9 @@
             <h5 class="text-lg font-semibold mb-4">Informations</h5>
             <ul class="text-gray-600">
               <li class="mb-4">À propos</li>
-              <li class="mb-4">Nous contacter</li>
+              <li class="mb-4">
+                <RouterLink to="/contact">Nous contacter</RouterLink>
+              </li>
               <li class="mb-4">Echanges</li>
               <li class="mb-4">Livraison</li>
               <li class="mb-4">
@@ -79,7 +81,6 @@
               <li class="mb-4">Mon compte</li>
               <li class="mb-4">Suivre mes commandes</li>
               <li class="mb-4">Guide des tailles</li>
-              <li class="mb-4">Nous contacter</li>
             </ul>
           </div>
         </div>

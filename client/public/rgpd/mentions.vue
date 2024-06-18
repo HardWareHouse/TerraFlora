@@ -37,10 +37,10 @@
 
     <h2 class="text-xl font-semibold mb-4">Nous contacter</h2>
     <p class="mb-4">
-      Par téléphone : +33 6 12 34 56 78 <br />
+      Par téléphone : 01 02 03 04 05 <br />
       Par email :
-      <a href="mailto:aria@llamascripters.com" class="text-blue-500 underline"
-        >aria@llamascripters.com</a
+      <a href="mailto:terra-flora@gmail.com" class="text-blue-500 underline"
+        >terra-flora@gmail.com</a
       >
       <br />
       Par courrier : 242 rue du Faubourg Saint-Antoine

@@ -14,6 +14,7 @@ import Checkout from "./pages/checkoutPage.vue";
 import CGU from "../public/rgpd/cgu.vue";
 import Politique from "../public/rgpd/politique_confidentialite.vue";
 import Mentions from "../public/rgpd/mentions.vue";
+import Contact from "./pages/contactPage.vue";
 
 const routes = [
   {
@@ -90,6 +91,11 @@ const routes = [
     path: "/confidentialite",
     name: "Politique",
     component: Politique,
+  },
+  {
+    path: "/contact",
+    name: "Contact",
+    component: Contact,
   },
 ];
 

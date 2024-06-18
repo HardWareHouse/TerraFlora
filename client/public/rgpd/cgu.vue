@@ -554,7 +554,7 @@
 
     <p class="mb-4">
       Les questions relatives aux Conditions d’utilisation doivent nous être
-      envoyées à aria@llamascripters.com.
+      envoyées à terra-flora@gmail.com.
     </p>
   </div>
 </template>
