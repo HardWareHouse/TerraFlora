@@ -10,12 +10,12 @@ export const useCartStore = defineStore('cart', {
         cartItemCount: (state) => state.items.length,
     },
     actions: {
-        addToCart(product, quantity) {
+        addToCart(product, quantity = 1) {
             const existingProduct = this.items.find(item => item.id === product.id);
             if (existingProduct) {
-                existingProduct.quantity += quantity; // Ajoute la quantité spécifiée
+                existingProduct.quantity += quantity;
             } else {
-                this.items.push({ ...product, quantity }); // Utilise la quantité spécifiée
+                this.items.push({ ...product, quantity });
             }
             this.updateLastActivity();
             this.saveCartToLocalStorage();
