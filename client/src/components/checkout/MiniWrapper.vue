@@ -54,11 +54,11 @@
                             id="rememberMe"
                             class="border-gray-300"
                           />
-                          <span class="ml-2">Remember Me</span>
+                          <span class="ml-2">Se souvenir de moi</span>
                         </label>
                       </div>
                       <a href="#" class="text-red-600 text-xs"
-                        >Forget Password?</a
+                        >Mot de passe oublié ?</a
                       >
                     </div>
                   </div>

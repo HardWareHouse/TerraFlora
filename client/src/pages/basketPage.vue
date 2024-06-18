@@ -17,10 +17,10 @@ const cartStore = useCartStore();
 const cartItems = computed(() => cartStore.items);
 
 const columns = ref([
-  { label: 'IMAGE', key: 'image', component: 'img', sortable: false, searchable: false },
-  { label: 'PRODUCT', key: 'nom', sortable: true, searchable: true, searchQuery: '' },
-  { label: 'PRICE', key: 'prix', sortable: true, searchable: true, searchQuery: '' },
-  { label: 'QUANTITY', key: 'quantity', sortable: true, searchable: true, searchQuery: '' },
-  { label: 'TOTAL', key: 'total', sortable: true, searchable: false, searchQuery: '' },
+  { label: 'Image', key: 'image', component: 'img', sortable: false, searchable: false },
+  { label: 'Produits', key: 'nom', sortable: true, searchable: true, searchQuery: '' },
+  { label: 'Prix', key: 'prix', sortable: true, searchable: true, searchQuery: '' },
+  { label: 'Quantité', key: 'quantity', sortable: true, searchable: true, searchQuery: '' },
+  { label: 'Total', key: 'total', sortable: true, searchable: false, searchQuery: '' },
 ]);
 </script>

@@ -1,5 +1,7 @@
 <script setup>
 import { ref, computed, defineAsyncComponent } from 'vue';
+import { useRouter } from 'vue-router';  // Import the router
+import { useAuthStore } from '../../pinia/auth.js';
 
 const activeTab = ref('dashboard');
 
@@ -14,7 +16,7 @@ const tabs = [
   { id: 'addressEdit', icon: 'bi-geo-alt-fill', label: 'Address' },
   { id: 'accountInfo', icon: 'bi-person', label: 'Account Details' },
   { id: 'emailPreference', icon: 'bi-envelope-paper-fill', label: 'Email Preference' },
-  { id: 'logout', icon: 'bi-box-arrow-left', label: 'Logout', link: 'login' },
+  { id: 'logout', icon: 'bi-box-arrow-left', label: 'Logout' },
 ];
 
 const tabClass = (tab) => {
@@ -35,6 +37,16 @@ const components = {
 };
 
 const activeTabComponent = computed(() => components[activeTab.value] || 'div');
+const authStore = useAuthStore();
+const router = useRouter();
+
+const logout = async () => {
+  await authStore.logout();
+
+  if (!authStore.token) {
+        router.push('/');
+    }
+};
 </script>
 
 <template>
@@ -45,17 +57,18 @@ const activeTabComponent = computed(() => components[activeTab.value] || 'div');
           <div class="myaccount-tab-menu">
             <template v-for="tab in tabs" :key="tab.id">
               <a
-                v-if="!tab.link"
+                v-if="tab.id !== 'logout'"
                 href="#"
                 :class="tabClass(tab.id)"
                 @click.prevent="selectTab(tab.id)"
               >
-              <i :class="`bi ${tab.icon} mr-2`"></i> {{ tab.label }}
+                <i :class="`bi ${tab.icon} mr-2`"></i> {{ tab.label }}
               </a>
               <a
                 v-else
-                :href="tab.link"
-                class="py-2 px-4 flex items-center hover:bg-red-600 text-black"
+                href="#"
+                :class="tabClass(tab.id)"
+                @click.prevent="logout"
               >
                 <i :class="`bi ${tab.icon} mr-2`"></i> {{ tab.label }}
               </a>

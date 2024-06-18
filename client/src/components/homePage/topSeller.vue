@@ -1,7 +1,7 @@
 <template>
   <div class="container mx-auto py-8">
-    <h2 class="text-3xl font-bold text-center mb-4">Top Seller</h2>
-    <p class="text-center text-[14px] text-gray-600 mb-8">Accumsan vitae pede lacus ut ullamcorper sollicitudin quisque libero</p>
+    <h2 class="text-3xl font-bold text-center mb-4">Meilleures ventes</h2>
+    <p class="text-center text-[14px] text-gray-600 mb-8">Nos meilleurs ventes</p> 
     <Carousel :wrap-around="true" :items-to-show="1" :breakpoints="breakpoints" class="product-carousel">
       <Slide v-for="product in topProducts" :key="product.id">
         <div class="relative">

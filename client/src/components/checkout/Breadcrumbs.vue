@@ -1,7 +1,7 @@
 <template>
   <div class="bg-gray-100 py-20 w-full">
     <div class="container mx-auto text-center">
-      <h1 class="text-3xl font-semibold mb-2">Checkout</h1>
+      <h1 class="text-3xl font-semibold mb-2">Paiement</h1>
       <nav class="text-sm font-medium text-gray-500" aria-label="Breadcrumb">
         <ol class="list-none p-0 inline-flex justify-center space-x-2">
           <li class="flex items-center">
@@ -16,7 +16,7 @@
             <span class="text-gray-400 mx-2">/</span>
           </li>
           <li class="flex items-center">
-            <span class="text-red-600">Checkout</span>
+            <span class="text-red-600">Paiement</span>
           </li>
         </ol>
       </nav>

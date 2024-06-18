@@ -56,6 +56,20 @@
             <input v-model="haveConsented" id="haveConsented" name="haveConsented" type="checkbox"
               class="w-4 h-4 text-red-600 border-gray-300 rounded focus:ring-red-500" />
             <label for="haveConsented" class="ml-2 text-sm text-gray-900">I consent to the terms and conditions</label>
+
+
+            <input v-model="wantsMailNewProduct" id="haveConsented" name="haveConsented" type="checkbox"
+              class="w-4 h-4 text-red-600 border-gray-300 rounded focus:ring-red-500" />
+            <label for="haveConsented" class="ml-2 text-sm text-gray-900">Je veux recevoir les mails de nouveaux produits</label>
+            <input v-model="wantsMailRestockProduct" id="haveConsented" name="haveConsented" type="checkbox"
+              class="w-4 h-4 text-red-600 border-gray-300 rounded focus:ring-red-500" />
+            <label for="haveConsented" class="ml-2 text-sm text-gray-900">Je veux recevoir les mails de restock de produit</label>
+            <input v-model="wantsMailChangingPrice" id="haveConsented" name="haveConsented" type="checkbox"
+              class="w-4 h-4 text-red-600 border-gray-300 rounded focus:ring-red-500" />
+            <label for="haveConsented" class="ml-2 text-sm text-gray-900">Je veux recevoir les mails de changement de prix</label>
+            <input v-model="wantsMailNewsletter" id="haveConsented" name="haveConsented" type="checkbox"
+              class="w-4 h-4 text-red-600 border-gray-300 rounded focus:ring-red-500" />
+            <label for="haveConsented" class="ml-2 text-sm text-gray-900">Je veux recevoir les mails de newsletter</label>
           </div>
         </div>
         <div>
@@ -86,6 +100,10 @@ const password = ref('')
 const password_cfg = ref('')
 const telephone = ref('')
 const haveConsented = ref(false)
+const wantsMailNewProduct = ref(false)
+const wantsMailRestockProduct = ref(false)
+const wantsMailChangingPrice = ref(false)
+const wantsMailNewsletter = ref(false)
 const error = ref('')
 const success = ref('')
 
@@ -111,7 +129,11 @@ const handleSubmit = async () => {
           password: password.value,
           password_cfg: password_cfg.value,
           telephone: telephone.value,
-          haveConsented: haveConsented.value
+          haveConsented: haveConsented.value,
+          wantsMailNewProduct: wantsMailNewProduct.value,
+          wantsMailRestockProduct: wantsMailRestockProduct.value,
+          wantsMailChangingPrice: wantsMailChangingPrice.value,
+          wantsMailNewsletter: wantsMailNewsletter.value
       })
       success.value = response.data.msg || 'Registration successful!'
       error.value = ''

@@ -11,7 +11,7 @@
                 {{ sortOrder === 'asc' ? '▲' : '▼' }}
               </span>
               <div v-if="col.searchable">
-                <input v-model="col.searchQuery" type="text" placeholder="Search..."
+                <input v-model="col.searchQuery" type="text" placeholder="Rechercher..."
                        class="border rounded px-2 py-1 text-black" />
               </div>
             </th>
@@ -49,12 +49,12 @@
     <div class="flex justify-between items-center mt-4 w-full">
       <button @click="prevPage" :disabled="currentPage === 1"
               class="px-2 py-1 border rounded mr-2">
-        Previous
+        Précédent
       </button>
-      <span>Page {{ currentPage }} of {{ totalPages }}</span>
+      <span>Page {{ currentPage }} sur {{ totalPages }}</span>
       <button @click="nextPage" :disabled="currentPage === totalPages"
               class="px-2 py-1 border rounded ml-2">
-        Next
+        Suivant
       </button>
     </div>
   </div>

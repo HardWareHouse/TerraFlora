@@ -1,7 +1,7 @@
 <template>
   <div class="container mx-auto py-8">
-    <h2 class="text-3xl font-bold text-center mb-4">New Products</h2>
-    <p class="text-center text-gray-600 mb-8">Accumsan vitae pede lacus ut ullamcorper sollicitudin quisque libero</p>
+    <h2 class="text-3xl font-bold text-center mb-4">Nouveaux produits</h2>
+    <p class="text-center text-gray-600 mb-8">Accèdez à notre offre de produits de qualité</p>
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
       <div v-for="product in limitedProducts" :key="product.id" class="relative">
         <div class="border rounded-lg overflow-hidden">
@@ -24,7 +24,7 @@
     </div>
     <RouterLink to="/shop">
       <div class="text-center mt-8 flex justify-center">
-        <p class="bg-red-600 text-white px-4 py-2 w-1/3 ">View More Products</p>
+        <p class="bg-red-600 text-white px-4 py-2 w-1/3 ">Voir plus d'articles</p>
       </div>
     </RouterLink>
   </div>
