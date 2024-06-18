@@ -145,7 +145,7 @@ function goToProductDetail(productId) {
 }
 
 function addToCart(product) {
-  cartStore.addToCart(product);
+  cartStore.addToCart(product, 1);
 }
 
 function addToWishlist(product) {
