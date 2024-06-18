@@ -23,7 +23,7 @@
     </div>
     <p class="border-t border-gray-200 w-full"></p>
     <div class="container mx-auto flex items-center justify-between py-10 px-4">
-      <div class="text-3xl font-bold">Terra Flora</div>
+      <div class="text-3xl font-bold text-black"><a href="/">Terra Flora</a></div>
       <nav class="flex space-x-6 text-sm font-medium">
         <router-link to="/" class="text-gray-700">HOME</router-link>
         <div class="relative group">
@@ -32,7 +32,8 @@
       </nav>
       <div class="flex space-x-4 text-gray-700 align-center">
         <a href="#" @click.prevent="$emit('toggle-search')"><i class="bi bi-search" style="font-size: 1.5rem;"></i></a>
-        <RouterLink to="/login"><i class="bi bi-person" style="font-size: 1.5rem;"></i></RouterLink>
+        <RouterLink v-if="authStore.user.userId === -1" to="/login"><i class="bi bi-person" style="font-size: 1.5rem;"></i></RouterLink>
+        <RouterLink v-else to="/dashboard"><i class="bi bi-person" style="font-size: 1.5rem;"></i></RouterLink>
         <RouterLink to="/wishlist"><i class="bi bi-heart" style="font-size: 1.5rem;"></i></RouterLink>
         <a href="#" @click.prevent="$emit('toggle-basket')"><i class="bi bi-cart" style="font-size: 1.5rem;"></i></a>
       </div>
@@ -40,21 +41,20 @@
   </header>
 </template>
 
-<script>
+<script setup>
+import { ref } from 'vue';
+import { useAuthStore } from '../../pinia/auth.js';
 import { RouterLink } from 'vue-router';
 
-export default {
-  data() {
-    return {
-      language: 'en',
-      currency: 'usd'
-    }
-  }
-}
+const authStore = useAuthStore();
+const language = ref('en');
+const currency = ref('usd');
 </script>
 
 <style scoped>
 .container {
   max-width: 1200px;
 }
+
+
 </style>
