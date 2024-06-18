@@ -300,79 +300,80 @@
     </div>
   </div>
 </template>
-
-<script>
+<script setup>
+import { ref, reactive, onMounted } from "vue";
 import { getData } from "country-list";
 
-export default {
-  data() {
-    return {
-      form: {
-        firstName: "",
-        lastName: "",
-        email: "",
-        companyName: "",
-        country: "",
-        streetAddress1: "",
-        streetAddress2: "",
-        city: "",
-        state: "",
-        postcode: "",
-        phone: "",
-        createAccount: false,
-        shipToDifferentAddress: false,
-        orderNote: "",
-      },
-      countries: [],
-      shipping: "Flat Rate: $70.00",
-      payment: "Cash On Delivery",
-      agreeTerms: false,
-      paymentMethods: [
-        {
-          label: "Cash On Delivery",
-          value: "Cash On Delivery",
-          description: "Pay with cash upon delivery.",
-        },
-        {
-          label: "Direct Bank Transfer",
-          value: "Direct Bank Transfer",
-          description:
-            "Make your payment directly into our bank account. Please use your Order ID as the payment reference. Your order will not be shipped until the funds have cleared in our account.",
-        },
-        {
-          label: "Pay with Check",
-          value: "Pay with Check",
-          description:
-            "Please send a check to Store Name, Store Street, Store Town, Store State / County, Store Postcode.",
-        },
-        {
-          label: "Paypal",
-          value: "Paypal",
-          description:
-            "Pay via PayPal; you can pay with your credit card if you don’t have a PayPal account.",
-        },
-      ],
-    };
+// Reactive form object
+const form = reactive({
+  firstName: "",
+  lastName: "",
+  email: "",
+  companyName: "",
+  country: "",
+  streetAddress1: "",
+  streetAddress2: "",
+  city: "",
+  state: "",
+  postcode: "",
+  phone: "",
+  createAccount: false,
+  shipToDifferentAddress: false,
+  orderNote: "",
+});
+
+// Reactive variables for countries, shipping, payment, and terms agreement
+const countries = ref([]);
+const shipping = ref("Flat Rate: $70.00");
+const payment = ref("Cash On Delivery");
+const agreeTerms = ref(false);
+
+// Payment methods array
+const paymentMethods = [
+  {
+    label: "Cash On Delivery",
+    value: "Cash On Delivery",
+    description: "Pay with cash upon delivery.",
   },
-  created() {
-    this.countries = getData().map((country) => ({
-      code: country.code,
-      name: country.name,
-    }));
+  {
+    label: "Direct Bank Transfer",
+    value: "Direct Bank Transfer",
+    description:
+      "Make your payment directly into our bank account. Please use your Order ID as the payment reference. Your order will not be shipped until the funds have cleared in our account.",
   },
-  methods: {
-    placeOrder() {
-      if (!this.agreeTerms) {
-        alert("You must agree to the terms and conditions to place the order.");
-        return;
-      }
-      const orderDetails = {
-        billingDetails: this.form,
-        shipping: this.shipping,
-        payment: this.payment,
-      };
-      console.log("Order details:", orderDetails);
-    },
+  {
+    label: "Pay with Check",
+    value: "Pay with Check",
+    description:
+      "Please send a check to Store Name, Store Street, Store Town, Store State / County, Store Postcode.",
   },
-};
+  {
+    label: "Paypal",
+    value: "Paypal",
+    description:
+      "Pay via PayPal; you can pay with your credit card if you don’t have a PayPal account.",
+  },
+];
+
+// Fetch countries data on component mount
+onMounted(() => {
+  countries.value = getData().map((country) => ({
+    code: country.code,
+    name: country.name,
+  }));
+});
+
+// Method to place order
+function placeOrder() {
+  if (!agreeTerms.value) {
+    alert("You must agree to the terms and conditions to place the order.");
+    return;
+  }
+  const orderDetails = {
+    billingDetails: form,
+    shipping: shipping.value,
+    payment: payment.value,
+  };
+  console.log("Order details:", orderDetails);
+}
 </script>

@@ -114,22 +114,18 @@
   </div>
 </template>
 
-<script>
-export default {
-  data() {
-    return {
-      showLoginAccordion: false,
-      showCouponAccordion: false,
-      showDropdown: false,
-    };
-  },
-  methods: {
-    toggleLoginAccordion() {
-      this.showLoginAccordion = !this.showLoginAccordion;
-    },
-    toggleCouponAccordion() {
-      this.showCouponAccordion = !this.showCouponAccordion;
-    },
-  },
-};
+<script setup>
+import { ref } from "vue";
+
+const showLoginAccordion = ref(false);
+const showCouponAccordion = ref(false);
+const showDropdown = ref(false);
+
+function toggleLoginAccordion() {
+  showLoginAccordion.value = !showLoginAccordion.value;
+}
+
+function toggleCouponAccordion() {
+  showCouponAccordion.value = !showCouponAccordion.value;
+}
 </script>
