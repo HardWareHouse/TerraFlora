@@ -17,8 +17,8 @@
           <div class="mt-2">
             <h3 class="text-[16px] flex justify-start mb-2">{{ product.nom }}</h3>
             <div class="flex items-center w-3/12 justify-between text-[17px]">
-              <span class="font-bold text-black">${{ product.prix }}</span>
-              <span class="line-through text-gray-500" v-if="product.oldPrice">${{ product.oldPrice }}</span>
+              <span class="font-bold text-black">{{ product.prix }}€</span>
+              <span class="line-through text-gray-500" v-if="product.oldPrice">{{ product.oldPrice }}€</span>
             </div>
           </div>
         </div>

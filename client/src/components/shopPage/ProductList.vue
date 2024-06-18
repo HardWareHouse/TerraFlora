@@ -65,7 +65,7 @@
         </div>
         <div class="product-info ml-4 w-2/3">
           <h3 class="text-lg font-semibold">{{ product.nom }}</h3>
-          <p class="text-gray-500">${{ product.prix }}</p>
+          <p class="text-gray-500">{{ product.prix }} €</p>
           <p class="mt-2 text-gray-700">{{ product.description }}</p>
           <div class="flex space-x-2 mt-4">
             <button class="px-4 py-2 bg-red-600 text-white rounded shadow hover:bg-red-700 transition duration-300" @click.stop="addToCart(product)">
@@ -169,11 +169,6 @@ function addToWishlist(product) {
 
 .product-image:hover .absolute {
   opacity: 1;
-}
-
-.absolute {
-  transition: opacity 0.2s;
-  opacity: 0;
 }
 
 button span {
