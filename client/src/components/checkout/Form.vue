@@ -2,31 +2,31 @@
   <div class="flex flex-col lg:flex-row lg:space-x-12 p-4">
     <div class="lg:w-1/2 p-4">
       <!-- Billing Details Form -->
-      <h2 class="text-lg font-medium border-b pb-4 mb-6">Billing Details</h2>
+      <h2 class="text-lg font-medium border-b pb-4 mb-6">Détails de la commande</h2>
       <form @submit.prevent="placeOrder">
         <div class="mb-4 grid grid-cols-2 gap-4">
           <div>
             <label for="f_name" class="block text-sm font-medium"
-              >First Name <span class="text-red-600">*</span></label
+              >Prénom <span class="text-red-600">*</span></label
             >
             <input
               type="text"
               id="f_name"
               v-model="form.firstName"
-              placeholder="First Name"
+              placeholder="Prénom"
               class="mt-1 p-2 border rounded-md w-full bg-gray-100"
               required
             />
           </div>
           <div>
             <label for="l_name" class="block text-sm font-medium"
-              >Last Name <span class="text-red-600">*</span></label
+              >Nom <span class="text-red-600">*</span></label
             >
             <input
               type="text"
               id="l_name"
               v-model="form.lastName"
-              placeholder="Last Name"
+              placeholder="Nom"
               class="mt-1 p-2 border rounded-md w-full bg-gray-100"
               required
             />
@@ -34,32 +34,20 @@
         </div>
         <div class="mb-4">
           <label for="email" class="block text-sm font-medium"
-            >Email Address <span class="text-red-600">*</span></label
+            >Adresse email <span class="text-red-600">*</span></label
           >
           <input
             type="email"
             id="email"
             v-model="form.email"
-            placeholder="Email Address"
+            placeholder="Adresse email"
             class="mt-1 p-2 border rounded-md w-full bg-gray-100"
             required
           />
         </div>
         <div class="mb-4">
-          <label for="com-name" class="block text-sm font-medium"
-            >Company Name</label
-          >
-          <input
-            type="text"
-            id="com-name"
-            v-model="form.companyName"
-            placeholder="Company Name"
-            class="mt-1 p-2 border rounded-md w-full bg-gray-100"
-          />
-        </div>
-        <div class="mb-4">
           <label for="country" class="block text-sm font-medium"
-            >Country <span class="text-red-600">*</span></label
+            >Pays <span class="text-red-600">*</span></label
           >
           <select
             id="country"
@@ -71,13 +59,13 @@
         </div>
         <div class="mb-4">
           <label for="street-address" class="block text-sm font-medium"
-            >Street address <span class="text-red-600">*</span></label
+            >Adresse <span class="text-red-600">*</span></label
           >
           <input
             type="text"
             id="street-address"
             v-model="form.streetAddress1"
-            placeholder="Street address Line 1"
+            placeholder="Adresse 1"
             class="mt-1 p-2 border rounded-md w-full bg-gray-100"
             required
           />
@@ -86,55 +74,43 @@
           <input
             type="text"
             v-model="form.streetAddress2"
-            placeholder="Street address Line 2 (Optional)"
+            placeholder="Adresse 2 (Optional)"
             class="mt-1 p-2 border rounded-md w-full bg-gray-100"
           />
         </div>
         <div class="mb-4">
           <label for="town" class="block text-sm font-medium"
-            >Town / City <span class="text-red-600">*</span></label
+            >Ville<span class="text-red-600">*</span></label
           >
           <input
             type="text"
             id="town"
             v-model="form.city"
-            placeholder="Town / City"
+            placeholder="Ville"
             class="mt-1 p-2 border rounded-md w-full bg-gray-100"
             required
           />
         </div>
         <div class="mb-4">
-          <label for="state" class="block text-sm font-medium"
-            >State / Division <span class="text-red-600">*</span></label
-          >
-          <input
-            type="text"
-            id="state"
-            v-model="form.state"
-            placeholder="State / Division"
-            class="mt-1 p-2 border rounded-md w-full bg-gray-100"
-          />
-        </div>
-        <div class="mb-4">
           <label for="postcode" class="block text-sm font-medium"
-            >Postcode / ZIP <span class="text-red-600">*</span></label
+            >Code postal<span class="text-red-600">*</span></label
           >
           <input
             type="text"
             id="postcode"
             v-model="form.postcode"
-            placeholder="Postcode / ZIP"
+            placeholder="Code postal"
             class="mt-1 p-2 border rounded-md w-full bg-gray-100"
             required
           />
         </div>
         <div class="mb-4">
-          <label for="phone" class="block text-sm font-medium">Phone</label>
+          <label for="phone" class="block text-sm font-medium">Téléphone</label>
           <input
             type="text"
             id="phone"
             v-model="form.phone"
-            placeholder="Phone"
+            placeholder="Téléphone"
             class="mt-1 p-2 border rounded-md w-full bg-gray-100"
           />
         </div>
@@ -147,7 +123,7 @@
               class="mr-2"
             />
             <label for="create_pwd" class="text-sm font-medium"
-              >Create an account?</label
+              >Créer un compte ?</label
             >
           </div>
         </div>
@@ -160,20 +136,20 @@
               class="mr-2"
             />
             <label for="ship_to_different" class="text-sm font-medium"
-              >Ship to a different address?</label
+              >Livrer à une autre adresse ?</label
             >
           </div>
         </div>
         <div class="mb-4">
           <label for="ordernote" class="block text-sm font-medium"
-            >Order Note</label
+            >Notes de commande</label
           >
           <textarea
             id="ordernote"
             v-model="form.orderNote"
             cols="30"
             rows="3"
-            placeholder="Notes about your order, e.g. special notes for delivery."
+            placeholder="Notes sur votre commande, par exemple des instructions spéciales pour la livraison."
             class="w-full mt-1 p-2 border rounded-md bg-gray-100"
           ></textarea>
         </div>
@@ -181,7 +157,7 @@
     </div>
     <div class="lg:w-1/2 p-4">
       <!-- Order Summary and Payment Section -->
-      <h2 class="text-lg font-medium border-b pb-4 mb-6">Your Order Summary</h2>
+      <h2 class="text-lg font-medium border-b pb-4 mb-6">Résumé de votre commande</h2>
       <div class="bg-gray-100 rounded-md">
         <table class="w-full text-sm border text-center">
           <thead class="border p-4">
@@ -204,11 +180,11 @@
               <td class="border p-4">$165.00</td>
             </tr>
             <tr>
-              <td class="font-medium border p-4">Subtotal</td>
+              <td class="font-medium border p-4">Sous-total</td>
               <td class="font-medium border p-4">$400.00</td>
             </tr>
             <tr>
-              <td class="font-medium border p-4">Shipping</td>
+              <td class="font-medium border p-4">Livrason</td>
               <td class="font-medium border p-4">
                 <div>
                   <label class="flex items-center mb-2">
@@ -216,11 +192,11 @@
                       type="radio"
                       name="shipping"
                       v-model="shipping"
-                      value="Flat Rate: $70.00"
+                      value="Flat Rate: $15.00"
                       class="mr-2 text-red-600"
                       checked
                     />
-                    <span>Flat Rate: $70.00</span>
+                    <span>Tarif Forfaitaire: $15.00</span>
                   </label>
                   <label class="flex items-center">
                     <input
@@ -230,13 +206,13 @@
                       value="Free Shipping"
                       class="mr-2 text-red-600"
                     />
-                    <span>Free Shipping</span>
+                    <span>Livraison gratuite (minimum 50€ de commande)</span>
                   </label>
                 </div>
               </td>
             </tr>
             <tr>
-              <td class="font-medium border p-4">Total Amount</td>
+              <td class="font-medium border p-4">Montant total</td>
               <td class="font-medium border p-4">$470.00</td>
             </tr>
           </tbody>
@@ -274,9 +250,7 @@
               v-model="agreeTerms"
               class="mr-2 text-red-600"
             />
-            <span
-              >I have read and agree to the website terms and conditions.</span
-            >
+            <span>J'ai lu et j'accepte les termes et conditions de Terra Flora.</span>
           </label>
         </div>
         <div class="mt-4 flex">
@@ -286,7 +260,7 @@
             class="w-3/4 mx-auto bg-red-500 text-white py-2 mb-4 rounded-md"
             :class="{ 'opacity-50 cursor-not-allowed': !agreeTerms }"
           >
-            Place Order
+            Passer au paiement
           </button>
         </div>
       </div>
@@ -301,7 +275,6 @@ const form = reactive({
   firstName: "",
   lastName: "",
   email: "",
-  companyName: "",
   country: "",
   streetAddress1: "",
   streetAddress2: "",
@@ -315,34 +288,35 @@ const form = reactive({
 });
 
 // Reactive variables for shipping, payment, and terms agreement
-const shipping = ref("Flat Rate: $70.00");
+const shipping = ref("Flat Rate: $15.00");
 const payment = ref("Cash On Delivery");
 const agreeTerms = ref(false);
 
 // Payment methods array
 const paymentMethods = [
   {
-    label: "Cash On Delivery",
-    value: "Cash On Delivery",
-    description: "Pay with cash upon delivery.",
+    label: "Carte bancaire",
+    value: "Carte bancaire",
+    description:
+      "Paiement via Carte bancaire",
   },
   {
-    label: "Direct Bank Transfer",
-    value: "Direct Bank Transfer",
+    label: "Carte bleue",
+    value: "Carte bleue",
     description:
-      "Make your payment directly into our bank account. Please use your Order ID as the payment reference. Your order will not be shipped until the funds have cleared in our account.",
+      "Paiement via Carte bleue",
   },
   {
-    label: "Pay with Check",
-    value: "Pay with Check",
+    label: "Stripe",
+    value: "Stripe",
     description:
-      "Please send a check to Store Name, Store Street, Store Town, Store State / County, Store Postcode.",
+      "Paiement via Stripe.",
   },
   {
     label: "Paypal",
     value: "Paypal",
     description:
-      "Pay via PayPal; you can pay with your credit card if you don’t have a PayPal account.",
+      "Paiement via Paypal",
   },
 ];
 
