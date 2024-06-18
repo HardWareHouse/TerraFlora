@@ -6,7 +6,7 @@
           <div class="absolute inset-0 flex flex-col items-end justify-center text-white text-right pr-14">
             <h3 class="text-red-600 text-lg font-bold mb-2 text-[30px] font-['Yesteryear']">{{ promotion.title }}</h3>
             <h2 class="text-2xl font-bold text-black text-[30px]">{{ promotion.subtitle }}</h2>
-            <a href="#" class="mt-4 text-black px-4 underline text-[14px] font-semibold leading-7">Shop Now</a>
+            <a href="#" class="mt-4 text-black px-4 underline text-[14px] font-semibold leading-7">Achetez maintenant</a>
           </div>
         </div>
       </div>
@@ -22,13 +22,13 @@
   const promotions = ref([
     {
       image: slide1,
-      title: 'For You',
-      subtitle: 'Tulip Flower',
-      alt: 'Tulip Flower'
+      title: 'Pour Lui',
+      subtitle: 'Fleur de Tulipe',
+      alt: 'Fleur de Tulipe'
     },
     {
       image: slide2,
-      title: 'For You',
+      title: 'Pour Elle',
       subtitle: 'Flower & Box',
       alt: 'Flower & Box'
     }

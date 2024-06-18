@@ -63,17 +63,10 @@
           >
           <select
             id="country"
-            v-model="form.country"
             class="mt-1 p-2 border rounded-md w-full bg-gray-100"
-            required
+            :required="true"
           >
-            <option
-              v-for="country in countries"
-              :key="country.code"
-              :value="country.name"
-            >
-              {{ country.name }}
-            </option>
+            <option :selected value="France">France</option>
           </select>
         </div>
         <div class="mb-4">
@@ -302,7 +295,6 @@
 </template>
 <script setup>
 import { ref, reactive, onMounted } from "vue";
-import { getData } from "country-list";
 
 // Reactive form object
 const form = reactive({
@@ -322,8 +314,7 @@ const form = reactive({
   orderNote: "",
 });
 
-// Reactive variables for countries, shipping, payment, and terms agreement
-const countries = ref([]);
+// Reactive variables for shipping, payment, and terms agreement
 const shipping = ref("Flat Rate: $70.00");
 const payment = ref("Cash On Delivery");
 const agreeTerms = ref(false);
@@ -354,14 +345,6 @@ const paymentMethods = [
       "Pay via PayPal; you can pay with your credit card if you don’t have a PayPal account.",
   },
 ];
-
-// Fetch countries data on component mount
-onMounted(() => {
-  countries.value = getData().map((country) => ({
-    code: country.code,
-    name: country.name,
-  }));
-});
 
 // Method to place order
 function placeOrder() {

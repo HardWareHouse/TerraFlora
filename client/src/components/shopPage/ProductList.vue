@@ -15,7 +15,7 @@
           <i class="bi bi-list-ul"></i>
         </button>
       </div>
-      <div>Showing {{ startItem }}–{{ endItem }} of {{ filteredProducts.length }} Results</div>
+      <div>Affichage {{ startItem }}–{{ endItem }} sur {{ filteredProducts.length }} résultats</div>
       <div>
         Trier par:
         <select v-model="sortBy" class="border p-1 rounded">

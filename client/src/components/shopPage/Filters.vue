@@ -12,8 +12,8 @@
     <div class="relative w-full my-4">
       <input type="range" v-model="priceRange" min="0" max="1000" step="10" class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer range-slider" />
       <div class="flex justify-between mt-2 text-gray-700">
-        <span>$0</span>
-        <span>\${{ priceRange }}</span>
+        <span>0€</span>
+        <span>{{ priceRange }}€</span>
       </div>
     </div>
     <button @click="applyFilter" class="w-full mt-4 px-4 py-2 bg-red-600 text-white font-semibold rounded shadow hover:bg-red-700 transition duration-300">Filter</button>
@@ -34,7 +34,7 @@
       </li>
     </ul>
 
-    <h2 class="text-xl font-bold my-6 text-gray-800">Size</h2>
+    <h2 class="text-xl font-bold my-6 text-gray-800">Taille</h2>
     <ul class="space-y-3">
       <li v-for="size in sizes" :key="size" class="flex items-center space-x-2">
         <input type="checkbox" :value="size" v-model="selectedSizes" class="form-checkbox h-5 w-5 text-red-600 border-gray-300 rounded focus:ring-0" />

@@ -2,21 +2,21 @@
   <header class="border-b border-gray-200">
     <div class="container mx-auto flex items-center justify-between py-2 px-4 h-10">
       <div class="text-[13px] text-gray-600 leading-none">
-        Welcome to Terra Flora online store
+        Bienvenue sur Terra Flora
       </div>
       <div class="flex items-center space-x-4">
         <div class="flex items-center space-x-1 text-[13px] text-gray-600 leading-none border-l border-gray-200">
-          Language:
+          Langue:
           <select v-model="language" class="text-[13px] text-gray-600 leading-none focus:outline-none">
-            <option value="en">English</option>
             <option value="fr">French</option>
+            <option value="en">English</option>
           </select>
         </div>
         <div class="flex items-center space-x-1 text-[13px] text-gray-600 leading-none">
-          Currency:
+          Monnaie:
           <select v-model="currency" class="text-[13px] text-gray-600 leading-none focus:outline-none">
-            <option value="usd">$ USD</option>
             <option value="eur">€ EUR</option>
+            <option value="usd">$ USD</option>
           </select>
         </div>
       </div>
@@ -25,9 +25,9 @@
     <div class="container mx-auto flex items-center justify-between py-10 px-4">
       <div class="text-3xl font-bold text-black"><a href="/">Terra Flora</a></div>
       <nav class="flex space-x-6 text-sm font-medium">
-        <router-link to="/" class="text-gray-700">HOME</router-link>
+        <router-link to="/" class="text-gray-700">ACCUEIL</router-link>
         <div class="relative group">
-          <router-link to="/shop" class="text-gray-700">SHOP</router-link>
+          <router-link to="/shop" class="text-gray-700">BOUTIQUE</router-link>
         </div>
       </nav>
       <div class="flex space-x-4 text-gray-700 align-center">
