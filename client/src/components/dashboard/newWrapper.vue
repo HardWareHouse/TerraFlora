@@ -38,11 +38,14 @@ const components = {
 
 const activeTabComponent = computed(() => components[activeTab.value] || 'div');
 const authStore = useAuthStore();
-const router = useRouter();  // Use the router
+const router = useRouter();
 
 const logout = async () => {
   await authStore.logout();
-  router.push('/');
+
+  if (!authStore.token) {
+        router.push('/');
+    }
 };
 </script>
 

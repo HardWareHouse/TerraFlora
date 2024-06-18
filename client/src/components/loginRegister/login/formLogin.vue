@@ -56,7 +56,10 @@ const password = ref('');
 
 const handleSubmit = () => {
     authStore.login(email.value, password.value);
-    router.push('/dashboard');
+
+    if (authStore.success) {
+        router.push('/dashboard');
+    }
 };
 </script>
 
