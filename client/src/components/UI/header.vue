@@ -8,15 +8,8 @@
         <div class="flex items-center space-x-1 text-[13px] text-gray-600 leading-none border-l border-gray-200">
           Langue:
           <select v-model="language" class="text-[13px] text-gray-600 leading-none focus:outline-none">
-            <option value="fr">French</option>
+            <option value="fr">Français</option>
             <option value="en">English</option>
-          </select>
-        </div>
-        <div class="flex items-center space-x-1 text-[13px] text-gray-600 leading-none">
-          Monnaie:
-          <select v-model="currency" class="text-[13px] text-gray-600 leading-none focus:outline-none">
-            <option value="eur">€ EUR</option>
-            <option value="usd">$ USD</option>
           </select>
         </div>
       </div>
@@ -32,8 +25,8 @@
       </nav>
       <div class="flex space-x-4 text-gray-700 align-center">
         <a href="#" @click.prevent="$emit('toggle-search')"><i class="bi bi-search" style="font-size: 1.5rem;"></i></a>
-        <RouterLink  to="/login"><i class="bi bi-person" style="font-size: 1.5rem;"></i></RouterLink>
-        <!-- <RouterLink  to="/dashboard"><i class="bi bi-person" style="font-size: 1.5rem;"></i></RouterLink> -->
+        <RouterLink v-if="!isAuthenticated" to="/login"><i class="bi bi-person" style="font-size: 1.5rem;"></i></RouterLink>
+        <RouterLink v-else to="/dashboard"><i class="bi bi-person" style="font-size: 1.5rem;"></i></RouterLink>
         <RouterLink to="/wishlist"><i class="bi bi-heart" style="font-size: 1.5rem;"></i></RouterLink>
         <a href="#" @click.prevent="$emit('toggle-basket')"><i class="bi bi-cart" style="font-size: 1.5rem;"></i></a>
       </div>
@@ -42,19 +35,20 @@
 </template>
 
 <script setup>
-import { ref } from 'vue';
+import { ref,computed } from 'vue';
 import { useAuthStore } from '../../pinia/auth.js';
 import { RouterLink } from 'vue-router';
 
 const authStore = useAuthStore();
-const language = ref('en');
-const currency = ref('usd');
+
+const isAuthenticated = computed(() => !!authStore.token);
+
+const language = ref('fr');
+
 </script>
 
 <style scoped>
 .container {
   max-width: 1200px;
 }
-
-
 </style>
