@@ -10,13 +10,13 @@ const selectTab = (tab) => {
 };
 
 const tabs = [
-  { id: 'dashboard', icon: 'bi-speedometer2', label: 'Dashboard' },
-  { id: 'orders', icon: 'bi-cart', label: 'Orders' },
-  { id: 'download', icon: 'bi-cloud-download', label: 'Download' },
-  { id: 'addressEdit', icon: 'bi-geo-alt-fill', label: 'Address' },
-  { id: 'accountInfo', icon: 'bi-person', label: 'Account Details' },
-  { id: 'emailPreference', icon: 'bi-envelope-paper-fill', label: 'Email Preference' },
-  { id: 'logout', icon: 'bi-box-arrow-left', label: 'Logout' },
+  { id: 'dashboard', icon: 'bi-speedometer2', label: 'Tableau de bord' },
+  { id: 'orders', icon: 'bi-cart', label: 'Mes commandes' },
+  { id: 'download', icon: 'bi-cloud-download', label: 'Mes telechargements' },
+  { id: 'addressEdit', icon: 'bi-geo-alt-fill', label: 'Mon adresse' },
+  { id: 'accountInfo', icon: 'bi-person', label: 'Mon compte' },
+  { id: 'emailPreference', icon: 'bi-envelope-paper-fill', label: 'Mes préférences' },
+  { id: 'logout', icon: 'bi-box-arrow-left', label: 'Déconnexion' },
 ];
 
 const tabClass = (tab) => {
