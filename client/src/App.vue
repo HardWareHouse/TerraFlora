@@ -11,6 +11,7 @@
 <script setup>
 import { ref, onMounted, onUnmounted } from 'vue';
 import { useCartStore } from './pinia/cart.js';
+import { useAuthStore } from './pinia/auth.js';
 import Header from './components/UI/header.vue';
 import Footer from './components/UI/footer.vue';
 import SearchOverlay from './components/UI/searchBar.vue';
@@ -19,6 +20,7 @@ import BasketBar from './components/UI/basket.vue';
 const showSearch = ref(false);
 const showBasket = ref(false);
 const cartStore = useCartStore();
+const authStore = useAuthStore();
 
 function toggleSearch() {
   showSearch.value = !showSearch.value;
@@ -33,9 +35,11 @@ function updateActivity() {
   cartStore.saveCartToLocalStorage();
 }
 
+
 onMounted(() => {
   document.addEventListener('mousemove', updateActivity);
   document.addEventListener('keydown', updateActivity);
+  authStore.checkToken();
 });
 
 onUnmounted(() => {

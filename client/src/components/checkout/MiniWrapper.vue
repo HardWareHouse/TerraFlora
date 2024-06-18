@@ -4,11 +4,11 @@
       <h3
         class="bg-gray-100 border-t-4 border-red-600 text-gray-900 text-sm font-medium uppercase py-3 pl-3"
       >
-        Returning Customer?
+        Vous êtes de retour ?
         <span
           class="text-red-600 cursor-pointer transition duration-400 ml-2"
           @click="toggleLoginAccordion"
-          >Click Here To Login</span
+          >Cliquez ici pour vous connecter</span
         >
       </h3>
       <div
@@ -18,9 +18,9 @@
       >
         <div>
           <p class="mb-4">
-            If you have shopped with us before, please enter your details in the
-            boxes below. If you are a new customer, please proceed to the
-            Billing &amp; Shipping section.
+            Si vous avez déjà fait des achats chez nous, veuillez entrer vos détails dans
+            les cases ci-dessous. Si vous êtes un nouveau client, veuillez vous rendre à la
+            section Facturation &amp; Expédition.
           </p>
           <div class="mt-5">
             <div class="flex justify-center">
@@ -31,7 +31,7 @@
                       <input
                         type="email"
                         class="w-full p-3 bg-gray-200 border border-gray-300 rounded"
-                        placeholder="Enter your Email"
+                        placeholder="Entrez votre email"
                         required
                       />
                     </div>
@@ -39,7 +39,7 @@
                       <input
                         type="password"
                         class="w-full p-3 bg-gray-200 border border-gray-300 rounded"
-                        placeholder="Enter your Password"
+                        placeholder="Entrez votre mot de passe"
                         required
                       />
                     </div>
@@ -54,11 +54,11 @@
                             id="rememberMe"
                             class="border-gray-300"
                           />
-                          <span class="ml-2">Remember Me</span>
+                          <span class="ml-2">Se souvenir de moi</span>
                         </label>
                       </div>
                       <a href="#" class="text-red-600 text-xs"
-                        >Forget Password?</a
+                        >Mot de passe oublié ?</a
                       >
                     </div>
                   </div>
@@ -80,11 +80,11 @@
       <h3
         class="bg-gray-100 border-t-4 border-red-600 text-gray-900 text-sm font-medium uppercase py-3 pl-3"
       >
-        Have A Coupon?
+        Vous avez un code promo ?
         <span
           class="text-red-600 cursor-pointer transition duration-400 ml-2"
           @click="toggleCouponAccordion"
-          >Click Here To Enter Your Code</span
+          >Cliquez ici pour entrer votre code</span
         >
       </h3>
       <div
@@ -99,11 +99,11 @@
                 <input
                   type="text"
                   class="p-3 bg-gray-200 border border-gray-300 rounded w-full md:w-auto mb-3 md:mb-0 md:mr-4 text-sm"
-                  placeholder="Enter Your Coupon Code"
+                  placeholder="Entrez votre code promo"
                   required
                 />
                 <button class="bg-red-600 text-white rounded px-3 h-14">
-                  Apply Coupon
+                  Valider
                 </button>
               </form>
             </div>

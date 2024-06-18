@@ -11,6 +11,10 @@ import notFound from "./pages/notFound.vue";
 import ResetPassword from "./pages/resetPassword.vue";
 import ProductDetail from "./pages/productDetail.vue";
 import Checkout from "./pages/checkoutPage.vue";
+import CGU from "../public/rgpd/cgu.vue";
+import Politique from "../public/rgpd/politique_confidentialite.vue";
+import Mentions from "../public/rgpd/mentions.vue";
+import Contact from "./pages/contactPage.vue";
 
 const routes = [
   {
@@ -72,6 +76,26 @@ const routes = [
     path: "/checkout",
     name: "Checkout",
     component: Checkout,
+  },
+  {
+    path: "/mentions",
+    name: "Mentions",
+    component: Mentions,
+  },
+  {
+    path: "/cgu",
+    name: "CGU",
+    component: CGU,
+  },
+  {
+    path: "/confidentialite",
+    name: "Politique",
+    component: Politique,
+  },
+  {
+    path: "/contact",
+    name: "Contact",
+    component: Contact,
   },
 ];
 

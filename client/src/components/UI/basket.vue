@@ -18,23 +18,23 @@
       </ul>
       <div class="pt-4 mt-4 border-t">
         <div class="flex items-center justify-between mb-2">
-          <span class="font-semibold">Sub-Total</span>
-          <span>${{ subTotal }}</span>
+          <span class="font-semibold">Sous-Total</span>
+          <span>{{ subTotal }}€</span>
         </div>
         <div class="flex items-center justify-between mb-2">
-          <span class="font-semibold">Eco Tax</span>
-          <span>$10.00</span>
+          <span class="font-semibold">Écotaxe</span>
+          <span>10.00€</span>
         </div>
         <div class="flex items-center justify-between mb-2">
-          <span class="font-semibold">VAT (20%)</span>
-          <span>${{ vat }}</span>
+          <span class="font-semibold">TVA (20%)</span>
+          <span>{{ vat }}€</span>
         </div>
         <div class="flex items-center justify-between pt-2 border-t">
           <span class="font-bold">Total</span>
-          <span>${{ total }}</span>
+          <span>{{ total }}€</span>
         </div>
         <div class="mt-4">
-          <button @click="viewCart" class="w-full px-4 py-2 mb-2 font-semibold text-white bg-red-700 rounded-md hover:bg-gray-800">VIEW BASKET</button>
+          <button @click="viewCart" class="w-full px-4 py-2 mb-2 font-semibold text-white bg-red-700 rounded-md hover:bg-gray-800">Voir mon panier</button>
         </div>
       </div>
     </div>
