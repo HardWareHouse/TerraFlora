@@ -3,8 +3,6 @@ import {getUser, getAllUsers, updateUser, deleteUser } from '../controllers/user
 
 const router = Router();
 
-// create a new user by an admin
-
 router.get('/', getAllUsers);
 router.get('/:id', getUser);
 router.put('/:id', updateUser);
