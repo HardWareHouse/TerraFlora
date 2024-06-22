@@ -1,7 +1,7 @@
 import { DataTypes } from 'sequelize';
-import { sequelize } from '../dataBase.js';
+import { connection } from './dataBase.js';
 
-const Facture = sequelize.define('Facture', {
+const Facture = connection.define('Facture', {
     id: {
         type: DataTypes.UUID,
         defaultValue: DataTypes.UUIDV4,

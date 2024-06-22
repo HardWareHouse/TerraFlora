@@ -1,5 +1,5 @@
 import express from 'express';
-import { connectToDatabase, sequelize } from './dataBase.js';
+import { connectToDatabase, connection } from './modelsSQL/dataBase.js';
 import './mongo.js';
 import '../src/modelsSQL/associations.js';
 import bodyParser from 'body-parser';
@@ -35,7 +35,7 @@ server.use((err, req, res, next) => {
 });
 
 connectToDatabase().then(() => {
-  sequelize.sync().then(() => {
+  connection.sync().then(() => {
     console.log('Database & tables created!');
   }).catch(error => {
     console.error('Unable to sync database:', error);

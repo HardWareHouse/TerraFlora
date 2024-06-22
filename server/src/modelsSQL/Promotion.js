@@ -1,7 +1,7 @@
 import { DataTypes } from 'sequelize';
-import { sequelize } from '../dataBase.js';
+import { connection } from './dataBase.js';
 
-const Promotion = sequelize.define('Promotion', {
+const Promotion = connection.define('Promotion', {
     id: {
         type: DataTypes.UUID,
         defaultValue: DataTypes.UUIDV4,

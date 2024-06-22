@@ -1,7 +1,7 @@
 import { DataTypes } from 'sequelize';
-import { sequelize } from '../dataBase.js';
+import { connection } from './dataBase.js';
 
-const MethodePaiement = sequelize.define('MethodePaiement', {
+const MethodePaiement = connection.define('MethodePaiement', {
     id: {
         type: DataTypes.UUID,
         defaultValue: DataTypes.UUIDV4,
