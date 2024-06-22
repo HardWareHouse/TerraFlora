@@ -71,14 +71,14 @@ const User = connection.define('User', {
   }
 }, {});
 
-User.addHook('beforeCreate', async (user) => {
-  user.password = await bcrypt.hash(user.password, await bcrypt.genSalt());
-});
-
-User.addHook('beforeUpdate', async (user, { fields }) => {
-  if (fields.includes('password')) {
+  User.addHook('beforeCreate', async (user) => {
     user.password = await bcrypt.hash(user.password, await bcrypt.genSalt());
-  }
-});
+  });
+
+  User.addHook('beforeUpdate', async (user, { fields }) => {
+    if (fields.includes('password')) {
+      user.password = await bcrypt.hash(user.password, await bcrypt.genSalt());
+    }
+  });
 
 export default User;

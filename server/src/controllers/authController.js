@@ -1,6 +1,6 @@
 import User from '../modelsSQL/User.js';
-import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
+import bcrypt from 'bcryptjs';
 import rateLimit from 'express-rate-limit';
 import { sendConfirmationEmail, sendResetPasswordEmail, sendAccountBlockedEmail } from '../emailConfig.js';
 
@@ -28,7 +28,7 @@ export const login = async (req, res) => {
       return res.status(400).json({ msg: "Il faut remplir tous les champs !" });
     }
 
-    const user = await User.findOne({ where: { email } });
+    const user = await User.findOne({ where: { email }});
 
     if (!user) {
       return res.status(401).json({ message: 'Invalid email or password' });
@@ -52,7 +52,24 @@ export const login = async (req, res) => {
 
     const token = jwt.sign({ id: user.id, email: user.email, role: user.role }, process.env.JWT_SECRET_KEY, { expiresIn: '1h' });
 
-    res.status(200).json({ token, user });
+    const userWithoutPassword = {
+      id: user.id,
+      nom: user.nom,
+      prenom: user.prenom,
+      email: user.email,
+      telephone: user.telephone,
+      role: user.role,
+      haveConsented: user.haveConsented,
+      isBlocked: user.isBlocked,
+      isVerified: user.isVerified,
+      lastUpdatedPassword: user.lastUpdatedPassword,
+      wantsMailNewProduct: user.wantsMailNewProduct,
+      wantsMailRestockProduct: user.wantsMailRestockProduct,
+      wantsMailChangingPrice: user.wantsMailChangingPrice,
+      wantsMailNewsletter: user.wantsMailNewsletter
+    };
+
+    res.status(200).json({ token, user: userWithoutPassword });
   } catch (error) {
     res.status(400).json({ error: error.message });
   }
@@ -82,13 +99,11 @@ export const register = async (req, res) => {
       return res.status(400).json({ msg: "L'email existe déjà" });
     }
 
-    const hashedPassword = await bcrypt.hash(password, 5);
-
     const newUser = await User.create({ 
       nom, 
       prenom, 
       email, 
-      password: hashedPassword, 
+      password,
       telephone, 
       role, 
       haveConsented,
@@ -194,7 +209,7 @@ export const resetPassword = async (req, res) => {
       return res.status(400).json({ msg: 'Utilisateur non trouvé.' });
     }
 
-    user.password = await bcrypt.hash(password, 5);
+    user.password = password;
     user.lastUpdatedPassword = new Date();
     await user.save();
 
