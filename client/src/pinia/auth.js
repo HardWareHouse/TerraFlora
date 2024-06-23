@@ -8,6 +8,7 @@ const instance = axios.create({
 export const useAuthStore = defineStore('auth', {
   state: () => ({
     token: null,
+    tokenMailPreference: null,
     nom: "",
     id: "",
     prenom: "",
@@ -27,7 +28,8 @@ export const useAuthStore = defineStore('auth', {
 
         const userData = response.data.user;
 
-        this.token = response.data.token;
+        this.token = response.data.loginToken;
+        this.tokenMailPreference = response.data.mailPreferenceToken;
         this.nom = userData.nom;
         this.prenom = userData.prenom;
         this.id = userData.id;
