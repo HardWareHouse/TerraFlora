@@ -77,5 +77,30 @@ export const useAuthStore = defineStore('auth', {
         instance.defaults.headers.common['Authorization'] = `Bearer ${parsedUser.token}`;
       }
     }
-  }
+  },
+  getters: {
+    isLoggedIn() {
+      return !!this.token;
+    },
+    isAdmin() {
+      return this.role === 'ROLE_ADMIN';
+    },
+    isUser() {
+      return this.role === 'ROLE_USER';
+    },
+  },
+  watch: {
+    token: {
+      handler(token) {
+        if (token) {
+          localStorage.setItem('user', JSON.stringify({
+            token
+          }));
+        } else {
+          localStorage.removeItem('user');
+        }
+      },
+      immediate: true,
+    },
+  },
 });
