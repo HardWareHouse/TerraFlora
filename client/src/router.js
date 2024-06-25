@@ -15,6 +15,7 @@ import CGU from "../public/rgpd/cgu.vue";
 import Politique from "../public/rgpd/politique_confidentialite.vue";
 import Mentions from "../public/rgpd/mentions.vue";
 import Contact from "./pages/contactPage.vue";
+import ManageProducts from "./pages/manageProducts.vue";
 
 const routes = [
   {
@@ -36,6 +37,12 @@ const routes = [
     path: "/product/:id",
     name: "ProductDetail",
     component: ProductDetail,
+  },
+  {
+    path: '/manage-products',
+    name: 'ManageProducts',
+    component: ManageProducts,
+    meta: { requiresAuth: true, roles: ['ROLE_ADMIN', 'ROLE_STORE_KEEPER'] }
   },
   {
     path: "/wishlist",
