@@ -1,4 +1,5 @@
 import { createRouter, createWebHistory } from "vue-router";
+import { useAuthStore } from './pinia/auth.js';
 import Admin from "./pages/adminDashboardPage.vue";
 import Home from "./pages/homePage.vue";
 import Shop from "./pages/shopPage.vue";
@@ -46,6 +47,7 @@ const routes = [
     path: "/dashboard",
     name: "Dashboard",
     component: Dashboard,
+    meta: { requiresAuth: true },
   },
   {
     path: "/basket",
@@ -103,6 +105,16 @@ const router = createRouter({
   history: createWebHistory(),
   routes,
   linkActiveClass: "text-red-600",
+});
+
+router.beforeEach((to, from, next) => {
+  const authStore = useAuthStore();
+
+  if (to.meta.requiresAuth && !authStore.isLoggedIn) {
+    next({ name: 'login' });
+  } else {
+    next();
+  }
 });
 
 export default router;
