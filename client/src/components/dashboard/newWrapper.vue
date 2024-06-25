@@ -1,6 +1,6 @@
 <script setup>
 import { ref, computed, defineAsyncComponent } from 'vue';
-import { useRouter } from 'vue-router';  // Import the router
+import { useRouter } from 'vue-router'; 
 import { useAuthStore } from '../../pinia/auth.js';
 
 const activeTab = ref('dashboard');
