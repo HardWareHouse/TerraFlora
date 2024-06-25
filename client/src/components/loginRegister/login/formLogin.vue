@@ -51,13 +51,15 @@ import { useRouter } from 'vue-router';
 const router = useRouter();
 const authStore = useAuthStore();
 
+const successLogin = ref(authStore.success);
+
 const email = ref('');
 const password = ref('');
 
 const handleSubmit = () => {
     authStore.login(email.value, password.value);
 
-    if (authStore.success) {
+    if (successLogin) {
         router.push('/dashboard');
     }
 };

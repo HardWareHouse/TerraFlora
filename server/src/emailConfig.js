@@ -1,66 +1,101 @@
-import nodemailer from 'nodemailer';
+import brevo from '@getbrevo/brevo';
 import dotenv from 'dotenv';
 
 dotenv.config();
 
-const transporter = nodemailer.createTransport({
-  host: 'smtp-relay.sendinblue.com',
-  port: 587,
-  secure: false,
-  auth: {
-    user: process.env.BREVO_USER,
-    pass: process.env.BREVO_PASS,
-  },
-});
+const apiInstance = new brevo.TransactionalEmailsApi();
 
-export const sendConfirmationEmail = (user, token) => {
+let apiKey = apiInstance.authentications['apiKey'];
+apiKey.apiKey = process.env.BREVO_PASS_API;
+
+const templateIds = {
+  confirmation: 2,
+  forgotPassword: 3,
+  accountBlocked: 4,
+  preferenceUpdate: 5
+};
+
+export async function sendConfirmationEmail(user, token) {
+  const sendSmtpEmail = new brevo.SendSmtpEmail();
+
   const url = `http://localhost:8000/auth/confirm/${token}`;
-  const mailOptions = {
-    from: process.env.BREVO_USER,
-    to: user.email,
-    subject: 'Confirm your email',
-    html: `<h2>Hello ${user.nom}</h2>
-           <p>Thank you for registering. Please confirm your email by clicking on the following link:</p>
-           <a href="${url}">Confirm your email</a>`
+  sendSmtpEmail.to = [{ email: user.email, name: user.nom }];
+  sendSmtpEmail.templateId = templateIds.confirmation;
+  sendSmtpEmail.params = {
+    NOM: user.nom,
+    TOKEN_URL: url,
   };
 
-  return transporter.sendMail(mailOptions);
-};
+  try {
+    await apiInstance.sendTransacEmail(sendSmtpEmail);
+  } catch (error) {
+    if (error instanceof brevo.HttpError) {
+      console.log('HttpError statusCode', error.statusCode);
+      console.log('HttpError body', error.body);
+    }
+    throw error;
+  }
+}
 
-export const sendResetPasswordEmail = (user, token) => {
+export async function sendResetPasswordEmail(user, token) {
+  const sendSmtpEmail = new brevo.SendSmtpEmail();
+
   const url = `http://localhost:8000/auth/reset-password/${token}`;
-  const mailOptions = {
-    from: process.env.BREVO_USER,
-    to: user.email,
-    subject: 'Reset your password',
-    html: `<h2>Hello ${user.nom}</h2>
-           <p>You requested a password reset. Please click on the following link to reset your password:</p>
-           <a href="${url}">Reset your password</a>`
+  sendSmtpEmail.to = [{ email: user.email, name: user.nom }];
+  sendSmtpEmail.templateId = templateIds.forgotPassword;
+  sendSmtpEmail.params = {
+    NOM: user.nom,
+    TOKEN_URL: url,
   };
 
-  return transporter.sendMail(mailOptions);
-};
+  try {
+    await apiInstance.sendTransacEmail(sendSmtpEmail);
+  } catch (error) {
+    if (error instanceof brevo.HttpError) {
+      console.log('HttpError statusCode', error.statusCode);
+      console.log('HttpError body', error.body);
+    }
+    throw error;
+  }
+}
 
-export const sendAccountBlockedEmail = (user) => {
-  const mailOptions = {
-    from: process.env.BREVO_USER,
-    to: user.email,
-    subject: 'Account Temporarily Blocked',
-    html: `<h2>Hello ${user.nom}</h2>
-           <p>Due to multiple failed login attempts, your account has been temporarily blocked for 10 minutes. Please try again later.</p>`
+export async function sendAccountBlockedEmail(user) {
+  const sendSmtpEmail = new brevo.SendSmtpEmail();
+
+  sendSmtpEmail.to = [{ email: user.email, name: user.nom }];
+  sendSmtpEmail.templateId = templateIds.accountBlocked;
+  sendSmtpEmail.params = {
+    NOM: user.nom,
   };
 
-  return transporter.sendMail(mailOptions);
-};
+  try {
+    await apiInstance.sendTransacEmail(sendSmtpEmail);
+  } catch (error) {
+    if (error instanceof brevo.HttpError) {
+      console.log('HttpError statusCode', error.statusCode);
+      console.log('HttpError body', error.body);
+    }
+    throw error;
+  }
+}
 
-export const sendPreferenceUpdateEmail = (user, preference) => {
-  const mailOptions = {
-    from: process.env.BREVO_USER,
-    to: user.email,
-    subject: 'Mise à jour des préférences de notification',
-    html: `<h2>Bonjour ${user.nom}</h2>
-           <p>Vous avez activé les notifications pour les ${preference}. Vous recevrez désormais des e-mails concernant cette catégorie.</p>`
+export async function sendPreferenceUpdateEmail(user, preference) {
+  const sendSmtpEmail = new brevo.SendSmtpEmail();
+
+  sendSmtpEmail.to = [{ email: user.email, name: user.nom }];
+  sendSmtpEmail.templateId = templateIds.preferenceUpdate;
+  sendSmtpEmail.params = {
+    NOM: user.nom,
+    PREFERENCE: preference,
   };
 
-  return transporter.sendMail(mailOptions);
-};
+  try {
+    await apiInstance.sendTransacEmail(sendSmtpEmail);
+  } catch (error) {
+    if (error instanceof brevo.HttpError) {
+      console.log('HttpError statusCode', error.statusCode);
+      console.log('HttpError body', error.body);
+    }
+    throw error;
+  }
+}

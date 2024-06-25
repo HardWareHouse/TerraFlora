@@ -8,6 +8,7 @@ const instance = axios.create({
 export const useAuthStore = defineStore('auth', {
   state: () => ({
     token: null,
+    tokenMailPreference: null,
     nom: "",
     id: "",
     prenom: "",
@@ -27,7 +28,8 @@ export const useAuthStore = defineStore('auth', {
 
         const userData = response.data.user;
 
-        this.token = response.data.token;
+        this.token = response.data.loginToken;
+        this.tokenMailPreference = response.data.mailPreferenceToken;
         this.nom = userData.nom;
         this.prenom = userData.prenom;
         this.id = userData.id;
@@ -75,5 +77,30 @@ export const useAuthStore = defineStore('auth', {
         instance.defaults.headers.common['Authorization'] = `Bearer ${parsedUser.token}`;
       }
     }
-  }
+  },
+  getters: {
+    isLoggedIn() {
+      return !!this.token;
+    },
+    isAdmin() {
+      return this.role === 'ROLE_ADMIN';
+    },
+    isUser() {
+      return this.role === 'ROLE_USER';
+    },
+  },
+  watch: {
+    token: {
+      handler(token) {
+        if (token) {
+          localStorage.setItem('user', JSON.stringify({
+            token
+          }));
+        } else {
+          localStorage.removeItem('user');
+        }
+      },
+      immediate: true,
+    },
+  },
 });

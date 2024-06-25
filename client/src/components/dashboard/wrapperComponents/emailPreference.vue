@@ -43,14 +43,14 @@ import { useAuthStore } from '../../../pinia/auth.js';
 
 const authStore = useAuthStore();
 
-const userId = authStore.id;
-const email = authStore.email;
+const userId = ref(authStore.id);
+const email = ref(authStore.email);
+const tokenMailPreference = ref(authStore.tokenMailPreference);
 
 const wantsMailNewProduct = ref(authStore.wantsMailNewProduct);
 const wantsMailRestockProduct = ref(authStore.wantsMailRestockProduct);
 const wantsMailChangingPrice = ref(authStore.wantsMailChangingPrice);
 const wantsMailNewsletter = ref(authStore.wantsMailNewsletter);
-
 
 watch(() => authStore.wantsMailNewProduct, (newValue) => {
   wantsMailNewProduct.value = newValue;
@@ -68,7 +68,6 @@ watch(() => authStore.wantsMailNewsletter, (newValue) => {
 const togglePreference = (preference) => {
   switch (preference) {
     case 'wantsMailNewProduct':
-      console.log(wantsMailNewProduct.value);
       wantsMailNewProduct.value = !wantsMailNewProduct.value;
       updatePreference('wantsMailNewProduct', wantsMailNewProduct.value);
       break;
@@ -104,11 +103,16 @@ const updatePreference = async (preference, value) => {
         url = 'http://localhost:8000/emailPreferences/updateWantsMailNewsletter';
         break;
     }
+
     const response = await axios.put(url, {
-      userId,
       [preference]: value
+    }, {
+      headers: {
+        'Authorization': `${tokenMailPreference.value}`
+      }
     });
-    console.log(userId);
+
+    console.log(authStore.mailPreferenceToken);
     console.log(preference);
     console.log(value); 
     console.log(response.data);
