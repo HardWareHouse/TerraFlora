@@ -10,6 +10,7 @@ import authRouter from './routes/auth.js';
 import adminRouter from './routes/admin.js';
 import produitRouter from './routes/produit.js';
 import emailPreferenceRoutes from './routes/emailPreference.js';
+import categorieRoutes from './routes/categorie.js';
 
 dotenv.config();
 
@@ -23,6 +24,7 @@ server.use('/users', userRouter);
 server.use('/auth', authRouter);
 server.use('/admin', adminRouter);
 server.use('/product', produitRouter);
+server.use('/categories', categorieRoutes);
 server.use('/emailPreferences', emailPreferenceRoutes);
 
 server.listen(8000, '0.0.0.0', () => {
