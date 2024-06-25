@@ -1,42 +1,43 @@
-import { createRouter, createWebHistory } from "vue-router";
+import { createRouter, createWebHistory } from 'vue-router';
 import { useAuthStore } from './pinia/auth.js';
-import Admin from "./pages/adminDashboardPage.vue";
-import Home from "./pages/homePage.vue";
-import Shop from "./pages/shopPage.vue";
-import Wishlist from "./pages/wishlistPage.vue";
-import Dashboard from "./pages/dashboardPage.vue";
-import Basket from "./pages/basketPage.vue";
-import Login from "./pages/login.vue";
-import Register from "./pages/register.vue";
-import notFound from "./pages/notFound.vue";
-import ResetPassword from "./pages/resetPassword.vue";
-import ProductDetail from "./pages/productDetail.vue";
-import Checkout from "./pages/checkoutPage.vue";
-import CGU from "../public/rgpd/cgu.vue";
-import Politique from "../public/rgpd/politique_confidentialite.vue";
-import Mentions from "../public/rgpd/mentions.vue";
-import Contact from "./pages/contactPage.vue";
-import ManageProducts from "./pages/manageProducts.vue";
+import Admin from './pages/adminDashboardPage.vue';
+import Home from './pages/homePage.vue';
+import Shop from './pages/shopPage.vue';
+import Wishlist from './pages/wishlistPage.vue';
+import Dashboard from './pages/dashboardPage.vue';
+import Basket from './pages/basketPage.vue';
+import Login from './pages/login.vue';
+import Register from './pages/register.vue';
+import notFound from './pages/notFound.vue';
+import ResetPassword from './pages/resetPassword.vue';
+import ProductDetail from './pages/productDetail.vue';
+import Checkout from './pages/checkoutPage.vue';
+import CGU from '../public/rgpd/cgu.vue';
+import Politique from '../public/rgpd/politique_confidentialite.vue';
+import Mentions from '../public/rgpd/mentions.vue';
+import Contact from './pages/contactPage.vue';
+import ManageProducts from './pages/manageProducts.vue';
 
 const routes = [
   {
-    path: "/",
-    name: "Home",
+    path: '/',
+    name: 'Home',
     component: Home,
   },
   {
-    path: "/admin",
-    name: "Admin",
+    path: '/admin',
+    name: 'Admin',
     component: Admin,
+    meta: { requiresAuth: true, roles: ['ROLE_ADMIN'] }
   },
   {
-    path: "/shop",
-    name: "Shop",
+    path: '/shop',
+    name: 'Shop',
     component: Shop,
   },
   {
-    path: "/product/:id",
-    name: "ProductDetail",
+    path: '/product/:id',
+    name: 'ProductDetail',
     component: ProductDetail,
   },
   {
@@ -46,64 +47,64 @@ const routes = [
     meta: { requiresAuth: true, roles: ['ROLE_ADMIN', 'ROLE_STORE_KEEPER'] }
   },
   {
-    path: "/wishlist",
-    name: "Wishlist",
+    path: '/wishlist',
+    name: 'Wishlist',
     component: Wishlist,
   },
   {
-    path: "/dashboard",
-    name: "Dashboard",
+    path: '/dashboard',
+    name: 'Dashboard',
     component: Dashboard,
     meta: { requiresAuth: true },
   },
   {
-    path: "/basket",
-    name: "Basket",
+    path: '/basket',
+    name: 'Basket',
     component: Basket,
   },
   {
-    path: "/login",
-    name: "login",
+    path: '/login',
+    name: 'login',
     component: Login,
   },
   {
-    path: "/register",
-    name: "register",
+    path: '/register',
+    name: 'register',
     component: Register,
   },
   {
-    path: "/resetPassword",
-    name: "ResetPassword",
+    path: '/resetPassword',
+    name: 'ResetPassword',
     component: ResetPassword,
   },
   {
-    path: "/:pathMatch(.*)*",
-    name: "notFound",
+    path: '/:pathMatch(.*)*',
+    name: 'notFound',
     component: notFound,
   },
   {
-    path: "/checkout",
-    name: "Checkout",
+    path: '/checkout',
+    name: 'Checkout',
     component: Checkout,
   },
   {
-    path: "/mentions",
-    name: "Mentions",
+    path: '/mentions',
+    name: 'Mentions',
     component: Mentions,
   },
   {
-    path: "/cgu",
-    name: "CGU",
+    path: '/cgu',
+    name: 'CGU',
     component: CGU,
   },
   {
-    path: "/confidentialite",
-    name: "Politique",
+    path: '/confidentialite',
+    name: 'Politique',
     component: Politique,
   },
   {
-    path: "/contact",
-    name: "Contact",
+    path: '/contact',
+    name: 'Contact',
     component: Contact,
   },
 ];
@@ -111,7 +112,7 @@ const routes = [
 const router = createRouter({
   history: createWebHistory(),
   routes,
-  linkActiveClass: "text-red-600",
+  linkActiveClass: 'text-red-600',
 });
 
 router.beforeEach((to, from, next) => {
@@ -119,6 +120,8 @@ router.beforeEach((to, from, next) => {
 
   if (to.meta.requiresAuth && !authStore.isLoggedIn) {
     next({ name: 'login' });
+  } else if (to.meta.requiresAuth && to.meta.roles && !to.meta.roles.includes(authStore.role)) {
+    next({ name: 'Home' });
   } else {
     next();
   }
