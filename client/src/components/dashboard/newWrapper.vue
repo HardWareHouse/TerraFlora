@@ -44,8 +44,8 @@ const logout = async () => {
   await authStore.logout();
 
   if (!authStore.token) {
-        router.push('/');
-    }
+    router.push('/');
+  }
 };
 </script>
 
@@ -76,7 +76,7 @@ const logout = async () => {
           </div>
         </div>
       </div>
-      <div class="w-full md:w-3/4 pl-0 md:pl-4">
+      <div class="w-full md:w-3/4 pl-0 md:ml-4">
         <div class="">
           <transition name="fade" mode="out-in">
             <component :is="activeTabComponent" />
