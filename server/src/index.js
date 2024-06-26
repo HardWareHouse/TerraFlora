@@ -11,6 +11,7 @@ import adminRouter from './routes/admin.js';
 import produitRouter from './routes/produit.js';
 import emailPreferenceRoutes from './routes/emailPreference.js';
 import categorieRoutes from './routes/categorie.js';
+import path from 'path';
 
 dotenv.config();
 
@@ -26,6 +27,7 @@ server.use('/admin', adminRouter);
 server.use('/product', produitRouter);
 server.use('/categories', categorieRoutes);
 server.use('/emailPreferences', emailPreferenceRoutes);
+server.use('/uploads', express.static(path.join('src/uploads')));
 
 server.listen(8000, '0.0.0.0', () => {
   console.log('Server listening on port 8000');

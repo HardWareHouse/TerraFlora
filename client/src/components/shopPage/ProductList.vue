@@ -30,7 +30,7 @@
       <div v-for="product in paginatedProducts" :key="product.id"
         class="product border p-4 rounded hover:shadow-lg transition-shadow relative" @click="goToProductDetail(product.id)">
         <div class="product-image relative">
-          <img :src="product.image || '/images/flower.webp'" alt="Product Image" class="w-full h-48 object-cover rounded" />
+          <img :src="getImageUrl(product.Images[0]?.imageUrl)" alt="Product Image" class="w-full h-48 object-cover rounded" />
           <span v-if="product.isPromotion"
             class="absolute top-0 left-0 bg-red-600 text-white text-xs px-2 py-1 rounded-br-lg">PROMOTION</span>
           <span v-if="product.pourcentagePromotion"
@@ -57,7 +57,7 @@
       <div v-for="product in paginatedProducts" :key="product.id"
         class="product flex border p-4 rounded hover:shadow-lg transition-shadow" @click="goToProductDetail(product.id)">
         <div class="product-image relative w-1/3">
-          <img :src="product.image || '/images/flower.webp'" alt="Product Image" class="w-full h-48 object-cover rounded" />
+          <img :src="getImageUrl(product.Images[0]?.imageUrl)" alt="Product Image" class="w-full h-48 object-cover rounded" />
           <span v-if="product.isPromotion"
             class="absolute top-0 left-0 bg-red-600 text-white text-xs px-2 py-1 rounded-br-lg">PROMOTION</span>
           <span v-if="product.pourcentagePromotion"
@@ -114,6 +114,14 @@ const fetchProducts = async () => {
     console.error('Error fetching products:', error);
   }
 };
+
+function getImageUrl(imagePath) {
+  if (!imagePath) {
+    return '/public/images/flower.webp';
+  }
+  return `http://localhost:8000/${imagePath}`;
+}
+
 
 watch(() => props.filters, fetchProducts, { immediate: true });
 watch(() => route.query.search, fetchProducts, { immediate: true });
