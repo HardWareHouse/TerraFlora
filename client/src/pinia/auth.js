@@ -2,7 +2,7 @@ import { defineStore } from 'pinia';
 import axios from 'axios';
 
 const instance = axios.create({
-  baseURL: 'http://localhost:8000/'
+  baseURL: 'http://localhost:8000/',
 });
 
 export const useAuthStore = defineStore('auth', {
@@ -17,7 +17,7 @@ export const useAuthStore = defineStore('auth', {
     wantsMailChangingPrice: null,
     wantsMailNewProduct: null,
     wantsMailNewsletter: null,
-    wantsMailRestockProduct: null,  
+    wantsMailRestockProduct: null,
     error: "",
     success: "",
   }),
@@ -25,38 +25,46 @@ export const useAuthStore = defineStore('auth', {
     async login(email, password) {
       try {
         const response = await instance.post('auth/login', { email, password });
-
         const userData = response.data.user;
 
-        this.token = response.data.loginToken;
-        this.tokenMailPreference = response.data.mailPreferenceToken;
-        this.nom = userData.nom;
-        this.prenom = userData.prenom;
-        this.id = userData.id;
-        this.email = userData.email;
-        this.role = userData.role;
-        this.wantsMailChangingPrice = userData.wantsMailChangingPrice;
-        this.wantsMailNewProduct = userData.wantsMailNewProduct;
-        this.wantsMailNewsletter = userData.wantsMailNewsletter;
-        this.wantsMailRestockProduct = userData.wantsMailRestockProduct;
-
-        instance.defaults.headers.common['Authorization'] = `Bearer ${response.data.token}`;
-
-        localStorage.setItem('user', JSON.stringify({
-          token: this.token
-        }));
+        this.setUserData(response.data.loginToken, response.data.mailPreferenceToken, userData);
 
         this.success = 'Login successful!';
         this.error = '';
-        
       } catch (err) {
-        console.error('Error during login:', err);
         this.error = err.response?.data?.error || 'An error occurred.';
         this.success = '';
       }
     },
     logout() {
-      console.log('Logging out...');
+      this.clearUserData();
+    },
+    checkToken() {
+      const user = localStorage.getItem('user');
+      if (user) {
+        const parsedUser = JSON.parse(user);
+        this.token = parsedUser.token;
+        instance.defaults.headers.common['Authorization'] = `Bearer ${parsedUser.token}`;
+      }
+    },
+    setUserData(token, tokenMailPreference, userData) {
+      this.token = token;
+      this.tokenMailPreference = tokenMailPreference;
+      this.nom = userData.nom;
+      this.prenom = userData.prenom;
+      this.id = userData.id;
+      this.email = userData.email;
+      this.role = userData.role;
+      this.wantsMailChangingPrice = userData.wantsMailChangingPrice;
+      this.wantsMailNewProduct = userData.wantsMailNewProduct;
+      this.wantsMailNewsletter = userData.wantsMailNewsletter;
+      this.wantsMailRestockProduct = userData.wantsMailRestockProduct;
+
+      instance.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+
+      localStorage.setItem('user', JSON.stringify({ token }));
+    },
+    clearUserData() {
       this.token = '';
       this.nom = '';
       this.id = '';
@@ -68,14 +76,6 @@ export const useAuthStore = defineStore('auth', {
 
       localStorage.removeItem('user');
       instance.defaults.headers.common['Authorization'] = '';
-    },
-    checkToken() {
-      const user = localStorage.getItem('user');
-      if (user) {
-        const parsedUser = JSON.parse(user);
-        this.token = parsedUser.token;
-        instance.defaults.headers.common['Authorization'] = `Bearer ${parsedUser.token}`;
-      }
     }
   },
   getters: {
@@ -87,20 +87,6 @@ export const useAuthStore = defineStore('auth', {
     },
     isUser() {
       return this.role === 'ROLE_USER';
-    },
-  },
-  watch: {
-    token: {
-      handler(token) {
-        if (token) {
-          localStorage.setItem('user', JSON.stringify({
-            token
-          }));
-        } else {
-          localStorage.removeItem('user');
-        }
-      },
-      immediate: true,
-    },
-  },
+    }
+  }
 });
