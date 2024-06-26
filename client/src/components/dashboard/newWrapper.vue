@@ -51,8 +51,8 @@ const logout = async () => {
 
 <template>
   <div class="my-account-wrapper py-8">
-    <div class="container mx-auto flex">
-      <div class="w-1/4">
+    <div class="container mx-auto flex flex-col md:flex-row">
+      <div class="w-full md:w-1/4 mb-4 md:mb-0">
         <div class="bg-white shadow-md rounded-lg">
           <div class="myaccount-tab-menu">
             <template v-for="tab in tabs" :key="tab.id">
@@ -76,7 +76,7 @@ const logout = async () => {
           </div>
         </div>
       </div>
-      <div class="w-3/4 pl-4">
+      <div class="w-full md:w-3/4 pl-0 md:pl-4">
         <div class="">
           <transition name="fade" mode="out-in">
             <component :is="activeTabComponent" />
