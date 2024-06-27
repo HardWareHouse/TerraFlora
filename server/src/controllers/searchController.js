@@ -1,10 +1,10 @@
 import Produit from '../modelsSQL/Produit.js';
-import Image from '../modelsSQL/Image.js'; // Assurez-vous d'importer le modèle Image
+import Image from '../modelsSQL/Image.js';
 import { Op } from 'sequelize';
 import validator from 'validator';
 import path from 'path';
 
-// Helper function to generate correct URL
+// Helper pour corriger l'url correcte de l'image
 const generateImageUrl = (filename) => {
   return `uploads/${filename}`;
 };
