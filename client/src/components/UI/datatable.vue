@@ -24,7 +24,8 @@
         <tbody>
           <tr v-for="row in paginatedData" :key="row.id" class="border-2">
             <td class="py-2 px-4">
-              <img :src="row.image || '/images/flower.webp'" class="w-24 h-24 object-cover" />
+              <img :src="getImageUrl(row.Images[0]?.imageUrl)" class="w-24 h-24 object-cover" v-if="row.Images && row.Images.length > 0" />
+              <img src="/images/flower.webp" class="w-24 h-24 object-cover" v-else />
             </td>
             <td class="py-2 px-4 border-x-2">
               {{ row.nom }}
@@ -125,8 +126,6 @@ const sortColumn = (key) => {
     sortKey.value = key;
     sortOrder.value = false;
   }
-  console.log("Sort Key: " + sortKey.value);
-  console.log("Sort Order: " + sortOrder.value);
 };
 
 const prevPage = () => {
@@ -163,6 +162,13 @@ const exportToCSV = () => {
   document.body.appendChild(link);
   link.click();
   document.body.removeChild(link);
+};
+
+const getImageUrl = (imagePath) => {
+  if (!imagePath) {
+    return '/images/flower.webp';
+  }
+  return `http://localhost:8000/${imagePath}`;
 };
 
 watch(() => props.data, () => {
