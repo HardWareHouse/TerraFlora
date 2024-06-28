@@ -25,10 +25,9 @@ export const useAuthStore = defineStore('auth', {
     async login(email, password) {
       try {
         const response = await instance.post('auth/login', { email, password });
-        const userData = response.data.user;
+        const { loginToken, mailPreferenceToken, user } = response.data;
 
-        this.setUserData(response.data.loginToken, response.data.mailPreferenceToken, userData);
-
+        this.setUserData(loginToken, mailPreferenceToken, user);
         this.success = 'Login successful!';
         this.error = '';
       } catch (err) {
@@ -36,15 +35,29 @@ export const useAuthStore = defineStore('auth', {
         this.success = '';
       }
     },
+    async fetchUserData() {
+      try {
+        const token = localStorage.getItem('token');
+        if (token) {
+          instance.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+          const response = await instance.get('auth/me');
+          const userData = response.data;
+    
+          this.setUserData(token, this.tokenMailPreference, userData);
+        }
+      } catch (err) {
+        this.logout();
+      }
+    },
     logout() {
       this.clearUserData();
     },
     checkToken() {
-      const user = localStorage.getItem('user');
-      if (user) {
-        const parsedUser = JSON.parse(user);
-        this.token = parsedUser.token;
-        instance.defaults.headers.common['Authorization'] = `Bearer ${parsedUser.token}`;
+      const token = localStorage.getItem('token');
+      if (token) {
+        this.token = token;
+        instance.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+        this.fetchUserData();
       }
     },
     setUserData(token, tokenMailPreference, userData) {
@@ -62,21 +75,28 @@ export const useAuthStore = defineStore('auth', {
 
       instance.defaults.headers.common['Authorization'] = `Bearer ${token}`;
 
-      localStorage.setItem('user', JSON.stringify({ token }));
+      localStorage.setItem('token', token);
+      localStorage.setItem('tokenMailPreference', tokenMailPreference);
     },
     clearUserData() {
-      this.token = '';
+      this.token = null;
+      this.tokenMailPreference = null;
       this.nom = '';
       this.id = '';
       this.prenom = '';
       this.email = '';
       this.role = '';
+      this.wantsMailChangingPrice = null;
+      this.wantsMailNewProduct = null;
+      this.wantsMailNewsletter = null;
+      this.wantsMailRestockProduct = null;
       this.success = '';
       this.error = '';
 
-      localStorage.removeItem('user');
-      instance.defaults.headers.common['Authorization'] = '';
-    }
+      localStorage.removeItem('token');
+      localStorage.removeItem('tokenMailPreference');
+      delete instance.defaults.headers.common['Authorization'];
+    },
   },
   getters: {
     isLoggedIn() {
