@@ -17,7 +17,6 @@ import { ref } from 'vue';
 import { useAuthStore } from '../../../pinia/auth.js'; 
 
 const authStore = useAuthStore();
-
 const nomPrenom = ref(authStore.nom + ' ' + authStore.prenom);
 </script>
 

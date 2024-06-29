@@ -11,6 +11,7 @@ import adminRouter from './routes/admin.js';
 import produitRouter from './routes/produit.js';
 import emailPreferenceRoutes from './routes/emailPreference.js';
 import categorieRoutes from './routes/categorie.js';
+import adresseRoutes from './routes/adresse.js';
 import path from 'path';
 
 dotenv.config();
@@ -24,6 +25,7 @@ server.use(cors());
 server.use('/users', userRouter);
 server.use('/auth', authRouter);
 server.use('/admin', adminRouter);
+server.use('/address', adresseRoutes);
 server.use('/product', produitRouter);
 server.use('/categories', categorieRoutes);
 server.use('/emailPreferences', emailPreferenceRoutes);

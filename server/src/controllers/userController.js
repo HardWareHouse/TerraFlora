@@ -6,36 +6,23 @@ import validator from 'validator';
 export const getUser = async (req, res) => {
   try {
     const { id } = req.params;
+    if (!id) {
+      return res.status(400).json({ error: 'User ID is required' });
+    }
     if (!validator.isUUID(id)) {
       return res.status(400).json({ error: 'Invalid UUID format' });
     }
-    const user = await User.findByPk(id, { attributes: { exclude: ['password'] } });
-    if (!user) {
-      return res.status(404).json({ error: 'User not found' });
-    }
-    res.status(200).json(user);
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-};
-
-// Récupérer les informations de l'utilisateur connecté
-export const getMe = async (req, res) => {
-  try {
     const user = await User.findByPk(req.user.id, {
-      attributes: ['nom', 'prenom', 'email', 'role']
+      attributes: ['nom', 'prenom', 'email', 'telephone', 'role']
     });
-
     if (!user) {
       return res.status(404).json({ error: 'User not found' });
     }
-
     res.status(200).json(user);
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
 };
-
 
 // Lire tous les utilisateurs
 export const getAllUsers = async (req, res) => {

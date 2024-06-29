@@ -3,6 +3,9 @@ import axios from 'axios';
 
 const instance = axios.create({
   baseURL: 'http://localhost:8000/',
+  headers: {
+    'Content-Type': 'application/json',
+  },
 });
 
 export const useAuthStore = defineStore('auth', {
@@ -14,6 +17,7 @@ export const useAuthStore = defineStore('auth', {
     prenom: "",
     email: "",
     role: "",
+    telephone: "",
     wantsMailChangingPrice: null,
     wantsMailNewProduct: null,
     wantsMailNewsletter: null,
@@ -35,29 +39,47 @@ export const useAuthStore = defineStore('auth', {
         this.success = '';
       }
     },
-    async fetchUserData() {
-      try {
-        const token = localStorage.getItem('token');
-        if (token) {
-          instance.defaults.headers.common['Authorization'] = `Bearer ${token}`;
-          const response = await instance.get('auth/me');
-          const userData = response.data;
-    
-          this.setUserData(token, this.tokenMailPreference, userData);
-        }
-      } catch (err) {
-        this.logout();
-      }
-    },
     logout() {
       this.clearUserData();
+    },
+    async fetchUseriD() {
+      try {
+        const token = localStorage.getItem('token');
+        if (!token) {
+          console.error('No token found');
+          return;
+        }
+        
+        const response = await instance.get('auth/verify-token', {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        const userId = response.data.userId;
+        if (!userId) {
+          console.error('No user found');
+          return;
+        }
+        return userId;
+
+        // this.nom = user.nom;
+        // this.prenom = user.prenom;
+        // this.email = user.email;
+        // this.role = user.role;
+        // this.telephone = user.telephone;
+        // this.wantsMailChangingPrice = user.wantsMailChangingPrice;
+        // this.wantsMailNewProduct = user.wantsMailNewProduct;
+        // this.wantsMailNewsletter = user.wantsMailNewsletter;
+        // this.wantsMailRestockProduct = user.wantsMailRestockProduct;
+      } catch (err) {
+        console.error('Error while fetching user data:', err);
+      }
     },
     checkToken() {
       const token = localStorage.getItem('token');
       if (token) {
         this.token = token;
         instance.defaults.headers.common['Authorization'] = `Bearer ${token}`;
-        this.fetchUserData();
       }
     },
     setUserData(token, tokenMailPreference, userData) {
@@ -68,6 +90,7 @@ export const useAuthStore = defineStore('auth', {
       this.id = userData.id;
       this.email = userData.email;
       this.role = userData.role;
+      this.telephone = userData.telephone;
       this.wantsMailChangingPrice = userData.wantsMailChangingPrice;
       this.wantsMailNewProduct = userData.wantsMailNewProduct;
       this.wantsMailNewsletter = userData.wantsMailNewsletter;
@@ -86,6 +109,7 @@ export const useAuthStore = defineStore('auth', {
       this.prenom = '';
       this.email = '';
       this.role = '';
+      this.telephone = '';
       this.wantsMailChangingPrice = null;
       this.wantsMailNewProduct = null;
       this.wantsMailNewsletter = null;
