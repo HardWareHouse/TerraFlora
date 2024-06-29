@@ -26,7 +26,7 @@ export const useAddress = () => {
           Authorization: `Bearer ${localStorage.getItem('token')}`,
         },
       });
-      address.value = addressSchema.parse(response.data); // Valider et typer les données reçues
+      address.value = addressSchema.parse(response.data);
     } catch (error) {
       console.error('Erreur lors de la récupération de l\'adresse:', error);
     } finally {
@@ -38,14 +38,13 @@ export const useAddress = () => {
   const updateAddress = async (addressId, updatedAddress) => {
     loading.value = true;
     try {
-      // Valider les données mises à jour avec le schéma Zod avant de les envoyer
       const validatedData = addressSchema.parse(updatedAddress);
       const response = await axios.put(`adress/${addressId}`, validatedData, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem('token')}`,
         },
       });
-      address.value = addressSchema.parse(response.data); // Valider et typer les données mises à jour
+      address.value = addressSchema.parse(response.data);
     } catch (error) {
       console.error('Erreur lors de la mise à jour de l\'adresse:', error);
     } finally {
