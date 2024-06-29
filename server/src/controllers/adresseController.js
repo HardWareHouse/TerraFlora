@@ -5,10 +5,18 @@ import validator from "validator";
 export const getAddress = async (req, res) => {
   try {
     const { id } = req.params;
+    if (!id) {
+      return res.status(400).json({ error: "Address ID is required" });
+    }
     if (!validator.isUUID(id)) {
       return res.status(400).json({ error: "Invalid UUID format" });
     }
+
     const address = await Adresse.findByPk(id);
+    if (!address) {
+      return res.status(404).json({ error: "Address not found" });
+    }
+
     res.status(200).json(address);
   } catch (error) {
     res.status(500).json({ error: error.message });
@@ -19,17 +27,21 @@ export const getAddress = async (req, res) => {
 export const getAddressByUserId = async (req, res) => {
     try {
         const { id } = req.params;
+        if (!id) {
+          return res.status(400).json({ error: "User ID is required" });
+        }
         if (!validator.isUUID(id)) {
         return res.status(400).json({ error: "Invalid UUID format" });
         }
+
         const address = await Adresse.findOne({ 
           where: { userId: id },
           attributes: { exclude: ["createdAt", "updatedAt", "userId"] }
         });
-
         if (!address) {
           return res.status(404).json({ error: "Address not found" });
         }
+
         res.status(200).json(address);
     } catch (error) {
         res.status(500).json({ error: error.message });
@@ -40,6 +52,10 @@ export const getAddressByUserId = async (req, res) => {
 export const getAllAddresses = async (req, res) => {
   try {
     const addresses = await Adresse.findAll();
+    if (!addresses) {
+      return res.status(404).json({ error: "Addresses not found" });
+    }
+
     res.status(200).json(addresses);
   } catch (error) {
     res.status(500).json({ error: error.message });
@@ -54,10 +70,18 @@ export const createAddress = async (req, res) => {
     if (!userId || !rue || !numero || !ville || !codePostal) {
       return res.status(400).json({ error: "Missing fields" });
     }
-    const address = await Adresse.create(req.body);
+
+    const address = await Adresse.create({
+      userId,
+      rue,
+      numero,
+      ville,
+      codePostal,
+    });
     if (!address) {
       return res.status(400).json({ error: "Address not created" });
     }
+
     res.status(201).json(address);
   } catch (error) {
     res.status(500).json({ error: error.message });
@@ -68,7 +92,6 @@ export const createAddress = async (req, res) => {
 export const updateAddress = async (req, res) => {
   try {
     const { rue, numero, ville, codePostal } = req.body;
-
     if (!rue && !numero && !ville && !codePostal) {
       return res.status(400).json({ error: "Missing fields" });
     }
@@ -88,6 +111,7 @@ export const updateAddress = async (req, res) => {
       address.ville = ville || address.ville;
       address.codePostal = codePostal || address.codePostal;
       await address.save();
+
       res.status(200).json(address);
     } else {
       res.status(404).json({ message: "Address not found" });
@@ -100,7 +124,15 @@ export const updateAddress = async (req, res) => {
 // Supprimer une adresse
 export const deleteAddress = async (req, res) => {
   try {
-    const address = await Adresse.findByPk(req.params.id);
+    const { id } = req.params;
+    if (!id) {
+      return res.status(400).json({ error: "Missing ID" });
+    }
+    if (!validator.isUUID(id)) {
+      return res.status(400).json({ error: "Invalid UUID format" });
+    }
+
+    const address = await Adresse.findByPk(id);
     if (address) {
       await address.destroy();
       res.status(204).json({ message: "Address deleted" });

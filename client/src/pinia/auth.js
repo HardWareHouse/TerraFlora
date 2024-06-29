@@ -124,7 +124,7 @@ export const useAuthStore = defineStore('auth', {
   },
   getters: {
     isLoggedIn() {
-      return !!this.token;
+      return this.token !== null;
     },
     isAdmin() {
       return this.role === 'ROLE_ADMIN';

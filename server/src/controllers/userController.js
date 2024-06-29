@@ -12,12 +12,14 @@ export const getUser = async (req, res) => {
     if (!validator.isUUID(id)) {
       return res.status(400).json({ error: 'Invalid UUID format' });
     }
+
     const user = await User.findByPk(req.user.id, {
       attributes: ['nom', 'prenom', 'email', 'telephone', 'role']
     });
     if (!user) {
       return res.status(404).json({ error: 'User not found' });
     }
+
     res.status(200).json(user);
   } catch (error) {
     res.status(500).json({ error: error.message });
@@ -28,6 +30,10 @@ export const getUser = async (req, res) => {
 export const getAllUsers = async (req, res) => {
   try {
     const users = await User.findAll({ attributes: { exclude: ['password'] } });
+    if (!users) { 
+      return res.status(404).json({ error: 'Users not found' });
+    }
+
     res.status(200).json(users);
   } catch (error) {
     res.status(500).json({ error: error.message });
@@ -75,8 +81,15 @@ export const updateUser = async (req, res) => {
 // Supprimer un utilisateur
 export const deleteUser = async (req, res) => {
   try {
-    const user = await User.findByPk(req.params.id);
+    const { id } = req.params;
+    if (!id) {
+      return res.status(400).json({ error: 'User ID is required' });
+    }
+    if (!validator.isUUID(id)) {
+      return res.status(400).json({ error: 'Invalid UUID format' });
+    }
 
+    const user = await User.findByPk(req.params.id);
     if (!user) {
       return res.status(404).json({ message: 'User not found' });
     }

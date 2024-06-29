@@ -301,8 +301,11 @@ export const verifyToken = async (req, res) => {
     }
 
     const decoded = jwt.verify(token, process.env.LOGIN_JWT_KEY);
+    if (!decoded) {
+      return res.status(400).json({ msg: "Token invalide." });
+    }
+
     const user = await User.findByPk(decoded.id);
-    
     if (!user) {
       return res.status(400).json({ msg: "Utilisateur non trouvé." });
     }
