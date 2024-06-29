@@ -47,7 +47,7 @@ let editMode = ref(false);
 
 // Charger l'adresse lorsque le composant est monté
 onMounted(() => {
-  authStore.fetchUseriD().then((userId) => {
+  authStore.getUseriD().then((userId) => {
     fetchAddressByUserId(userId);
   });
 });

@@ -42,39 +42,6 @@ export const useAuthStore = defineStore('auth', {
     logout() {
       this.clearUserData();
     },
-    async fetchUseriD() {
-      try {
-        const token = localStorage.getItem('token');
-        if (!token) {
-          console.error('No token found');
-          return;
-        }
-        
-        const response = await instance.get('auth/verify-token', {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
-        const userId = response.data.userId;
-        if (!userId) {
-          console.error('No user found');
-          return;
-        }
-        return userId;
-
-        // this.nom = user.nom;
-        // this.prenom = user.prenom;
-        // this.email = user.email;
-        // this.role = user.role;
-        // this.telephone = user.telephone;
-        // this.wantsMailChangingPrice = user.wantsMailChangingPrice;
-        // this.wantsMailNewProduct = user.wantsMailNewProduct;
-        // this.wantsMailNewsletter = user.wantsMailNewsletter;
-        // this.wantsMailRestockProduct = user.wantsMailRestockProduct;
-      } catch (err) {
-        console.error('Error while fetching user data:', err);
-      }
-    },
     checkToken() {
       const token = localStorage.getItem('token');
       if (token) {
@@ -120,6 +87,39 @@ export const useAuthStore = defineStore('auth', {
       localStorage.removeItem('token');
       localStorage.removeItem('tokenMailPreference');
       delete instance.defaults.headers.common['Authorization'];
+    },
+    async getUseriD() {
+      try {
+        const token = localStorage.getItem('token');
+        if (!token) {
+          console.error('No token found');
+          return;
+        }
+        
+        const response = await instance.get('auth/verify-token', {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        const userId = response.data.userId;
+        if (!userId) {
+          console.error('No user found');
+          return;
+        }
+        return userId;
+
+        // this.nom = user.nom;
+        // this.prenom = user.prenom;
+        // this.email = user.email;
+        // this.role = user.role;
+        // this.telephone = user.telephone;
+        // this.wantsMailChangingPrice = user.wantsMailChangingPrice;
+        // this.wantsMailNewProduct = user.wantsMailNewProduct;
+        // this.wantsMailNewsletter = user.wantsMailNewsletter;
+        // this.wantsMailRestockProduct = user.wantsMailRestockProduct;
+      } catch (err) {
+        console.error('Error while fetching user data:', err);
+      }
     },
   },
   getters: {
