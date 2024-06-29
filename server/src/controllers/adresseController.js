@@ -50,7 +50,14 @@ export const getAllAddresses = async (req, res) => {
 // Créer une adresse
 export const createAddress = async (req, res) => {
   try {
+    const { userId, rue, numero, ville, codePostal } = req.body;
+    if (!userId || !rue || !numero || !ville || !codePostal) {
+      return res.status(400).json({ error: "Missing fields" });
+    }
     const address = await Adresse.create(req.body);
+    if (!address) {
+      return res.status(400).json({ error: "Address not created" });
+    }
     res.status(201).json(address);
   } catch (error) {
     res.status(500).json({ error: error.message });
@@ -61,7 +68,20 @@ export const createAddress = async (req, res) => {
 export const updateAddress = async (req, res) => {
   try {
     const { rue, numero, ville, codePostal } = req.body;
-    const address = await Adresse.findByPk(req.params.id);
+
+    if (!rue && !numero && !ville && !codePostal) {
+      return res.status(400).json({ error: "Missing fields" });
+    }
+
+    const { id } = req.params;
+    if (!id) {
+      return res.status(400).json({ error: "Missing ID" });
+    }
+    if (!validator.isUUID(id)) {
+      return res.status(400).json({ error: "Invalid UUID format" });
+    }
+    
+    const address = await Adresse.findByPk(id);
     if (address) {
       address.rue = rue || address.rue;
       address.numero = numero || address.numero;

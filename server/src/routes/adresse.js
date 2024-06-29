@@ -7,13 +7,14 @@ import {
     updateAddress, 
     deleteAddress 
 } from "../controllers/adresseController.js";
+import { authenticate } from '../middlewares/authMiddleware.js';
 
 const router = Router();
 
 router.get('/', getAllAddresses);
-router.get('/:id', getAddressByUserId);
-router.post('/', createAddress);
-router.put('/:id', updateAddress);
-router.delete('/:id', deleteAddress);
+router.get('/:id', authenticate, getAddressByUserId);
+router.post('/', authenticate, createAddress);
+router.put('/:id', authenticate, updateAddress);
+router.delete('/:id', authenticate, deleteAddress);
 
 export default router;
