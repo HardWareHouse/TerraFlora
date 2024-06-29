@@ -1,11 +1,25 @@
 import { defineStore } from 'pinia';
 import axios from 'axios';
+import z from 'zod';
 
 const instance = axios.create({
   baseURL: 'http://localhost:8000/',
   headers: {
     'Content-Type': 'application/json',
   },
+});
+
+const userSchema = z.object({
+  id: z.string(),
+  nom: z.string(),
+  prenom: z.string(),
+  email: z.string(),
+  role: z.string(),
+  telephone: z.string(),
+  wantsMailChangingPrice: z.boolean(),
+  wantsMailNewProduct: z.boolean(),
+  wantsMailNewsletter: z.boolean(),
+  wantsMailRestockProduct: z.boolean(),
 });
 
 export const useAuthStore = defineStore('auth', {
@@ -107,16 +121,6 @@ export const useAuthStore = defineStore('auth', {
           return;
         }
         return userId;
-
-        // this.nom = user.nom;
-        // this.prenom = user.prenom;
-        // this.email = user.email;
-        // this.role = user.role;
-        // this.telephone = user.telephone;
-        // this.wantsMailChangingPrice = user.wantsMailChangingPrice;
-        // this.wantsMailNewProduct = user.wantsMailNewProduct;
-        // this.wantsMailNewsletter = user.wantsMailNewsletter;
-        // this.wantsMailRestockProduct = user.wantsMailRestockProduct;
       } catch (err) {
         console.error('Error while fetching user data:', err);
       }

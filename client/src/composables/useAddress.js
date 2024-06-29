@@ -28,6 +28,11 @@ export const useAddress = () => {
           Authorization: `Bearer ${localStorage.getItem('token')}`,
         },
       });
+      if (!response.data) {
+        console.error('Aucune donnée adresse trouvée');
+        return;
+      }
+      
       address.value = addressSchema.parse(response.data);
     } catch (error) {
       console.error('Erreur lors de la récupération de l\'adresse:', error);
@@ -41,12 +46,22 @@ export const useAddress = () => {
     loading.value = true;
     try {
       const validatedData = addressSchema.parse(newAddress);
+      if (!validatedData) {
+        console.error('Les données de l\'adresse ne sont pas valides');
+        return;
+      }
+
       validatedData.userId = userId;
       const response = await instance.post('address', validatedData, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem('token')}`,
         },
       });
+      if (!response.data) {
+        console.error('Aucune donnée adresse trouvée');
+        return;
+      }
+
       address.value = addressSchema.parse(response.data);
     } catch (error) {
       console.error('Erreur lors de la création de l\'adresse:', error);
@@ -60,11 +75,21 @@ export const useAddress = () => {
     loading.value = true;
     try {
       const validatedData = addressSchema.parse(updatedAddress);
+      if (!validatedData) {
+        console.error('Les données de l\'adresse ne sont pas valides');
+        return;
+      }
+
       const response = await instance.put(`address/${addressId}`, validatedData, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem('token')}`,
         },
       });
+      if (!response.data) {
+        console.error('Aucune donnée adresse trouvée');
+        return;
+      }
+      
       address.value = addressSchema.parse(response.data);
     } catch (error) {
       console.error('Erreur lors de la mise à jour de l\'adresse:', error);
