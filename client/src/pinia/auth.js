@@ -37,7 +37,7 @@ export const useAuthStore = defineStore('auth', {
     wantsMailNewsletter: null,
     wantsMailRestockProduct: null,
     error: "",
-    success: "",
+    success: null,
   }),
   actions: {
     async login(email, password) {
@@ -50,7 +50,7 @@ export const useAuthStore = defineStore('auth', {
         this.error = '';
       } catch (err) {
         this.error = err.response?.data?.error || 'An error occurred.';
-        this.success = '';
+        this.success = null;
       }
     },
     logout() {
@@ -95,7 +95,7 @@ export const useAuthStore = defineStore('auth', {
       this.wantsMailNewProduct = null;
       this.wantsMailNewsletter = null;
       this.wantsMailRestockProduct = null;
-      this.success = '';
+      this.success = null ;
       this.error = '';
 
       localStorage.removeItem('token');
