@@ -13,12 +13,33 @@
 </template>
 
 <script setup>
-import { ref } from 'vue';
-import { useAuthStore } from '../../../pinia/auth.js'; 
+import { ref, watchEffect, onMounted } from 'vue';
+import { useUser } from '../../../composables/useUser.js';
+import { useAuthStore } from '../../../pinia/auth.js';
 
+const { user, loading, fetchUser } = useUser();
 const authStore = useAuthStore();
+const nomPrenom = ref('');
 
-const nomPrenom = ref(authStore.nom + ' ' + authStore.prenom);
+onMounted(() => {
+  authStore.getUseriD().then((userId) => {
+    fetchUser(userId).then(() => {
+      updateNomPrenom();
+    });
+  });
+});
+
+const updateNomPrenom = () => {
+  if (user.value) {
+    nomPrenom.value = `${user.value.nom} ${user.value.prenom}`;
+  }
+};
+
+watchEffect(() => {
+  if (user.value) {
+    updateNomPrenom();
+  }
+});
 </script>
 
 <style scoped>

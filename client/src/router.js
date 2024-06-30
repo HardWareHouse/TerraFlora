@@ -115,8 +115,12 @@ const router = createRouter({
   linkActiveClass: 'text-red-600',
 });
 
-router.beforeEach((to, from, next) => {
+router.beforeEach(async (to, from, next) => {
   const authStore = useAuthStore();
+  
+  if (to.meta.requiresAuth && localStorage.getItem('token') && !authStore.isLoggedIn ) {
+    await authStore.checkToken();
+  }
 
   if (to.meta.requiresAuth && !authStore.isLoggedIn) {
     next({ name: 'login' });

@@ -57,11 +57,11 @@ const email = ref('');
 const password = ref('');
 
 const handleSubmit = () => {
-    authStore.login(email.value, password.value);
-
-    if (successLogin) {
-        router.push('/dashboard');
-    }
+    authStore.login(email.value, password.value).then(() => {
+        if (authStore.success) {
+            router.push('/dashboard');
+        }
+    });
 };
 </script>
 

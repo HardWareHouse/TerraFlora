@@ -1,8 +1,25 @@
 import { defineStore } from 'pinia';
 import axios from 'axios';
+import z from 'zod';
 
 const instance = axios.create({
   baseURL: 'http://localhost:8000/',
+  headers: {
+    'Content-Type': 'application/json',
+  },
+});
+
+const userSchema = z.object({
+  id: z.string(),
+  nom: z.string(),
+  prenom: z.string(),
+  email: z.string(),
+  role: z.string(),
+  telephone: z.string(),
+  wantsMailChangingPrice: z.boolean(),
+  wantsMailNewProduct: z.boolean(),
+  wantsMailNewsletter: z.boolean(),
+  wantsMailRestockProduct: z.boolean(),
 });
 
 export const useAuthStore = defineStore('auth', {
@@ -14,37 +31,36 @@ export const useAuthStore = defineStore('auth', {
     prenom: "",
     email: "",
     role: "",
+    telephone: "",
     wantsMailChangingPrice: null,
     wantsMailNewProduct: null,
     wantsMailNewsletter: null,
     wantsMailRestockProduct: null,
     error: "",
-    success: "",
+    success: null,
   }),
   actions: {
     async login(email, password) {
       try {
         const response = await instance.post('auth/login', { email, password });
-        const userData = response.data.user;
+        const { loginToken, mailPreferenceToken, user } = response.data;
 
-        this.setUserData(response.data.loginToken, response.data.mailPreferenceToken, userData);
-
+        this.setUserData(loginToken, mailPreferenceToken, user);
         this.success = 'Login successful!';
         this.error = '';
       } catch (err) {
         this.error = err.response?.data?.error || 'An error occurred.';
-        this.success = '';
+        this.success = null;
       }
     },
     logout() {
       this.clearUserData();
     },
     checkToken() {
-      const user = localStorage.getItem('user');
-      if (user) {
-        const parsedUser = JSON.parse(user);
-        this.token = parsedUser.token;
-        instance.defaults.headers.common['Authorization'] = `Bearer ${parsedUser.token}`;
+      const token = localStorage.getItem('token');
+      if (token) {
+        this.token = token;
+        instance.defaults.headers.common['Authorization'] = `Bearer ${token}`;
       }
     },
     setUserData(token, tokenMailPreference, userData) {
@@ -55,6 +71,7 @@ export const useAuthStore = defineStore('auth', {
       this.id = userData.id;
       this.email = userData.email;
       this.role = userData.role;
+      this.telephone = userData.telephone;
       this.wantsMailChangingPrice = userData.wantsMailChangingPrice;
       this.wantsMailNewProduct = userData.wantsMailNewProduct;
       this.wantsMailNewsletter = userData.wantsMailNewsletter;
@@ -62,25 +79,56 @@ export const useAuthStore = defineStore('auth', {
 
       instance.defaults.headers.common['Authorization'] = `Bearer ${token}`;
 
-      localStorage.setItem('user', JSON.stringify({ token }));
+      localStorage.setItem('token', token);
+      localStorage.setItem('tokenMailPreference', tokenMailPreference);
     },
     clearUserData() {
-      this.token = '';
+      this.token = null;
+      this.tokenMailPreference = null;
       this.nom = '';
       this.id = '';
       this.prenom = '';
       this.email = '';
       this.role = '';
-      this.success = '';
+      this.telephone = '';
+      this.wantsMailChangingPrice = null;
+      this.wantsMailNewProduct = null;
+      this.wantsMailNewsletter = null;
+      this.wantsMailRestockProduct = null;
+      this.success = null ;
       this.error = '';
 
-      localStorage.removeItem('user');
-      instance.defaults.headers.common['Authorization'] = '';
-    }
+      localStorage.removeItem('token');
+      localStorage.removeItem('tokenMailPreference');
+      delete instance.defaults.headers.common['Authorization'];
+    },
+    async getUseriD() {
+      try {
+        const token = localStorage.getItem('token');
+        if (!token) {
+          console.error('No token found');
+          return;
+        }
+        
+        const response = await instance.get('auth/verify-token', {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        const userId = response.data.userId;
+        if (!userId) {
+          console.error('No user found');
+          return;
+        }
+        return userId;
+      } catch (err) {
+        console.error('Error while fetching user data:', err);
+      }
+    },
   },
   getters: {
     isLoggedIn() {
-      return !!this.token;
+      return this.token !== null;
     },
     isAdmin() {
       return this.role === 'ROLE_ADMIN';
