@@ -20,8 +20,8 @@
             <td class="py-2 px-4 border">{{ product.prix }}</td>
             <td class="py-2 px-4 border">{{ product.stock }}</td>
             <td class="py-2 px-4 border">
-              <button @click="openEditProductModal(product)" class="bg-yellow-500 text-white px-4 py-2 rounded mr-2">Éditer</button>
-              <button @click="deleteProduct(product.id)" class="bg-red-500 text-white px-4 py-2 rounded">Supprimer</button>
+              <button @click="openEditProductModal(product)" class="bg-yellow-500 text-white px-4 py-2 rounded mr-2"> <i class="bi bi-pencil"></i> </button>
+              <button @click="deleteProduct(product.id)" class="bg-red-500 text-white px-4 py-2 rounded"><i class="bi bi-trash"></i></button>
             </td>
           </tr>
         </tbody>
