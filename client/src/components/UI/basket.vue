@@ -7,7 +7,8 @@
       <ul>
         <li v-for="item in cartItems" :key="item.id" class="flex items-center justify-between py-4">
           <div class="flex items-center">
-            <img :src="item.image || '/images/flower.webp'" alt="item.nom" class="w-16 h-16 mr-4 rounded">
+            <img :src="getImageUrl(item.Images[0]?.imageUrl)" alt="item.nom" class="w-16 h-16 mr-4 rounded" v-if="item.Images && item.Images.length > 0">
+            <img src="/images/flower.webp" alt="item.nom" class="w-16 h-16 mr-4 rounded" v-else>
             <div>
               <p class="text-sm font-semibold">{{ item.nom }}</p>
               <p class="text-xs text-gray-600">{{ item.quantity }} × ${{ item.prix }}</p>
@@ -69,6 +70,13 @@ const total = computed(() => {
 const viewCart = () => {
   router.push('/basket');
   emit('close');
+};
+
+const getImageUrl = (imagePath) => {
+  if (!imagePath) {
+    return '/images/flower.webp';
+  }
+  return `http://localhost:8000/uploads/${imagePath.split('/').pop()}`;
 };
 </script>
 

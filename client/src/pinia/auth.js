@@ -1,79 +1,140 @@
 import { defineStore } from 'pinia';
 import axios from 'axios';
+import z from 'zod';
 
 const instance = axios.create({
-  baseURL: 'http://localhost:8000/'
+  baseURL: 'http://localhost:8000/',
+  headers: {
+    'Content-Type': 'application/json',
+  },
+});
+
+const userSchema = z.object({
+  id: z.string(),
+  nom: z.string(),
+  prenom: z.string(),
+  email: z.string(),
+  role: z.string(),
+  telephone: z.string(),
+  wantsMailChangingPrice: z.boolean(),
+  wantsMailNewProduct: z.boolean(),
+  wantsMailNewsletter: z.boolean(),
+  wantsMailRestockProduct: z.boolean(),
 });
 
 export const useAuthStore = defineStore('auth', {
   state: () => ({
     token: null,
+    tokenMailPreference: null,
     nom: "",
     id: "",
     prenom: "",
     email: "",
     role: "",
+    telephone: "",
     wantsMailChangingPrice: null,
     wantsMailNewProduct: null,
     wantsMailNewsletter: null,
-    wantsMailRestockProduct: null,  
+    wantsMailRestockProduct: null,
     error: "",
-    success: "",
+    success: null,
   }),
   actions: {
     async login(email, password) {
       try {
         const response = await instance.post('auth/login', { email, password });
+        const { loginToken, mailPreferenceToken, user } = response.data;
 
-        const userData = response.data.user;
-
-        this.token = response.data.token;
-        this.nom = userData.nom;
-        this.prenom = userData.prenom;
-        this.id = userData.id;
-        this.email = userData.email;
-        this.role = userData.role;
-        this.wantsMailChangingPrice = userData.wantsMailChangingPrice;
-        this.wantsMailNewProduct = userData.wantsMailNewProduct;
-        this.wantsMailNewsletter = userData.wantsMailNewsletter;
-        this.wantsMailRestockProduct = userData.wantsMailRestockProduct;
-
-        instance.defaults.headers.common['Authorization'] = `Bearer ${response.data.token}`;
-
-        localStorage.setItem('user', JSON.stringify({
-          token: this.token
-        }));
-
+        this.setUserData(loginToken, mailPreferenceToken, user);
         this.success = 'Login successful!';
         this.error = '';
-        
       } catch (err) {
-        console.error('Error during login:', err);
         this.error = err.response?.data?.error || 'An error occurred.';
-        this.success = '';
+        this.success = null;
       }
     },
     logout() {
-      console.log('Logging out...');
-      this.token = '';
+      this.clearUserData();
+    },
+    checkToken() {
+      const token = localStorage.getItem('token');
+      if (token) {
+        this.token = token;
+        instance.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+      }
+    },
+    setUserData(token, tokenMailPreference, userData) {
+      this.token = token;
+      this.tokenMailPreference = tokenMailPreference;
+      this.nom = userData.nom;
+      this.prenom = userData.prenom;
+      this.id = userData.id;
+      this.email = userData.email;
+      this.role = userData.role;
+      this.telephone = userData.telephone;
+      this.wantsMailChangingPrice = userData.wantsMailChangingPrice;
+      this.wantsMailNewProduct = userData.wantsMailNewProduct;
+      this.wantsMailNewsletter = userData.wantsMailNewsletter;
+      this.wantsMailRestockProduct = userData.wantsMailRestockProduct;
+
+      instance.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+
+      localStorage.setItem('token', token);
+      localStorage.setItem('tokenMailPreference', tokenMailPreference);
+    },
+    clearUserData() {
+      this.token = null;
+      this.tokenMailPreference = null;
       this.nom = '';
       this.id = '';
       this.prenom = '';
       this.email = '';
       this.role = '';
-      this.success = '';
+      this.telephone = '';
+      this.wantsMailChangingPrice = null;
+      this.wantsMailNewProduct = null;
+      this.wantsMailNewsletter = null;
+      this.wantsMailRestockProduct = null;
+      this.success = null ;
       this.error = '';
 
-      localStorage.removeItem('user');
-      instance.defaults.headers.common['Authorization'] = '';
+      localStorage.removeItem('token');
+      localStorage.removeItem('tokenMailPreference');
+      delete instance.defaults.headers.common['Authorization'];
     },
-    checkToken() {
-      const user = localStorage.getItem('user');
-      if (user) {
-        const parsedUser = JSON.parse(user);
-        this.token = parsedUser.token;
-        instance.defaults.headers.common['Authorization'] = `Bearer ${parsedUser.token}`;
+    async getUseriD() {
+      try {
+        const token = localStorage.getItem('token');
+        if (!token) {
+          console.error('No token found');
+          return;
+        }
+        
+        const response = await instance.get('auth/verify-token', {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        const userId = response.data.userId;
+        if (!userId) {
+          console.error('No user found');
+          return;
+        }
+        return userId;
+      } catch (err) {
+        console.error('Error while fetching user data:', err);
       }
+    },
+  },
+  getters: {
+    isLoggedIn() {
+      return this.token !== null;
+    },
+    isAdmin() {
+      return this.role === 'ROLE_ADMIN';
+    },
+    isUser() {
+      return this.role === 'ROLE_USER';
     }
   }
 });

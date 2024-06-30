@@ -1,7 +1,7 @@
 import { DataTypes } from 'sequelize';
-import { sequelize } from '../dataBase.js';
+import { connection } from './dataBase.js';
 
-const Panier = sequelize.define('Panier', {
+const Panier = connection.define('Panier', {
     id: {
         type: DataTypes.UUID,
         defaultValue: DataTypes.UUIDV4,

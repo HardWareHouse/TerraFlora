@@ -1,6 +1,6 @@
 <template>
   <header class="border-b border-gray-200">
-    <div class="container mx-auto flex items-center justify-between py-2 px-4 h-10">
+    <div class="container mx-auto flex items-center justify-between px-4 h-10">
       <div class="text-[13px] text-gray-600 leading-none">
         Bienvenue sur Terra Flora
       </div>
@@ -15,8 +15,8 @@
       </div>
     </div>
     <p class="border-t border-gray-200 w-full"></p>
-    <div class="container mx-auto flex items-center justify-between py-10 px-4">
-      <div class="text-3xl font-bold text-black"><a href="/">Terra Flora</a></div>
+    <div class="container mx-auto flex items-center justify-between px-4">
+      <div><a href="/"><img src="../../assets/homePage/TerraFlora_logo.png" alt="Terra Flora" class="h-32" /></a></div>
       <nav class="flex space-x-6 text-sm font-medium">
         <router-link to="/" class="text-gray-700">ACCUEIL</router-link>
         <div class="relative group">

@@ -1,6 +1,6 @@
 <script setup>
 import { ref, computed, defineAsyncComponent } from 'vue';
-import { useRouter } from 'vue-router';  // Import the router
+import { useRouter } from 'vue-router'; 
 import { useAuthStore } from '../../pinia/auth.js';
 
 const activeTab = ref('dashboard');
@@ -10,13 +10,13 @@ const selectTab = (tab) => {
 };
 
 const tabs = [
-  { id: 'dashboard', icon: 'bi-speedometer2', label: 'Dashboard' },
-  { id: 'orders', icon: 'bi-cart', label: 'Orders' },
-  { id: 'download', icon: 'bi-cloud-download', label: 'Download' },
-  { id: 'addressEdit', icon: 'bi-geo-alt-fill', label: 'Address' },
-  { id: 'accountInfo', icon: 'bi-person', label: 'Account Details' },
-  { id: 'emailPreference', icon: 'bi-envelope-paper-fill', label: 'Email Preference' },
-  { id: 'logout', icon: 'bi-box-arrow-left', label: 'Logout' },
+  { id: 'dashboard', icon: 'bi-speedometer2', label: 'Tableau de bord' },
+  { id: 'orders', icon: 'bi-cart', label: 'Mes commandes' },
+  { id: 'download', icon: 'bi-cloud-download', label: 'Mes telechargements' },
+  { id: 'addressEdit', icon: 'bi-geo-alt-fill', label: 'Mon adresse' },
+  { id: 'accountInfo', icon: 'bi-person', label: 'Mon compte' },
+  { id: 'emailPreference', icon: 'bi-envelope-paper-fill', label: 'Mes préférences' },
+  { id: 'logout', icon: 'bi-box-arrow-left', label: 'Déconnexion' },
 ];
 
 const tabClass = (tab) => {
@@ -44,15 +44,15 @@ const logout = async () => {
   await authStore.logout();
 
   if (!authStore.token) {
-        router.push('/');
-    }
+    router.push('/');
+  }
 };
 </script>
 
 <template>
   <div class="my-account-wrapper py-8">
-    <div class="container mx-auto flex">
-      <div class="w-1/4">
+    <div class="container mx-auto flex flex-col md:flex-row">
+      <div class="w-full md:w-1/4 mb-4 md:mb-0">
         <div class="bg-white shadow-md rounded-lg">
           <div class="myaccount-tab-menu">
             <template v-for="tab in tabs" :key="tab.id">
@@ -76,7 +76,7 @@ const logout = async () => {
           </div>
         </div>
       </div>
-      <div class="w-3/4 pl-4">
+      <div class="w-full md:w-3/4 pl-0 md:ml-4">
         <div class="">
           <transition name="fade" mode="out-in">
             <component :is="activeTabComponent" />

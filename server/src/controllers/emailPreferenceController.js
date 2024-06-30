@@ -3,10 +3,10 @@ import { sendPreferenceUpdateEmail } from '../emailConfig.js';
 
 // Update wantsMailNewProduct
 export const updateWantsMailNewProduct = async (req, res) => {
-  const { userId, wantsMailNewProduct } = req.body;
-  
+  const { wantsMailNewProduct } = req.body;
+
   try {
-    const user = await User.findByPk(userId);
+    const user = await User.findByPk(req.user.id);
     if (!user) {
       return res.status(404).json({ message: 'User not found' });
     }
@@ -14,7 +14,7 @@ export const updateWantsMailNewProduct = async (req, res) => {
     user.wantsMailNewProduct = wantsMailNewProduct;
 
     if (user.wantsMailNewProduct) {
-        sendPreferenceUpdateEmail(user, 'nouveaux produits');
+      sendPreferenceUpdateEmail(user, 'nouveaux produits');
     }
 
     await user.save();
@@ -27,10 +27,10 @@ export const updateWantsMailNewProduct = async (req, res) => {
 
 // Update wantsMailRestockProduct
 export const updateWantsMailRestockProduct = async (req, res) => {
-  const { userId, wantsMailRestockProduct } = req.body;
-  
+  const { wantsMailRestockProduct } = req.body;
+
   try {
-    const user = await User.findByPk(userId);
+    const user = await User.findByPk(req.user.id);
     if (!user) {
       return res.status(404).json({ message: 'User not found' });
     }
@@ -38,7 +38,7 @@ export const updateWantsMailRestockProduct = async (req, res) => {
     user.wantsMailRestockProduct = wantsMailRestockProduct;
 
     if (user.wantsMailRestockProduct) {
-        sendPreferenceUpdateEmail(user, 'restock de produit');
+      sendPreferenceUpdateEmail(user, 'restock de produit');
     }
 
     await user.save();
@@ -51,10 +51,10 @@ export const updateWantsMailRestockProduct = async (req, res) => {
 
 // Update wantsMailChangingPrice
 export const updateWantsMailChangingPrice = async (req, res) => {
-  const { userId, wantsMailChangingPrice } = req.body;
-  
+  const { wantsMailChangingPrice } = req.body;
+
   try {
-    const user = await User.findByPk(userId);
+    const user = await User.findByPk(req.user.id);
     if (!user) {
       return res.status(404).json({ message: 'User not found' });
     }
@@ -62,7 +62,7 @@ export const updateWantsMailChangingPrice = async (req, res) => {
     user.wantsMailChangingPrice = wantsMailChangingPrice;
 
     if (user.wantsMailChangingPrice) {
-        sendPreferenceUpdateEmail(user, 'prix');
+      sendPreferenceUpdateEmail(user, 'prix');
     }
 
     await user.save();
@@ -75,10 +75,10 @@ export const updateWantsMailChangingPrice = async (req, res) => {
 
 // Update wantsMailNewsletter
 export const updateWantsMailNewsletter = async (req, res) => {
-  const { userId, wantsMailNewsletter } = req.body;
-  
+  const { wantsMailNewsletter } = req.body;
+
   try {
-    const user = await User.findByPk(userId);
+    const user = await User.findByPk(req.user.id);
     if (!user) {
       return res.status(404).json({ message: 'User not found' });
     }
@@ -86,7 +86,7 @@ export const updateWantsMailNewsletter = async (req, res) => {
     user.wantsMailNewsletter = wantsMailNewsletter;
 
     if (user.wantsMailNewsletter) {
-        sendPreferenceUpdateEmail(user, 'newsletter');
+      sendPreferenceUpdateEmail(user, 'newsletter');
     }
 
     await user.save();

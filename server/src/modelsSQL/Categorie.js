@@ -1,7 +1,7 @@
 import { DataTypes } from 'sequelize';
-import { sequelize } from '../dataBase.js';
+import { connection } from './dataBase.js';
 
-const Categorie = sequelize.define('Categorie', {
+const Categorie = connection.define('Categorie', {
     id: {
         type: DataTypes.UUID,
         defaultValue: DataTypes.UUIDV4,

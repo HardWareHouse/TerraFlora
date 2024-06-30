@@ -4,7 +4,7 @@
 <template>
     <div class="bg-gray-100 py-14 w-full">
       <div class="container mx-auto text-center">
-        <h1 class="text-3xl font-semibold mb-2">Dashboard</h1>
+        <h1 class="text-3xl font-semibold mb-2">Mon Dashboard</h1>
         <nav class="text-sm font-medium text-gray-500" aria-label="Breadcrumb">
           <ol class="list-none p-0 inline-flex justify-center space-x-2">
             <li class="flex items-center">

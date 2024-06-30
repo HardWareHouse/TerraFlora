@@ -1,7 +1,7 @@
 import { DataTypes } from 'sequelize';
-import { sequelize } from '../dataBase.js';
+import { connection } from './dataBase.js';
 
-const Commande = sequelize.define('Commande', {
+const Commande = connection.define('Commande', {
     id: {
         type: DataTypes.UUID,
         defaultValue: DataTypes.UUIDV4,

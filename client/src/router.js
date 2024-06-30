@@ -1,4 +1,5 @@
 import { createRouter, createWebHistory } from "vue-router";
+import { useAuthStore } from "./pinia/auth.js";
 import Admin from "./pages/adminDashboardPage.vue";
 import Home from "./pages/homePage.vue";
 import Shop from "./pages/shopPage.vue";
@@ -15,6 +16,7 @@ import CGU from "../public/rgpd/cgu.vue";
 import Politique from "../public/rgpd/politique_confidentialite.vue";
 import Mentions from "../public/rgpd/mentions.vue";
 import Contact from "./pages/contactPage.vue";
+import ManageProducts from "./pages/manageProducts.vue";
 import Stripe from "./pages/stripePayment.vue";
 
 const routes = [
@@ -27,6 +29,7 @@ const routes = [
     path: "/admin",
     name: "Admin",
     component: Admin,
+    meta: { requiresAuth: true, roles: ["ROLE_ADMIN"] },
   },
   {
     path: "/shop",
@@ -39,6 +42,12 @@ const routes = [
     component: ProductDetail,
   },
   {
+    path: "/manage-products",
+    name: "ManageProducts",
+    component: ManageProducts,
+    meta: { requiresAuth: true, roles: ["ROLE_ADMIN", "ROLE_STORE_KEEPER"] },
+  },
+  {
     path: "/wishlist",
     name: "Wishlist",
     component: Wishlist,
@@ -47,6 +56,7 @@ const routes = [
     path: "/dashboard",
     name: "Dashboard",
     component: Dashboard,
+    meta: { requiresAuth: true },
   },
   {
     path: "/basket",
@@ -109,6 +119,30 @@ const router = createRouter({
   history: createWebHistory(),
   routes,
   linkActiveClass: "text-red-600",
+});
+
+router.beforeEach(async (to, from, next) => {
+  const authStore = useAuthStore();
+
+  if (
+    to.meta.requiresAuth &&
+    localStorage.getItem("token") &&
+    !authStore.isLoggedIn
+  ) {
+    await authStore.checkToken();
+  }
+
+  if (to.meta.requiresAuth && !authStore.isLoggedIn) {
+    next({ name: "login" });
+  } else if (
+    to.meta.requiresAuth &&
+    to.meta.roles &&
+    !to.meta.roles.includes(authStore.role)
+  ) {
+    next({ name: "Home" });
+  } else {
+    next();
+  }
 });
 
 export default router;

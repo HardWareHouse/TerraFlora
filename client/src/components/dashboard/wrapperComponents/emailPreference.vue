@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="bg-white p-6 rounded-lg shadow-md">
-      <h3 class="text-2xl font-medium pb-2 border-b border-gray-200">Dashboard</h3>
+      <h3 class="text-2xl font-medium pb-2 border-b border-gray-200">Mes préferences</h3>
       <p class="text-gray-700 mb-6 mt-4 text-[14px]">
         Les e-mails vous sont envoyés à l'adresse <span class="font-semibold text-red-600">{{ email }}</span>.<br/>
         Pour ne plus recevoir de notifications par e-mail, cliquez sur le lien "NON" en face de chaque alerte.
@@ -43,14 +43,14 @@ import { useAuthStore } from '../../../pinia/auth.js';
 
 const authStore = useAuthStore();
 
-const userId = authStore.id;
-const email = authStore.email;
+const userId = ref(authStore.id);
+const email = ref(authStore.email);
+const tokenMailPreference = ref(authStore.tokenMailPreference);
 
 const wantsMailNewProduct = ref(authStore.wantsMailNewProduct);
 const wantsMailRestockProduct = ref(authStore.wantsMailRestockProduct);
 const wantsMailChangingPrice = ref(authStore.wantsMailChangingPrice);
 const wantsMailNewsletter = ref(authStore.wantsMailNewsletter);
-
 
 watch(() => authStore.wantsMailNewProduct, (newValue) => {
   wantsMailNewProduct.value = newValue;
@@ -68,7 +68,6 @@ watch(() => authStore.wantsMailNewsletter, (newValue) => {
 const togglePreference = (preference) => {
   switch (preference) {
     case 'wantsMailNewProduct':
-      console.log(wantsMailNewProduct.value);
       wantsMailNewProduct.value = !wantsMailNewProduct.value;
       updatePreference('wantsMailNewProduct', wantsMailNewProduct.value);
       break;
@@ -104,11 +103,16 @@ const updatePreference = async (preference, value) => {
         url = 'http://localhost:8000/emailPreferences/updateWantsMailNewsletter';
         break;
     }
+
     const response = await axios.put(url, {
-      userId,
       [preference]: value
+    }, {
+      headers: {
+        'Authorization': `${tokenMailPreference.value}`
+      }
     });
-    console.log(userId);
+
+    console.log(authStore.mailPreferenceToken);
     console.log(preference);
     console.log(value); 
     console.log(response.data);

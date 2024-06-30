@@ -1,7 +1,7 @@
 import { DataTypes } from 'sequelize';
-import { sequelize } from '../dataBase.js';
+import { connection } from './dataBase.js';
 
-const DemandeRGPD = sequelize.define('DemandeRGPD', {
+const DemandeRGPD = connection.define('DemandeRGPD', {
     id: {
         type: DataTypes.UUID,
         defaultValue: DataTypes.UUIDV4,

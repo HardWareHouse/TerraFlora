@@ -1,7 +1,8 @@
 import { DataTypes } from 'sequelize';
-import { sequelize } from '../dataBase.js';
+import { connection } from './dataBase.js';
+import bcrypt from 'bcryptjs';
 
-const User = sequelize.define('User', {
+const User = connection.define('User', {
   id: {
     type: DataTypes.UUID,
     defaultValue: DataTypes.UUIDV4,
@@ -44,15 +45,15 @@ const User = sequelize.define('User', {
     type: DataTypes.DATE,
     defaultValue: DataTypes.NOW
   },
-  wantsMailNewProduct: {  
+  wantsMailNewProduct: {
     type: DataTypes.BOOLEAN,
     defaultValue: false 
   },
-  wantsMailRestockProduct: {  
+  wantsMailRestockProduct: {
     type: DataTypes.BOOLEAN,
     defaultValue: false  
   },
-  wantsMailChangingPrice: { 
+  wantsMailChangingPrice: {
     type: DataTypes.BOOLEAN,
     defaultValue: false
   },
@@ -69,5 +70,15 @@ const User = sequelize.define('User', {
     defaultValue: false
   }
 }, {});
+
+  User.addHook('beforeCreate', async (user) => {
+    user.password = await bcrypt.hash(user.password, await bcrypt.genSalt());
+  });
+
+  User.addHook('beforeUpdate', async (user, { fields }) => {
+    if (fields.includes('password')) {
+      user.password = await bcrypt.hash(user.password, await bcrypt.genSalt());
+    }
+  });
 
 export default User;

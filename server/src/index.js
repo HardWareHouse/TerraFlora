@@ -1,5 +1,5 @@
 import express from 'express';
-import { connectToDatabase, sequelize } from './dataBase.js';
+import { connectToDatabase, connection } from './modelsSQL/dataBase.js';
 import './mongo.js';
 import '../src/modelsSQL/associations.js';
 import bodyParser from 'body-parser';
@@ -10,6 +10,9 @@ import authRouter from './routes/auth.js';
 import adminRouter from './routes/admin.js';
 import produitRouter from './routes/produit.js';
 import emailPreferenceRoutes from './routes/emailPreference.js';
+import categorieRoutes from './routes/categorie.js';
+import adresseRoutes from './routes/adresse.js';
+import path from 'path';
 
 dotenv.config();
 
@@ -22,8 +25,11 @@ server.use(cors());
 server.use('/users', userRouter);
 server.use('/auth', authRouter);
 server.use('/admin', adminRouter);
+server.use('/address', adresseRoutes);
 server.use('/product', produitRouter);
+server.use('/categories', categorieRoutes);
 server.use('/emailPreferences', emailPreferenceRoutes);
+server.use('/uploads', express.static(path.join('src/uploads')));
 
 server.listen(8000, '0.0.0.0', () => {
   console.log('Server listening on port 8000');
@@ -35,7 +41,7 @@ server.use((err, req, res, next) => {
 });
 
 connectToDatabase().then(() => {
-  sequelize.sync().then(() => {
+  connection.sync().then(() => {
     console.log('Database & tables created!');
   }).catch(error => {
     console.error('Unable to sync database:', error);

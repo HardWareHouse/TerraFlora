@@ -9,6 +9,7 @@ import DemandeRGPD from './DemandeRGPD.js';
 import Paiement from './Paiement.js';
 import Adresse from './Adresse.js';
 import MethodePaiement from './MethodePaiement.js';
+import Image from './Image.js';
 
 // Associations
 
@@ -44,6 +45,9 @@ Produit.belongsTo(Categorie, { foreignKey: 'categorieId', targetKey: 'id' });
 
 Produit.hasMany(Paiement, { foreignKey: 'produitId', sourceKey: 'id' });
 Paiement.belongsTo(Produit, { foreignKey: 'produitId', targetKey: 'id' });
+
+Produit.hasMany(Image, { foreignKey: 'produitId' });
+Image.belongsTo(Produit, { foreignKey: 'produitId' });
 
 // Facture associations
 Facture.belongsTo(User, { foreignKey: 'userId', targetKey: 'id' });
