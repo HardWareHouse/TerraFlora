@@ -108,7 +108,7 @@ export const updateAddress = async (req, res) => {
     
     const address = await Adresse.findByPk(id);
     if (address) {
-      adresse.adresse = adresse || address.adresse;
+      address.adresse = adresse || address.adresse;
       address.rue = rue || address.rue;
       address.numero = numero || address.numero;
       address.ville = ville || address.ville;

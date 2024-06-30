@@ -3,9 +3,9 @@
     <h3 class="text-xl font-medium border-b border-gray-200 pb-2">Adresse de facturation</h3>
     <div v-if="address">
       <address class="mt-4 not-italic text-[14px] text-gray-600">
-        <p><strong>{{ address.numero }} rue {{ address.rue }} </strong></p>
+        <p><strong>{{ address.numero }} rue {{ address.rue }}</strong></p>
         <p><strong>{{ address.ville }}, {{ address.codePostal }}</strong></p>
-        <p><strong>France </strong></p>
+        <p><strong>France</strong></p>
       </address>
       <button @click="toggleEditMode" class="inline-block px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700">
         <i class="bi bi-pencil-square mr-2"></i> {{ editMode ? 'Fermer' : 'Modifier' }}
@@ -29,8 +29,10 @@
       </div>
       <button type="submit" class="mt-4 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">Enregistrer</button>
     </form>
+    <p v-if="successMessage" class="mt-4 text-green-500">{{ successMessage }}</p>
   </div>
 </template>
+
 
 <script setup>
 import { ref, watch, onMounted } from 'vue';
@@ -42,14 +44,17 @@ const { address, loading, fetchAddressByUserId, createAddress, updateAddress } =
 
 const formData = ref({
   adresse: '',
-  rue: '',
   numero: '',
+  rue: '',
   ville: '',
   codePostal: '',
 });
 
+const originalFormData = ref(null); // Pour stocker les données originales de l'adresse
+
 const myUserId = ref(null);
 const editMode = ref(false);
+const successMessage = ref(''); // Message de confirmation de succès
 
 onMounted(() => {
   authStore.getUseriD().then((userId) => {
@@ -62,23 +67,31 @@ watch(address, (newAddress) => {
   if (newAddress) {
     formData.value = {
       adresse: newAddress.adresse || '',
-      rue: newAddress.rue || '',
       numero: newAddress.numero || '',
+      rue: newAddress.rue || '',
       ville: newAddress.ville || '',
       codePostal: newAddress.codePostal || ''
     };
+    originalFormData.value = { ...formData.value }; // Stocker les données originales
   }
 });
 
 const updateTheAddress = async () => {
+  if (JSON.stringify(formData.value) === JSON.stringify(originalFormData.value)) {
+    console.log('Aucun changement détecté');
+    return;
+  }
+
   try {
     if (address.value) {
       await updateAddress(address.value.id, formData.value);
     } else {
       await createAddress(myUserId.value, formData.value);
     }
+    successMessage.value = 'Adresse mise à jour avec succès!';
     editMode.value = false;
   } catch (error) {
+    successMessage.value = ' Une erreur est survenue lors de la mise à jour de l\'adresse. Veuillez réessayer.';
     console.error('Erreur lors de la mise à jour de l\'adresse:', error);
   }
 };
@@ -87,13 +100,12 @@ const toggleEditMode = () => {
   editMode.value = !editMode.value;
   if (!editMode.value) {
     resetFormData();
-  }
-  else {
+  } else {
     if (address.value) {
       formData.value = {
         adresse: address.value.adresse || '',
-        rue: address.value.rue || '',
         numero: address.value.numero || '',
+        rue: address.value.rue || '',
         ville: address.value.ville || '',
         codePostal: address.value.codePostal || ''
       };
@@ -104,8 +116,8 @@ const toggleEditMode = () => {
 const resetFormData = () => {
   formData.value = {
     adresse: '',
-    rue: '',
     numero: '',
+    rue: '',
     ville: '',
     codePostal: '',
   };
