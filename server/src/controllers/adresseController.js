@@ -94,6 +94,7 @@ export const createAddress = async (req, res) => {
 export const updateAddress = async (req, res) => {
   try {
     const { adresse, rue, numero, ville, codePostal } = req.body;
+
     if (!adresse && !rue && !numero && !ville && !codePostal) {
       return res.status(400).json({ error: "Missing fields" });
     }
