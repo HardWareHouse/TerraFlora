@@ -15,6 +15,7 @@ import CGU from "../public/rgpd/cgu.vue";
 import Politique from "../public/rgpd/politique_confidentialite.vue";
 import Mentions from "../public/rgpd/mentions.vue";
 import Contact from "./pages/contactPage.vue";
+import Stripe from "./pages/stripePayment.vue";
 
 const routes = [
   {
@@ -96,6 +97,11 @@ const routes = [
     path: "/contact",
     name: "Contact",
     component: Contact,
+  },
+  {
+    path: "/stripe",
+    name: "Stripe",
+    component: Stripe,
   },
 ];
 

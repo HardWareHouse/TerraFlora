@@ -2,7 +2,9 @@
   <div class="flex flex-col lg:flex-row lg:space-x-12 p-4">
     <div class="lg:w-1/2 p-4">
       <!-- Billing Details Form -->
-      <h2 class="text-lg font-medium border-b pb-4 mb-6">Détails de la commande</h2>
+      <h2 class="text-lg font-medium border-b pb-4 mb-6">
+        Détails de la commande
+      </h2>
       <form @submit.prevent="placeOrder">
         <div class="mb-4 grid grid-cols-2 gap-4">
           <div>
@@ -157,7 +159,9 @@
     </div>
     <div class="lg:w-1/2 p-4">
       <!-- Order Summary and Payment Section -->
-      <h2 class="text-lg font-medium border-b pb-4 mb-6">Résumé de votre commande</h2>
+      <h2 class="text-lg font-medium border-b pb-4 mb-6">
+        Résumé de votre commande
+      </h2>
       <div class="bg-gray-100 rounded-md">
         <table class="w-full text-sm border text-center">
           <thead class="border p-4">
@@ -250,7 +254,10 @@
               v-model="agreeTerms"
               class="mr-2 text-red-600"
             />
-            <span>J'ai lu et j'accepte les termes et conditions de Terra Flora.</span>
+            <span
+              >J'ai lu et j'accepte les termes et conditions de Terra
+              Flora.</span
+            >
           </label>
         </div>
         <div class="mt-4 flex">
@@ -297,26 +304,22 @@ const paymentMethods = [
   {
     label: "Carte bancaire",
     value: "Carte bancaire",
-    description:
-      "Paiement via Carte bancaire",
+    description: "Paiement via Carte bancaire",
   },
   {
     label: "Carte bleue",
     value: "Carte bleue",
-    description:
-      "Paiement via Carte bleue",
+    description: "Paiement via Carte bleue",
   },
   {
     label: "Stripe",
     value: "Stripe",
-    description:
-      "Paiement via Stripe.",
+    description: "Paiement via Stripe.",
   },
   {
     label: "Paypal",
     value: "Paypal",
-    description:
-      "Paiement via Paypal",
+    description: "Paiement via Paypal",
   },
 ];
 
