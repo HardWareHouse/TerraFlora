@@ -32,3 +32,11 @@ export const authorizeAdmin = (req, res, next) => {
 
     next();
 };
+
+export const authorizeUser = (req, res, next) => {
+    if (req.user.role !== 'ROLE_USER') {
+        return res.status(403).json({ error: 'Access denied. Not a user.' });
+    }
+
+    next();
+};
