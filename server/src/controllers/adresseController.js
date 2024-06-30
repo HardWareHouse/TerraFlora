@@ -78,6 +78,7 @@ export const createAddress = async (req, res) => {
       ville,
       codePostal,
     });
+
     if (!address) {
       return res.status(400).json({ error: "Address not created" });
     }

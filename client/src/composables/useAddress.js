@@ -52,17 +52,21 @@ export const useAddress = () => {
       }
 
       validatedData.userId = userId;
+      console.log(validatedData);
       const response = await instance.post('address', validatedData, {
         headers: {
-          Authorization: `Bearer ${localStorage.getItem('token')}`,
+          'Authorization': `${localStorage.getItem('token')}`,
         },
       });
+      console.log(response);
+
       if (!response.data) {
         console.error('Aucune donnée adresse trouvée');
         return;
       }
 
       address.value = addressSchema.parse(response.data);
+      console.log(address.value);
     } catch (error) {
       console.error('Erreur lors de la création de l\'adresse:', error);
     } finally {
