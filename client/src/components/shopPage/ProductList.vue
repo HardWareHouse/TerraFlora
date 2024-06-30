@@ -117,7 +117,7 @@ const fetchProducts = async () => {
 
 function getImageUrl(imagePath) {
   if (!imagePath) {
-    return '/public/images/flower.webp';
+    return '/images/flower.webp';
   }
   return `http://localhost:8000/${imagePath}`;
 }
