@@ -35,12 +35,13 @@
 
 
 <script setup>
-import { ref, watch, onMounted } from 'vue';
+import { ref, watch, onMounted, inject } from 'vue';
 import { useAuthStore } from '../../../pinia/auth.js';
 import { useAddress } from '../../../composables/useAddress.js';
 
 const authStore = useAuthStore();
 const { address, loading, fetchAddressByUserId, createAddress, updateAddress } = useAddress();
+const userId = inject('userId');
 
 const formData = ref({
   adresse: '',
@@ -57,10 +58,11 @@ const editMode = ref(false);
 const successMessage = ref(''); // Message de confirmation de succès
 
 onMounted(() => {
-  authStore.getUseriD().then((userId) => {
-    myUserId.value = userId;
-    fetchAddressByUserId(userId);
-  });
+  if (userId && userId.value) {
+    fetchAddressByUserId(userId.value).then(() => {
+      myUserId.value = userId.value;
+    });
+  };
 });
 
 watch(address, (newAddress) => {
