@@ -9,6 +9,11 @@ const userId = ref(null);
 
 onMounted(async () => {
   userId.value = await authStore.getUseriD();
+  if (userId.value === null) {
+    authStore.logout().then(() => {
+      router.push({ name: 'login' });
+    });
+  }
 });
 
 const isUserLoaded = computed(() => userId.value !== null);
