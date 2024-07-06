@@ -44,17 +44,23 @@
 
 <script setup>
 import { ref, onMounted, computed } from 'vue';
-import { useRouter, useRoute } from 'vue-router';
+import { useRouter } from 'vue-router';
+import { useCartStore } from '../../pinia/cart.js';
 import axios from 'axios';
 import { Carousel, Slide, Navigation } from 'vue3-carousel';
 import 'vue3-carousel/dist/carousel.css';
 
 
 const router = useRouter();
+const cartStore = useCartStore();
 const products = ref([]);
 
 function goToProductDetail(productId) {
   router.push({ name: 'ProductDetail', params: { id: productId } });
+}
+
+function addToCart(product) {
+  cartStore.addToCart(product, 1);
 }
 
 const fetchProducts = async () => {

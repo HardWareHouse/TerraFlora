@@ -45,7 +45,7 @@
 <script setup>
 import { ref, onMounted, computed } from 'vue';
 import axios from 'axios';
-import { useRouter, useRoute } from 'vue-router';
+import { useRouter } from 'vue-router';
 import { useCartStore } from '../../pinia/cart.js';
 
 const products = ref([]);

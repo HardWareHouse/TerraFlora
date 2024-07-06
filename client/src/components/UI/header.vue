@@ -1,5 +1,5 @@
 <template>
-  <header class="border-b border-gray-200">
+  <header class="sticky top-0 z-50 bg-white border-b border-gray-200 shadow">
     <div class="container mx-auto flex items-center justify-between px-4 h-10">
       <div class="text-[13px] text-gray-600 leading-none">
         Bienvenue sur Terra Flora
@@ -43,7 +43,6 @@ const authStore = useAuthStore();
 const isAuthenticated = computed(() => !!authStore.token);
 
 const language = ref('fr');
-
 </script>
 
 <style scoped>
