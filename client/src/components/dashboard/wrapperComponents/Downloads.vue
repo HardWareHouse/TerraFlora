@@ -1,32 +1,70 @@
 <template>
   <div class="p-6 bg-white rounded-lg shadow-md">
-    <h3 class="text-2xl font-medium mb-4">Telechargements</h3>
-    <div class="overflow-x-auto">
-      <table class="min-w-full border border-gray-200 text-center">
-        <thead>
-          <tr class="bg-gray-100">
-            <th class="px-4 py-2 border border-gray-200">Produit</th>
-            <th class="px-4 py-2 border border-gray-200">Date</th>
-            <th class="px-4 py-2 border border-gray-200">Expiration</th>
-            <th class="px-4 py-2 border border-gray-200">Telecharger</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td class="p-4 border border-gray-200">Roses rouges</td>
-            <td class="p-4 border border-gray-200">22/08/2023</td>
-            <td class="p-4 border border-gray-200">En cours</td>
-            <td class="p-4 border border-gray-200">
-              <router-link to="/basket" class="bg-red-600 text-white px-4 py-3">
-               <i class="bi bi-cloud-download mr-2"></i>Telecharger
-              </router-link>
-            </td>
-          </tr>
-        </tbody>
-      </table>
+    <h3 class="text-2xl font-medium mb-4">Factures</h3>
+    <div v-if="loading" class="text-center">Chargement...</div>
+    <div v-else>
+      <div v-if="myInvoices.length > 0" class="overflow-x-auto">
+        <table class="min-w-full border border-gray-200 text-center">
+          <thead>
+            <tr class="bg-gray-100">
+              <th class="px-4 py-2 border border-gray-200">Numéro de Facture</th>
+              <th class="px-4 py-2 border border-gray-200">Date de Facturation</th>
+              <th class="px-4 py-2 border border-gray-200">Statut de Paiement</th>
+              <th class="px-4 py-2 border border-gray-200">Total</th>
+              <th class="px-4 py-2 border border-gray-200">Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="invoice in myInvoices" :key="invoice.id">
+              <td class="p-4 border border-gray-200">F#{{ invoice.numero }}</td>
+              <td class="p-4 border border-gray-200">{{ formatDate(invoice.dateFacturation) }}</td>
+              <td class="p-4 border border-gray-200">{{ invoice.statutPaiement }}</td>
+              <td class="p-4 border border-gray-200">{{ invoice.total }} €</td>
+              <td class="p-4 border border-gray-200">
+                <router-link to="/basket" class="bg-red-600 text-white px-4 py-3">
+                  <i class="bi bi-cloud-download mr-2"></i>Telecharger
+                </router-link>
+                <!-- <router-link :to="'/invoices/' + invoice.id" class="bg-red-600 text-white px-4 py-3">
+                  Voir
+                </router-link> -->
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div v-else class="text-center">
+        Vous n'avez pas encore de factures avec votre compte.
+      </div>
     </div>
   </div>
 </template>
 
 <script setup>
+import { ref, onMounted, inject } from 'vue';
+import { useAuthStore } from '../../../pinia/auth.js';
+import { useInvoice } from '../../../composables/useInvoice.js';
+
+const authStore = useAuthStore();
+const { invoices, loading, fetchInvoicesByUserId } = useInvoice();
+
+const userId = inject('userId');
+const myUserId = ref(null);
+const myInvoices = ref([]);
+
+const formatDate = (dateString) => {
+  const date = new Date(dateString);
+  const day = date.getDate().toString().padStart(2, '0');
+  const month = (date.getMonth() + 1).toString().padStart(2, '0');
+  const year = date.getFullYear();
+  return `${day}/${month}/${year}`;
+};
+
+onMounted(() => {
+  if (userId && userId.value) {
+    fetchInvoicesByUserId(userId.value).then(() => {
+      myUserId.value = userId.value;
+      myInvoices.value = invoices.value;
+    });
+  };
+});
 </script>

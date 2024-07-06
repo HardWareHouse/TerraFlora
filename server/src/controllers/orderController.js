@@ -23,7 +23,7 @@ export const getOrder = async (req, res) => {
   }
 };
 
-// Lire les informations d'une commande par l'ID de l'utilisateur
+// Lire les informations de plusieurs commandes par l'ID de l'utilisateur
 export const getOrdersByUserId = async (req, res) => {
     try {
       const { id } = req.params;

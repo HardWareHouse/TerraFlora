@@ -8,15 +8,15 @@
           <thead>
             <tr class="bg-gray-100">
               <th class="px-4 py-2 border border-gray-200">Numéro de commande</th>
-              <th class="px-4 py-2 border border-gray-200">Date</th>
-              <th class="px-4 py-2 border border-gray-200">Status</th>
+              <th class="px-4 py-2 border border-gray-200">Date de commande</th>
+              <th class="px-4 py-2 border border-gray-200">Statuts de livraison</th>
               <th class="px-4 py-2 border border-gray-200">Total</th>
               <th class="px-4 py-2 border border-gray-200">Action</th>
             </tr>
           </thead>
           <tbody>
             <tr v-for="order in myOrders" :key="order.id">
-              <td class="p-4 border border-gray-200">{{ order.numero }}</td>
+              <td class="p-4 border border-gray-200">C#{{ order.numero }}</td>
               <td class="p-4 border border-gray-200">{{ formatDate(order.dateCommande) }}</td>
               <td class="p-4 border border-gray-200">{{ order.statut }}</td>
               <td class="p-4 border border-gray-200">{{ order.total }} €</td>
@@ -37,7 +37,7 @@
 </template>
 
 <script setup>
-import { ref, watch, onMounted, inject } from 'vue';
+import { ref, onMounted, inject } from 'vue';
 import { useAuthStore } from '../../../pinia/auth.js';
 import { useOrder } from '../../../composables/useOrder.js';
 
