@@ -7,7 +7,7 @@ const db = {
   connection,
 };
 for (const file of files) {
-  if (["index.js", "dataBase.js"].includes(file)) continue;
+  if (["indexSQL.js", "dataBase.js"].includes(file)) continue;
   const model = require(path.join(__dirname, file))(connection);
   db[model.name] = model;
 }

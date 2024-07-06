@@ -40,8 +40,8 @@
               <i class="bi bi-cart"></i>
               <span class="absolute right-full mr-2 bg-red-600 text-white px-2 py-1 rounded z-10">Add to Cart</span>
             </button>
-            <button class="relative bg-white text-red-600 p-2 border border-red-600 rounded-full shadow-lg hover:bg-red-100 transition duration-300" @click.stop="addToWishlist(product)">
-              <i class="bi bi-heart"></i>
+            <button class="relative bg-white text-red-600 p-2 border border-red-600 rounded-full shadow-lg hover:bg-red-100 transition duration-300" @click.stop="goToProductDetail(product.id)">
+              <i class="bi bi-eye"></i>
               <span class="absolute right-full mr-2 bg-red-600 text-white px-2 py-1 rounded z-10">Add to Wishlist</span>
             </button>
           </div>
@@ -71,8 +71,8 @@
             <button class="px-4 py-2 bg-red-600 text-white rounded shadow hover:bg-red-700 transition duration-300" @click.stop="addToCart(product)">
               Add to Cart
             </button>
-            <button class="px-4 py-2 bg-white text-red-600 border border-red-600 rounded hover:bg-red-100 transition duration-300" @click.stop="addToWishlist(product)">
-              <i class="bi bi-heart"></i>
+            <button class="px-4 py-2 bg-white text-red-600 border border-red-600 rounded hover:bg-red-100 transition duration-300" @click.stop="goToProductDetail(product.id)">
+              <i class="bi bi-eye"></i>
             </button>
           </div>
         </div>
@@ -154,10 +154,6 @@ function goToProductDetail(productId) {
 
 function addToCart(product) {
   cartStore.addToCart(product, 1);
-}
-
-function addToWishlist(product) {
-  console.log(`Adding ${product.nom} to wishlist`);
 }
 </script>
 
