@@ -73,8 +73,8 @@ const originalFormData = ref(null); // Pour stocker les données originales de l
 const validVoies = ['allée', 'avenue', 'boulevard', 'chemin', 'cours', 'impasse', 'passage', 'place', 'quai', 'route', 'rue', 'square', 'voie']; // Les voies valides
 const myUserId = ref(null);
 const editMode = ref(false);
-const successMessage = ref(''); // Message de confirmation de succès
-const errorMessage = ref(''); // Message d'erreur
+const successMessage = ref('');
+const errorMessage = ref('');
 
 onMounted(() => {
   if (userId && userId.value) {
@@ -104,7 +104,7 @@ const updateTheAddress = async () => {
   } else {
     errorMessage.value = '';
   }
-  
+
   if (JSON.stringify(formData.value) === JSON.stringify(originalFormData.value)) {
     console.log('Aucun changement détecté');
     return;
@@ -116,7 +116,7 @@ const updateTheAddress = async () => {
     } else {
       await createAddress(myUserId.value, formData.value);
     }
-    successMessage.value = 'Adresse mise à jour avec succès!';
+    successMessage.value = 'Votre adresse a été mise à jour avec succès';
     editMode.value = false;
   } catch (error) {
     successMessage.value = ' Une erreur est survenue lors de la mise à jour de l\'adresse. Veuillez réessayer.';
