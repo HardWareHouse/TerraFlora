@@ -11,7 +11,7 @@ const orderSchema = z.object({
     numero: z.string().min(1).max(255),
     statut: z.string().min(1).max(255),
     dateCommande: z.string(),
-    total: z.string(),
+    total: z.number(),
     dateLivraisonPrevue: z.string().nullable(),
     dateLivraisonFinale: z.string().nullable(),
 });

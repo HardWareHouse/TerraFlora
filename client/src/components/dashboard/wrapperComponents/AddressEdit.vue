@@ -116,7 +116,7 @@ const updateTheAddress = async () => {
     } else {
       await createAddress(myUserId.value, formData.value);
     }
-    successMessage.value = 'Votre adresse a été mise à jour avec succès';
+    successMessage.value = 'Votre adresse a été mise à jour avec succès!';
     editMode.value = false;
   } catch (error) {
     successMessage.value = ' Une erreur est survenue lors de la mise à jour de l\'adresse. Veuillez réessayer.';

@@ -20,7 +20,7 @@ const Commande = connection.define('Commande', {
         allowNull: false
     },
     total: {
-        type: DataTypes.DECIMAL(10, 2),
+        type: DataTypes.FLOAT,
         allowNull: false
     },
     dateLivraisonPrevue: {
