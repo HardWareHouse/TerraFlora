@@ -66,14 +66,14 @@ export const getAllAddresses = async (req, res) => {
 // Créer une adresse
 export const createAddress = async (req, res) => {
   try {
-    const { userId, adresse, rue, numero, ville, codePostal } = req.body;
-    if (!userId || !adresse || !rue || !numero || !ville || !codePostal) {
+    const { userId, voie, rue, numero, ville, codePostal } = req.body;
+    if (!userId || !voie || !rue || !numero || !ville || !codePostal) {
       return res.status(400).json({ error: "Missing fields" });
     }
 
     const address = await Adresse.create({
       userId,
-      adresse,
+      voie,
       rue,
       numero,
       ville,
@@ -93,9 +93,9 @@ export const createAddress = async (req, res) => {
 // Mettre à jour une adresse
 export const updateAddress = async (req, res) => {
   try {
-    const { adresse, rue, numero, ville, codePostal } = req.body;
+    const { voie, rue, numero, ville, codePostal } = req.body;
 
-    if (!adresse && !rue && !numero && !ville && !codePostal) {
+    if (!voie && !rue && !numero && !ville && !codePostal) {
       return res.status(400).json({ error: "Missing fields" });
     }
 
@@ -109,7 +109,7 @@ export const updateAddress = async (req, res) => {
     
     const address = await Adresse.findByPk(id);
     if (address) {
-      address.adresse = adresse || address.adresse;
+      address.voie = voie || address.voie;
       address.rue = rue || address.rue;
       address.numero = numero || address.numero;
       address.ville = ville || address.ville;

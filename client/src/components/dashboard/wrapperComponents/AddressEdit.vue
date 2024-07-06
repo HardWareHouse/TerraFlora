@@ -3,7 +3,7 @@
     <h3 class="text-xl font-medium border-b border-gray-200 pb-2">Adresse de facturation</h3>
     <div v-if="address">
       <address class="mt-4 not-italic text-[14px] text-gray-600">
-        <p><strong>{{ address.numero }} rue {{ address.rue }}</strong></p>
+        <p><strong>{{ address.numero }} {{ address.voie }} {{ address.rue }}</strong></p>
         <p><strong>{{ address.ville }}, {{ address.codePostal }}</strong></p>
         <p><strong>France</strong></p>
       </address>
@@ -21,8 +21,23 @@
     <!-- Formulaire de modification ou d'ajout d'adresse -->
     <form class="mt-4" v-if="editMode" @submit.prevent="updateTheAddress">
       <div class="flex flex-col space-y-2">
-        <input v-model="formData.adresse" type="text" placeholder="Adresse" required class="px-4 py-2 border border-gray-300 rounded">
         <input v-model="formData.numero" type="text" placeholder="Numéro" required class="px-4 py-2 border border-gray-300 rounded">
+        <select v-model="formData.voie" required class="px-4 py-2 border border-gray-300 rounded">
+          <option value="" disabled selected>Choisissez une voie</option>
+          <option value="allée">Allée</option>
+          <option value="avenue">Avenue</option>
+          <option value="boulevard">Boulevard</option>
+          <option value="chemin">Chemin</option>
+          <option value="cours">Cours</option>
+          <option value="impasse">Impasse</option>
+          <option value="passage">Passage</option>
+          <option value="place">Place</option>
+          <option value="quai">Quai</option>
+          <option value="route">Route</option>
+          <option value="rue">Rue</option>
+          <option value="square">Square</option>
+          <option value="voie">Voie</option>
+        </select>
         <input v-model="formData.rue" type="text" placeholder="Rue" required class="px-4 py-2 border border-gray-300 rounded">
         <input v-model="formData.ville" type="text" placeholder="Ville" required class="px-4 py-2 border border-gray-300 rounded">
         <input v-model="formData.codePostal" type="text" placeholder="Code Postal" required class="px-4 py-2 border border-gray-300 rounded">
@@ -30,8 +45,10 @@
       <button type="submit" class="mt-4 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">Enregistrer</button>
     </form>
     <p v-if="successMessage" class="mt-4 text-green-500">{{ successMessage }}</p>
+    <p v-if="errorMessage" class="mt-4 text-red-500">{{ errorMessage }}</p>
   </div>
 </template>
+
 
 
 <script setup>
@@ -44,7 +61,7 @@ const { address, loading, fetchAddressByUserId, createAddress, updateAddress } =
 const userId = inject('userId');
 
 const formData = ref({
-  adresse: '',
+  voie: '',
   numero: '',
   rue: '',
   ville: '',
@@ -53,9 +70,11 @@ const formData = ref({
 
 const originalFormData = ref(null); // Pour stocker les données originales de l'adresse
 
+const validVoies = ['allée', 'avenue', 'boulevard', 'chemin', 'cours', 'impasse', 'passage', 'place', 'quai', 'route', 'rue', 'square', 'voie']; // Les voies valides
 const myUserId = ref(null);
 const editMode = ref(false);
 const successMessage = ref(''); // Message de confirmation de succès
+const errorMessage = ref(''); // Message d'erreur
 
 onMounted(() => {
   if (userId && userId.value) {
@@ -68,7 +87,7 @@ onMounted(() => {
 watch(address, (newAddress) => {
   if (newAddress) {
     formData.value = {
-      adresse: newAddress.adresse || '',
+      voie: newAddress.voie || '',
       numero: newAddress.numero || '',
       rue: newAddress.rue || '',
       ville: newAddress.ville || '',
@@ -79,6 +98,13 @@ watch(address, (newAddress) => {
 });
 
 const updateTheAddress = async () => {
+  if (!validVoies.includes(formData.value.voie)) {
+    errorMessage.value = 'La voie sélectionnée est invalide.';
+    return;
+  } else {
+    errorMessage.value = '';
+  }
+  
   if (JSON.stringify(formData.value) === JSON.stringify(originalFormData.value)) {
     console.log('Aucun changement détecté');
     return;
@@ -105,7 +131,7 @@ const toggleEditMode = () => {
   } else {
     if (address.value) {
       formData.value = {
-        adresse: address.value.adresse || '',
+        voie: address.value.voie || '',
         numero: address.value.numero || '',
         rue: address.value.rue || '',
         ville: address.value.ville || '',
@@ -117,7 +143,7 @@ const toggleEditMode = () => {
 
 const resetFormData = () => {
   formData.value = {
-    adresse: '',
+    voie: '',
     numero: '',
     rue: '',
     ville: '',
