@@ -1,6 +1,6 @@
 <template>
   <div id="app" @mousemove="updateActivity" @keydown="updateActivity">
-    <Header @toggle-search="toggleSearch" @toggle-basket="toggleBasket"/>
+    <Header class="sticky" @toggle-search="toggleSearch" @toggle-basket="toggleBasket"/>
     <router-view></router-view>
     <SearchOverlay v-if="showSearch" @close="toggleSearch"/>
     <BasketBar v-if="showBasket" @close="toggleBasket"/>
