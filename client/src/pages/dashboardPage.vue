@@ -1,9 +1,31 @@
 <script setup>
-  import breadcrumb from "../components/dashboard/breadcrumbDashboard.vue";
-  import newWrapper from "../components/dashboard/newWrapper.vue";
+import { ref, onMounted, computed, provide } from 'vue';
+import { useAuthStore } from '../pinia/auth.js';
+import breadcrumb from "../components/dashboard/breadcrumbDashboard.vue";
+import newWrapper from "../components/dashboard/newWrapper.vue";
+
+const authStore = useAuthStore();
+const userId = ref(null);
+
+onMounted(async () => {
+  userId.value = await authStore.getUseriD();
+  if (userId.value === null) {
+    authStore.logout().then(() => {
+      router.push({ name: 'login' });
+    });
+  }
+});
+
+const isUserLoaded = computed(() => userId.value !== null);
+provide('userId', userId);
 </script>
 
 <template>
-   <breadcrumb />
-   <newWrapper />
+  <div v-if="isUserLoaded">
+    <breadcrumb />
+    <newWrapper />
+  </div>
+  <div v-else>
+    Loading...
+  </div>
 </template>

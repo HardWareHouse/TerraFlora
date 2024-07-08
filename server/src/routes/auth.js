@@ -6,10 +6,10 @@ import {
     loginLimiter,
     register, 
     resetPassword, 
-    resetPasswordPage,
-    verifyToken
+    resetPasswordPage
 } from '../controllers/authController.js';
 import { authenticate } from '../middlewares/authMiddleware.js';
+import { verifyToken } from '../middlewares/tokenMiddleware.js';
 
 const router = Router();
 

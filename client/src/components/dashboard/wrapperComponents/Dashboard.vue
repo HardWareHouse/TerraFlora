@@ -13,20 +13,19 @@
 </template>
 
 <script setup>
-import { ref, watchEffect, onMounted } from 'vue';
+import { ref, watchEffect, onMounted, inject } from 'vue';
 import { useUser } from '../../../composables/useUser.js';
-import { useAuthStore } from '../../../pinia/auth.js';
 
 const { user, loading, fetchUser } = useUser();
-const authStore = useAuthStore();
+const userId = inject('userId');
 const nomPrenom = ref('');
 
 onMounted(() => {
-  authStore.getUseriD().then((userId) => {
-    fetchUser(userId).then(() => {
+  if (userId && userId.value) {
+    fetchUser(userId.value).then(() => {
       updateNomPrenom();
     });
-  });
+  }
 });
 
 const updateNomPrenom = () => {

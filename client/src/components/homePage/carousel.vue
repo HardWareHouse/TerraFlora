@@ -36,14 +36,14 @@ const slides = ref([
         alt: 'Slide 1',
         title: 'Cadeau de Saint-Valentin',
         mainText: 'Rafraîchissez votre esprit et ressentez l\'amour',
-        buttonText: 'Buy Now'
+        buttonText: 'Découvrir'
     },
     {
         src: slide2,
         alt: 'Slide 2',
         title: 'Cadeau de Saint-Valentin',
         mainText: 'Rafraîchissez votre esprit et ressentez l\'amour',
-        buttonText: 'Buy Now'
+        buttonText: 'Découvrir'
     }
 ]);
 </script>

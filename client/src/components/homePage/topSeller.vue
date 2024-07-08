@@ -17,11 +17,11 @@
             <div class="absolute right-0 top-0 bottom-0 flex flex-col items-center justify-center space-y-2 opacity-0 product-card-hover mr-2">
               <button class="relative bg-red-600 text-white p-2 rounded-full shadow-lg hover:bg-red-700 transition duration-300" @click.stop="addToCart(product)">
                 <i class="bi bi-cart"></i>
-                <span class="absolute right-full mr-2 bg-red-600 text-white px-2 py-1 rounded z-10">Add to Cart</span>
+                <span class="absolute right-full mr-2 bg-red-600 text-white px-2 py-1 rounded z-10">Ajouter au panier</span>
               </button>
-              <button class="relative bg-white text-red-600 p-2 border border-red-600 rounded-full shadow-lg hover:bg-red-100 transition duration-300" @click.stop="addToWishlist(product)">
-                <i class="bi bi-heart"></i>
-                <span class="absolute right-full mr-2 bg-red-600 text-white px-2 py-1 rounded z-10">Add to Wishlist</span>
+              <button @click.stop="goToProductDetail(product.id)" class="relative bg-white text-red-600 p-2 border border-red-600 rounded-full shadow-lg hover:bg-red-100 transition duration-300">
+                <i class="bi bi-eye"></i>
+                <span class="absolute right-full mr-2 bg-red-600 text-white px-2 py-1 rounded z-10">Voir en détail</span>
               </button>
             </div>
           </div>
@@ -44,11 +44,24 @@
 
 <script setup>
 import { ref, onMounted, computed } from 'vue';
+import { useRouter } from 'vue-router';
+import { useCartStore } from '../../pinia/cart.js';
 import axios from 'axios';
 import { Carousel, Slide, Navigation } from 'vue3-carousel';
 import 'vue3-carousel/dist/carousel.css';
 
+
+const router = useRouter();
+const cartStore = useCartStore();
 const products = ref([]);
+
+function goToProductDetail(productId) {
+  router.push({ name: 'ProductDetail', params: { id: productId } });
+}
+
+function addToCart(product) {
+  cartStore.addToCart(product, 1);
+}
 
 const fetchProducts = async () => {
   try {

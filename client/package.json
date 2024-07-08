@@ -20,13 +20,13 @@
     "stripe": "^16.1.0",
     "vue": "^3.3.11",
     "vue-router": "^4.3.2",
-    "vue-slider-component": "^3.2.24",
     "vue3-carousel": "^0.3.3",
     "zod": "^3.23.8"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^4.5.2",
     "autoprefixer": "^10.4.19",
+    "jest": "^29.7.0",
     "postcss": "^8.4.38",
     "tailwindcss": "^3.4.3",
     "vite": "^5.0.8"

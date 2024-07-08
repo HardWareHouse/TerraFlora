@@ -1,6 +1,6 @@
-import { connection } from '../modelsSQL/dataBase.js';
+import db from "../modelsSQL/indexSQL.js";
 
-connection
+db.connection
   .sync({ alter: true })
   .then(() => console.log("Database synced"))
-  .then(() => connection.close());
+  .then(() => db.connection.close());

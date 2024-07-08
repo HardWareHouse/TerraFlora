@@ -7,12 +7,20 @@ const Commande = connection.define('Commande', {
         defaultValue: DataTypes.UUIDV4,
         primaryKey: true
     },
+    numero: {
+        type: DataTypes.STRING,
+        allowNull: false
+    },
     statut: {
         type: DataTypes.STRING,
         allowNull: false
     },
     dateCommande: {
         type: DataTypes.DATE,
+        allowNull: false
+    },
+    total: {
+        type: DataTypes.FLOAT,
         allowNull: false
     },
     dateLivraisonPrevue: {

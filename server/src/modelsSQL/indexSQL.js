@@ -1,20 +1,33 @@
-const fs = require("node:fs");
-const path = require("node:path");
-const connection = require("./dataBase.js");
+import {connection} from "./dataBase.js";
+import Adresse from './Adresse.js';
+import Categorie from './Categorie.js';
+import Facture from './Facture.js';
+import DemandeRGPD from './DemandeRGPD.js';
+import MethodePaiement from './MethodePaiement.js';
+import Paiement from './Paiement.js';
+import Panier from './Panier.js';
+import Image from './Image.js';
+import Produit from './Produit.js';
+import Promotion from './Promotion.js';
+import User from './User.js';
+import Commande from './Commande.js';
 
-const files = fs.readdirSync(__dirname);
 const db = {
   connection,
+  Adresse,
+  Categorie,
+  Facture,
+  DemandeRGPD,
+  MethodePaiement,
+  Paiement,
+  Panier,
+  Image,
+  Produit,
+  Promotion,
+  User,
+  Commande,
 };
-for (const file of files) {
-  if (["index.js", "dataBase.js"].includes(file)) continue;
-  const model = require(path.join(__dirname, file))(connection);
-  db[model.name] = model;
-}
 
-for (let modelName in db) {
-  if (db[modelName] === connection) continue;
-  if (db[modelName].associateToto) db[modelName].associateToto(db);
-}
+import './associations.js';
 
-module.exports = db;
+export default db;

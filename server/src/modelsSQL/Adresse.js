@@ -7,7 +7,7 @@ const Adresse = connection.define('Adresse', {
         defaultValue: DataTypes.UUIDV4,
         primaryKey: true
     },
-    rue: {
+    voie: {
         type: DataTypes.STRING,
         allowNull: false
     },
@@ -15,7 +15,7 @@ const Adresse = connection.define('Adresse', {
         type: DataTypes.STRING,
         allowNull: false
     },
-    adresse: {
+    rue: {
         type: DataTypes.STRING,
         allowNull: false
     },

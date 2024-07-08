@@ -8,7 +8,7 @@ const instance = axios.create({
 
 const addressSchema = z.object({
   id: z.string().optional(),
-  adresse: z.string(),
+  voie: z.enum(['allée', 'avenue', 'boulevard', 'chemin', 'cours', 'impasse', 'passage', 'place', 'quai', 'route', 'rue', 'square', 'voie']),
   rue: z.string(),
   numero: z.string(),
   ville: z.string(),
