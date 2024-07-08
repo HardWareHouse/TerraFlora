@@ -1,64 +1,32 @@
 <template>
-  <!-- Display a payment form -->
-  <div id="checkout">
-    <!-- Checkout will insert the payment form here -->
-  </div>
+  <section>
+    <div class="product">
+      <img
+        src="https://i.imgur.com/EHyR2nP.png"
+        alt="The cover of Stubborn Attachments"
+      />
+      <div class="description">
+        <h3>Stubborn Attachments</h3>
+        <h5>$20.00</h5>
+      </div>
+    </div>
+    <button @click="createCheckoutSession" id="checkout-button">
+      Checkout
+    </button>
+  </section>
 </template>
+
 <script setup>
-// This is your test secret API key.
-const stripe = require("stripe")(
-  "sk_test_51PT1o1RvflFVG7kRUO0KVmN8PqBv2pQ5xMmmQdloHulVfSUFZWxu89mXswT2SaKvQkuHWh4XbXJt4e8QRtJlGzYr004FN4Y8Ry"
-);
-const express = require("express");
-const app = express();
-app.use(express.static("public"));
+import axios from "axios";
 
-const YOUR_DOMAIN = "http://localhost:5173";
-
-app.post("/create-checkout-session", async (req, res) => {
-  const session = await stripe.checkout.sessions.create({
-    ui_mode: "embedded",
-    line_items: [
-      {
-        // Provide the exact Price ID (for example, pr_1234) of the product you want to sell
-        price: "{{PRICE_ID}}",
-        quantity: 1,
-      },
-    ],
-    mode: "payment",
-    return_url: `${YOUR_DOMAIN}/return.html?session_id={CHECKOUT_SESSION_ID}`,
-  });
-
-  res.send({ clientSecret: session.client_secret });
-});
-
-app.get("/session-status", async (req, res) => {
-  const session = await stripe.checkout.sessions.retrieve(req.query.session_id);
-
-  res.send({
-    status: session.status,
-    customer_email: session.customer_details.email,
-  });
-});
-
-app.listen(4242, () => console.log("Running on port 5173"));
-initialize();
-
-// Create a Checkout Session
-async function initialize() {
-  const fetchClientSecret = async () => {
-    const response = await fetch("/create-checkout-session", {
-      method: "POST",
-    });
-    const { clientSecret } = await response.json();
-    return clientSecret;
-  };
-
-  const checkout = await stripe.initEmbeddedCheckout({
-    fetchClientSecret,
-  });
-
-  // Mount Checkout
-  checkout.mount("#checkout");
-}
+const createCheckoutSession = async () => {
+  try {
+    const response = await axios.post(
+      "http://localhost:8000/create-checkout-session"
+    );
+    window.location.href = response.data.url;
+  } catch (error) {
+    console.error("Error creating checkout session:", error);
+  }
+};
 </script>
