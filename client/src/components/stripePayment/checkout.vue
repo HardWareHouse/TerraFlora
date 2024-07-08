@@ -1,32 +1,67 @@
 <template>
-  <section>
-    <div class="product">
-      <img
-        src="https://i.imgur.com/EHyR2nP.png"
-        alt="The cover of Stubborn Attachments"
-      />
-      <div class="description">
-        <h3>Stubborn Attachments</h3>
-        <h5>$20.00</h5>
-      </div>
-    </div>
-    <button @click="createCheckoutSession" id="checkout-button">
-      Checkout
-    </button>
-  </section>
+  <div>
+    <stripe-checkout
+      ref="checkoutRef"
+      mode="payment"
+      :pk="publishableKey"
+      :line-items="lineItems"
+      :success-url="successURL"
+      :cancel-url="cancelURL"
+      @loading="(v) => (loading = v)"
+    />
+    <button @click="submit">Pay now!</button>
+  </div>
 </template>
 
-<script setup>
-import axios from "axios";
+<script>
+import { StripeCheckout } from "@vue-stripe/vue-stripe";
+import { useCartStore } from "../../pinia/cart.js";
 
-const createCheckoutSession = async () => {
-  try {
-    const response = await axios.post(
-      "http://localhost:8000/create-checkout-session"
-    );
-    window.location.href = response.data.url;
-  } catch (error) {
-    console.error("Error creating checkout session:", error);
-  }
+export default {
+  components: {
+    StripeCheckout,
+  },
+  data() {
+    return {
+      loading: false,
+      publishableKey: `${import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY}`,
+      lineItems: [],
+      successURL: `${window.location.origin}/success`,
+      cancelURL: `${window.location.origin}/cancel`,
+    };
+  },
+  computed: {
+    cartItems() {
+      const cartStore = useCartStore();
+      return cartStore.items || [];
+    },
+  },
+  watch: {
+    cartItems: {
+      handler(newItems) {
+        if (Array.isArray(newItems)) {
+          this.updateLineItems(newItems);
+        } else {
+          console.error("cartItems is not an array:", newItems);
+        }
+      },
+      immediate: true,
+    },
+  },
+  methods: {
+    updateLineItems(cartItems) {
+      this.lineItems = cartItems.map((item) => ({
+        price: item.priceId,
+        quantity: item.quantity,
+      }));
+    },
+    submit() {
+      if (this.lineItems.length === 0) {
+        console.error("lineItems is empty, cannot proceed to checkout");
+        return;
+      }
+      this.$refs.checkoutRef.redirectToCheckout();
+    },
+  },
 };
 </script>

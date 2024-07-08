@@ -1,9 +1,12 @@
 <template>
-  <section id="success" class="hidden">
-    <p>
-      We appreciate your business! A confirmation email will be sent to
-      <span id="customer-email"></span>. If you have any questions, please email
-      <a href="mailto:orders@example.com">orders@example.com</a>.
-    </p>
-  </section>
+  <div>
+    <h1>Payment Successful</h1>
+    <p>Thank you for your purchase!</p>
+  </div>
 </template>
+
+<script>
+export default {
+  name: "SuccessPage",
+};
+</script>
