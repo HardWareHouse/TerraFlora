@@ -17,7 +17,7 @@
           <span>Total</span>
           <span class="text-red-600">{{ total }}€</span>
         </div>
-        <div>
+        <!-- <div>
           <stripe-checkout
             ref="checkoutRef"
             mode="payment"
@@ -33,12 +33,12 @@
           >
             Passer à la caisse
           </button>
-        </div>
-        <!-- <RouterLink
-          to="/stripe"
+        </div> -->
+        <RouterLink
+          to="/checkout"
           class="w-full bg-red-600 text-white py-2 mt-4 rounded"
           >Passer à la caisse
-        </RouterLink> -->
+        </RouterLink>
       </div>
     </div>
   </div>
@@ -63,6 +63,8 @@ const proceedToCheckout = () => {
   console.log("Proceeding to checkout...");
 };
 </script>
+<!--
+
 <script>
 import { StripeCheckout } from "@vue-stripe/vue-stripe";
 import { useCartStore } from "../../pinia/cart.js";
@@ -115,4 +117,4 @@ export default {
   },
 };
 </script>
-<style scoped></style>
+-->

@@ -17,7 +17,7 @@ import Politique from "../public/rgpd/politique_confidentialite.vue";
 import Mentions from "../public/rgpd/mentions.vue";
 import Contact from "./pages/contactPage.vue";
 import ManageProducts from "./pages/manageProducts.vue";
-import Stripe from "./pages/stripePayment.vue";
+// import Stripe from "./pages/stripePayment.vue";
 import success from "./components/stripePayment/success.vue";
 
 const routes = [
@@ -109,11 +109,11 @@ const routes = [
     name: "Contact",
     component: Contact,
   },
-  {
-    path: "/stripe",
-    name: "Stripe",
-    component: Stripe,
-  },
+  // {
+  //   path: "/stripe",
+  //   name: "Stripe",
+  //   component: Stripe,
+  // },
   {
     path: "/success",
     name: "Success",

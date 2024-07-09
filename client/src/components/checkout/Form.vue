@@ -221,7 +221,7 @@
             </tr>
           </tbody>
         </table>
-        <div class="mt-4 ml-4">
+        <!-- <div class="mt-4 ml-4">
           <h3 class="text-sm font-medium mb-2">Payment Options</h3>
           <div>
             <div v-for="(method, index) in paymentMethods" :key="index">
@@ -246,7 +246,7 @@
               </div>
             </div>
           </div>
-        </div>
+        </div> -->
         <div class="mt-4 ml-2">
           <label class="flex items-center">
             <input
@@ -261,13 +261,22 @@
           </label>
         </div>
         <div class="mt-4 flex">
+          <stripe-checkout
+            ref="checkoutRef"
+            mode="payment"
+            :pk="publishableKey"
+            :line-items="lineItems"
+            :success-url="successURL"
+            :cancel-url="cancelURL"
+            @loading="(v) => (loading = v)"
+          />
           <button
-            @click="placeOrder"
+            @click="submit"
             :disabled="!agreeTerms"
             class="w-3/4 mx-auto bg-red-500 text-white py-2 mb-4 rounded-md"
             :class="{ 'opacity-50 cursor-not-allowed': !agreeTerms }"
           >
-            Passer au paiement
+            Valider et Payer
           </button>
         </div>
       </div>
@@ -276,7 +285,6 @@
 </template>
 <script setup>
 import { ref, reactive, onMounted } from "vue";
-
 // Reactive form object
 const form = reactive({
   firstName: "",
@@ -336,4 +344,61 @@ function placeOrder() {
   };
   console.log("Order details:", orderDetails);
 }
+</script>
+<script>
+import { StripeCheckout } from "@vue-stripe/vue-stripe";
+import { useCartStore } from "../../pinia/cart.js";
+
+export default {
+  components: {
+    StripeCheckout,
+  },
+  data() {
+    return {
+      loading: false,
+      publishableKey: `${import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY}`,
+      lineItems: [],
+      successURL: `${window.location.origin}/success`,
+      cancelURL: `${window.location.origin}/cancel`,
+    };
+  },
+  computed: {
+    cartItems() {
+      const cartStore = useCartStore();
+      return cartStore.items || [];
+    },
+  },
+  watch: {
+    cartItems: {
+      handler(newItems) {
+        if (Array.isArray(newItems)) {
+          this.updateLineItems(newItems);
+        } else {
+          console.error("cartItems is not an array:", newItems);
+        }
+      },
+      immediate: true,
+    },
+  },
+  methods: {
+    updateLineItems(cartItems) {
+      this.lineItems = cartItems.map((item) => ({
+        price: item.priceId,
+        quantity: item.quantity,
+      }));
+      this.lineItems.push({
+        price: "price_1PaelZRvflFVG7kRdJbhGUCq",
+        quantity: 1,
+      });
+    },
+
+    submit() {
+      if (this.lineItems.length === 0) {
+        console.error("lineItems is empty, cannot proceed to checkout");
+        return;
+      }
+      this.$refs.checkoutRef.redirectToCheckout();
+    },
+  },
+};
 </script>
