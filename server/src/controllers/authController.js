@@ -1,59 +1,6 @@
-import User from '../modelsBDD/User.js';
-import bcrypt from 'bcryptjs';
-import jwt from 'jsonwebtoken';
-
-const isPasswordValid = (password) => {
-    const minLength = 12;
-    const hasUpperCase = /[A-Z]/.test(password);
-    const hasLowerCase = /[a-z]/.test(password);
-    const hasNumbers = /\d/.test(password);
-    const hasSpecialChar = /[!@#$%^&*(),.?":{}|<>]/.test(password);
-    
-    return password.length >= minLength && hasUpperCase && hasLowerCase && hasNumbers && hasSpecialChar;
-  };
-
-export const register = async (req, res) => {
-  try {
-    const { nom, prenom, email, email_cfg, password, password_cfg, telephone, role, haveConsented } = req.body;
-    
-    if (email !== email_cfg || password !== password_cfg){
-      return res.status(500).json({
-          msg: "Les confirmations ne sont pas bonnes!"
-      })
-  }
-
-  if (!email || !password || !nom || !prenom) {
-    return res.status(400).json({ msg: "Il faut remplir tous les champs !" });
-  }
-  
-  if (!isPasswordValid(password)) {
-    return res.status(400).json({ msg: "Le mot de passe doit contenir au moins 12 caractères, incluant des symboles, chiffres, lettres minuscules et majuscules." });
-  }
-
-  const existingUser = await User.findOne({ where: { email } });
-    
-  if (existingUser) {
-    return res.status(400).json({ msg: "L'email existe déjà" });
-  }
-
-  const hashedPassword = await bcrypt.hash(password, 5);
-
-  const newUser = await User.create({ 
-    nom, 
-    prenom, 
-    email, 
-    password: hashedPassword, 
-    telephone, 
-    role, 
-    haveConsented,
-    isVerified: false,
-  });
-
-    res.status(201).json(newUser);
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-};
+import * as userService from "../services/authService.js";
+import { isPasswordExpired, isPasswordValid } from "../helpers/passwordHelper.js";
+import rateLimit from "express-rate-limit";
 
 export const login = async (req, res) => {
   try {
@@ -63,34 +10,227 @@ export const login = async (req, res) => {
       return res.status(400).json({ msg: "Il faut remplir tous les champs !" });
     }
 
-    try {
-      const user  = await User.findOne({ where: { email } });
+    const user = await userService.findUserByEmail(email);
 
-      if (!user.isVerified) {
-        return res.status(401).json({ message: 'Account not verified. Please verify your account to log in.' });
-      }
+    if (!user) {
+      return res.status(401).json({ message: 'Invalid email or password' });
+    }
 
-      if (!user) {
-          return res.status(500).json({
-              msg: "Pas de email" + error
-          })
-      }
-      else if(user && await bcrypt.compare(password, user.password) ){
-          const token = jwt.sign({ id: user.id, email: user.email, role: user.role }, process.env.JWT_SECRET_KEY, { expiresIn: '1h' });
-          return res.status(200).json({token, user});
-      }
-      // Vérification si le compte est vérifié
-      else{
-          return res.status(500).json({
-              msg: "MDP PAS BON"
-          })
-      }
+    if (!user.isVerified) {
+      return res.status(401).json({ message: 'Account not verified. Please verify your account to log in.' });
+    }
+
+    const isMatch = await userService.comparePasswords(password, user.password);
+
+    if (!isMatch) {
+      return res.status(401).json({ message: 'Invalid email or password' });
+    }
+
+    if (isPasswordExpired(user.lastUpdatedPassword)) {
+      await userService.handlePasswordReset(user);
+      return res.status(401).json({ message: 'Your password has expired. A reset link has been sent to your email.' });
+    }
+
+    const loginToken = userService.generateToken({ id: user.id, email: user.email, role: user.role }, process.env.LOGIN_JWT_KEY, '1h');
+    const mailPreferenceToken = userService.generateToken({ id: user.id, email: user.email }, process.env.MAIL_PREFERENCE_JWT_KEY, '1h');
+
+    const userWithoutPassword = {
+      id: user.id,
+      nom: user.nom,
+      prenom: user.prenom,
+      email: user.email,
+      telephone: user.telephone,
+      role: user.role,
+      haveConsented: user.haveConsented,
+      isBlocked: user.isBlocked,
+      isVerified: user.isVerified,
+      lastUpdatedPassword: user.lastUpdatedPassword,
+      wantsMailNewProduct: user.wantsMailNewProduct,
+      wantsMailRestockProduct: user.wantsMailRestockProduct,
+      wantsMailChangingPrice: user.wantsMailChangingPrice,
+      wantsMailNewsletter: user.wantsMailNewsletter
+    };
+
+    res.status(200).json({ loginToken, mailPreferenceToken, user: userWithoutPassword });
   } catch (error) {
-      return res.status(500).json({
-          msg: "ca marche pas du tout " + error
-      })
-  }  
-  } catch (error) {
-    res.status(500).json({ error: error.message });
+    res.status(400).json({ error: error.message });
   }
 };
+
+export const register = async (req, res) => {
+  try {
+    const {
+      nom,
+      prenom,
+      email,
+      email_cfg,
+      password,
+      password_cfg,
+      telephone,
+      role,
+      haveConsented,
+      wantsMailNewProduct,
+      wantsMailRestockProduct,
+      wantsMailChangingPrice,
+      wantsMailNewsletter,
+    } = req.body;
+
+    if (email !== email_cfg || password !== password_cfg) {
+      return res.status(400).json({ msg: "Les confirmations ne sont pas bonnes!" });
+    }
+
+    if (!email || !password || !nom || !prenom) {
+      return res.status(400).json({ msg: "Il faut remplir tous les champs !" });
+    }
+
+    if (!isPasswordValid(password)) {
+      return res.status(400).json({ msg: "Le mot de passe doit contenir au moins 12 caractères, incluant des symboles, chiffres, lettres minuscules et majuscules." });
+    }
+
+    const existingUser = await userService.findUserByEmail(email);
+
+    if (existingUser) {
+      return res.status(400).json({ msg: "L'email existe déjà" });
+    }
+
+    const newUser = await userService.createUser({
+      nom,
+      prenom,
+      email,
+      password,
+      lastUpdatedPassword: new Date(),
+      telephone,
+      role,
+      haveConsented,
+      isVerified: false,
+      wantsMailNewProduct,
+      wantsMailRestockProduct,
+      wantsMailChangingPrice,
+      wantsMailNewsletter,
+    });
+
+    res.status(201).json({ newUser, msg: "Utilisateur créé avec succès. Veuillez vérifier votre email pour confirmer votre compte." });
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
+};
+
+export const confirmEmail = async (req, res) => {
+  try {
+    const { token } = req.params;
+
+    const decoded = userService.verifyToken(token, process.env.REGISTER_JWT_KEY);
+    const user = await userService.findUserById(decoded.id);
+
+    if (!user) {
+      return res.status(400).json({ msg: "Utilisateur non trouvé." });
+    }
+
+    if (user.isVerified) {
+      return res.status(400).json({ msg: "Email déjà confirmé." });
+    }
+
+    user.isVerified = true;
+    await user.save();
+
+    res.status(200).json({ msg: "Email confirmé avec succès." });
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
+};
+
+export const forgotPassword = async (req, res) => {
+  try {
+    const { email } = req.body;
+    const user = await userService.findUserByEmail(email);
+
+    if (!user) {
+      return res.status(400).json({ msg: "Utilisateur non trouvé." });
+    }
+
+    await userService.handlePasswordReset(user);
+
+    res.status(200).json({ msg: "Email de réinitialisation envoyé." });
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
+};
+
+export const resetPassword = async (req, res) => {
+  try {
+    const { token } = req.params;
+    const { password, password_cfg } = req.body;
+
+    if (password !== password_cfg) {
+      return res.status(400).json({ msg: "Les mots de passe ne correspondent pas." });
+    }
+
+    if (!isPasswordValid(password)) {
+      return res.status(400).json({ msg: "Le mot de passe doit contenir au moins 12 caractères, incluant des symboles, chiffres, lettres minuscules et majuscules." });
+    }
+
+    const decoded = userService.verifyToken(token, process.env.RESET_PASSWORD_JWT_KEY);
+    const user = await userService.findUserById(decoded.id);
+
+    if (!user) {
+      return res.status(400).json({ msg: "Utilisateur non trouvé." });
+    }
+
+    user.password = await bcrypt.hash(password, 10);
+    user.lastUpdatedPassword = new Date();
+    await user.save();
+
+    res.status(200).json({ msg: "Mot de passe réinitialisé avec succès." });
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
+};
+
+export const resetPasswordPage = (req, res) => {
+  const { token } = req.params;
+  res.send(`
+    <form action="/auth/reset-password/${token}" method="POST">
+      <input type="hidden" name="token" value="${token}" />
+      <label for="password">New Password:</label>
+      <input type="password" id="password" name="password" required>
+      <label for="password_cfg">Confirm New Password:</label>
+      <input type="password" id="password_cfg" name="password_cfg" required>
+      <button type="submit">Reset Password</button>
+    </form>
+  `);
+};
+
+const loginAttempts = {};
+
+export const loginLimiter = rateLimit({
+  windowMs: 3 * 60 * 1000,
+  max: 3,
+  handler: async (req, res, next) => {
+    const { email } = req.body;
+    const user = await userService.findUserByEmail(email);
+
+    if (!user) {
+      return res.status(401).json({ message: 'Invalid email or password' });
+    }
+
+    if (!loginAttempts[email]) {
+      loginAttempts[email] = 1;
+    } else {
+      loginAttempts[email] += 1;
+    }
+
+    if (loginAttempts[email] > 3) {
+      user.isBlocked = true;
+      await user.save();
+      await userService.handleAccountBlocked(user);
+      return res.status(403).json({ message: 'Too many login attempts. Account blocked.' });
+    }
+
+    next();
+  },
+  onLimitReached: (req, res, next) => {
+    const { email } = req.body;
+    loginAttempts[email] = 1;
+    next();
+  }
+});

@@ -24,3 +24,6 @@ dist/
 build/
 client/dist/
 server/build/
+
+#Uploads images
+uploads/

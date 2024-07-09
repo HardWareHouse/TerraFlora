@@ -22,6 +22,10 @@ services:
       - 8000:8000
     volumes:
       - ./server:/home/node
+    environment:
+      - MONGODB_CONNECTION_STRING=mongodb://mongo:27017/terraflora?authSource=admin
+      - MONGODB_USER=root
+      - MONGODB_PASSWORD=password
 
   postgres:
     image: postgres
@@ -35,12 +39,12 @@ services:
       POSTGRES_DB: app
 
   adminer:
-    image: adminer
+    image: adminer:4.8.1
     restart: unless-stopped
     ports:
       - 8080:8080
 
-  mongo: 
+  mongo:
     image: mongo
     ports:
       - 127.0.0.1:27017:27017
@@ -53,6 +57,5 @@ services:
     working_dir: /SampleCollections
 
 volumes:
-  mongo-data: {}
-  postgres-data: {}
-
+  mongo-data:
+  postgres-data:

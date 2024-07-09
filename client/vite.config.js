@@ -1,5 +1,5 @@
-import { defineConfig } from 'vite'
-import vue from '@vitejs/plugin-vue'
+import { defineConfig } from "vite";
+import vue from "@vitejs/plugin-vue";
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -8,7 +8,7 @@ export default defineConfig({
     // port: 5173,
     host: "0.0.0.0",
     watch: {
-        usePolling: true
-    }
-  }
-})
+      usePolling: true,
+    },
+  },
+});
