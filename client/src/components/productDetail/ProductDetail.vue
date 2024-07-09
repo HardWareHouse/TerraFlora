@@ -1,5 +1,5 @@
 <template>
-  <div class="product-detail-container max-w-7xl mx-auto py-8">
+  <div class="product-detail-container max-w-7xl mx-auto py-8" v-if="product.nom">
     <div class="flex flex-col lg:flex-row">
       <div class="product-images lg:w-1/2 p-4">
         <img
@@ -71,6 +71,9 @@
       </div>
     </div>
   </div>
+  <div v-else>
+    <p>Chargement des détails du produit...</p>
+  </div>
 </template>
 
 <script setup>
@@ -97,10 +100,10 @@ const quantity = ref(1);
 const cartStore = useCartStore();
 
 onMounted(async () => {
-  const productId = route.params.id;
+  const productName = decodeURIComponent(route.params.name);
   try {
     const response = await axios.get(
-      `http://localhost:8000/product/${productId}`
+      `http://localhost:8000/product/name/${productName}`
     );
     product.value = response.data;
 
