@@ -1,21 +1,22 @@
-import Adresse from "../modelsSQL/Adresse.js";
-import validator from "validator";
+import { isValidUUID } from "../helpers/validatorHelper.js";
+import * as addressService from "../services/addressService.js";
 
 // Lire les informations d'une adresse
 export const getAddress = async (req, res) => {
-  try {
-    const { id } = req.params;
-    if (!id) {
-      return res.status(400).json({ error: "Address ID is required" });
-    }
-    if (!validator.isUUID(id)) {
-      return res.status(400).json({ error: "Invalid UUID format" });
-    }
+  const { id } = req.params;
 
-    const address = await Adresse.findByPk(id);
+  if (!id || !isValidUUID(id)) {
+    return res.status(400).json({ error: "Invalid or missing address ID" });
+  }
+
+  try {
+    const address = await addressService.getAddressById(id);
     if (!address) {
       return res.status(404).json({ error: "Address not found" });
     }
+
+    const user = req.user;
+    if (address.userId !== user.id && user.role !== "ROLE_ADMIN") return res.status(403).json({ error: "Unauthorized" });
 
     res.status(200).json(address);
   } catch (error) {
@@ -25,53 +26,66 @@ export const getAddress = async (req, res) => {
 
 // Lire les informations d'une adresse par l'ID de l'utilisateur
 export const getAddressByUserId = async (req, res) => {
-    try {
-        const { id } = req.params;
-        if (!id) {
-          return res.status(400).json({ error: "User ID is required" });
-        }
-        if (!validator.isUUID(id)) {
-        return res.status(400).json({ error: "Invalid UUID format" });
-        }
+  const { id } = req.params;
+  const user = req.user;
 
-        const address = await Adresse.findOne({ 
-          where: { userId: id },
-          attributes: { exclude: ["createdAt", "updatedAt", "userId"] }
-        });
-        if (!address) {
-          return res.status(404).json({ error: "Address not found" });
-        }
+  if (!id || !isValidUUID(id)) {
+    return res.status(400).json({ error: "Invalid or missing user ID" });
+  }
 
-        res.status(200).json(address);
-    } catch (error) {
-        res.status(500).json({ error: error.message });
+  if (user.id !== id) {
+    return res.status(403).json({ error: "Unauthorized" });
+  }
+
+  try {
+    const address = await addressService.getAddressByUserId(id);
+    if (!address) {
+      return res.status(404).json({ error: "Address not found" });
     }
+
+    if (address.userId !== user.id && user.role !== "ROLE_ADMIN") return res.status(403).json({ error: "Unauthorized" });
+
+    res.status(200).json(address);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
 };
 
 // Lire toutes les adresses
 export const getAllAddresses = async (req, res) => {
-  try {
-    const addresses = await Adresse.findAll();
-    if (!addresses) {
-      return res.status(404).json({ error: "Addresses not found" });
-    }
+  const user = req.user;
 
+  if (user.role !== "ROLE_ADMIN") {
+    return res.status(403).json({ error: "Unauthorized" });
+  }
+
+  try {
+    const addresses = await addressService.getAllAddresses();
     res.status(200).json(addresses);
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
 };
 
-
 // Créer une adresse
 export const createAddress = async (req, res) => {
-  try {
-    const { userId, voie, rue, numero, ville, codePostal } = req.body;
-    if (!userId || !voie || !rue || !numero || !ville || !codePostal) {
-      return res.status(400).json({ error: "Missing fields" });
-    }
+  const { userId, voie, rue, numero, ville, codePostal } = req.body;
+  const user = req.user;
 
-    const address = await Adresse.create({
+  if (!userId || !voie || !rue || !numero || !ville || !codePostal) {
+    return res.status(400).json({ error: "Missing fields" });
+  }
+
+  if (!isValidUUID(userId)) {
+    return res.status(400).json({ error: "Invalid UUID format" });
+  }
+
+  if (user.id !== userId) {
+    return res.status(403).json({ error: "Unauthorized" });
+  }
+
+  try {
+    const address = await addressService.createAddress({
       userId,
       voie,
       rue,
@@ -79,10 +93,6 @@ export const createAddress = async (req, res) => {
       ville,
       codePostal,
     });
-
-    if (!address) {
-      return res.status(400).json({ error: "Address not created" });
-    }
 
     res.status(201).json(address);
   } catch (error) {
@@ -92,34 +102,30 @@ export const createAddress = async (req, res) => {
 
 // Mettre à jour une adresse
 export const updateAddress = async (req, res) => {
+  const { id } = req.params;
+  const { voie, rue, numero, ville, codePostal } = req.body;
+  const user = req.user;
+
+  if (!id || !isValidUUID(id)) {
+    return res.status(400).json({ error: "Invalid or missing address ID" });
+  }
+
+  if (!voie && !rue && !numero && !ville && !codePostal) {
+    return res.status(400).json({ error: "Missing fields" });
+  }
+
   try {
-    const { voie, rue, numero, ville, codePostal } = req.body;
-
-    if (!voie && !rue && !numero && !ville && !codePostal) {
-      return res.status(400).json({ error: "Missing fields" });
+    const address = await addressService.getAddressById(id);
+    if (!address) {
+      return res.status(404).json({ error: "Address not found" });
     }
 
-    const { id } = req.params;
-    if (!id) {
-      return res.status(400).json({ error: "Missing ID" });
+    if (address.userId !== user.id) {
+      return res.status(403).json({ error: "Unauthorized" });
     }
-    if (!validator.isUUID(id)) {
-      return res.status(400).json({ error: "Invalid UUID format" });
-    }
-    
-    const address = await Adresse.findByPk(id);
-    if (address) {
-      address.voie = voie || address.voie;
-      address.rue = rue || address.rue;
-      address.numero = numero || address.numero;
-      address.ville = ville || address.ville;
-      address.codePostal = codePostal || address.codePostal;
-      await address.save();
 
-      res.status(200).json(address);
-    } else {
-      res.status(404).json({ message: "Address not found" });
-    }
+    const updatedAddress = await addressService.updateAddressById(id, { voie, rue, numero, ville, codePostal });
+    res.status(200).json(updatedAddress);
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
@@ -127,22 +133,27 @@ export const updateAddress = async (req, res) => {
 
 // Supprimer une adresse
 export const deleteAddress = async (req, res) => {
+  const { id } = req.params;
+  const user = req.user;
+
+  if (!id || !isValidUUID(id)) {
+    return res.status(400).json({ error: "Invalid or missing address ID" });
+  }
+
   try {
-    const { id } = req.params;
-    if (!id) {
-      return res.status(400).json({ error: "Missing ID" });
-    }
-    if (!validator.isUUID(id)) {
-      return res.status(400).json({ error: "Invalid UUID format" });
+    const address = await addressService.getAddressById(id);
+    if (!address) {
+      return res.status(404).json({ error: "Address not found" });
     }
 
-    const address = await Adresse.findByPk(id);
-    if (address) {
-      await address.destroy();
-      res.status(204).json({ message: "Address deleted" });
-    } else {
-      res.status(404).json({ message: "Address not found" });
+    if (address.userId !== user.id) return res.status(403).json({ error: "Unauthorized" });
+    
+    const deleteAddress = await addressService.deleteAddressById(id);
+    if (!deleteAddress) {
+      return res.status(404).json({ error: "Address not found" });
     }
+    
+    res.status(204).json({ message: "Address deleted" });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }

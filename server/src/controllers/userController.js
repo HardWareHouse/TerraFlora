@@ -1,26 +1,30 @@
-import User from '../modelsSQL/User.js';
-import bcrypt from 'bcryptjs';
-import validator from 'validator';
+import * as userService from "../services/userService.js";
+import { isValidUUID, isValidEmail, isStrongPassword } from "../helpers/validatorHelper.js";
 
 // Lire les informations d'un utilisateur
 export const getUser = async (req, res) => {
+  const { id } = req.params;
+  const user = req.user;
+
+  if (!id || !isValidUUID(id)) {
+    return res.status(400).json({ error: "Invalid or missing user ID" });
+  }
+
+  if (id !== user.id && user.role !== "ROLE_ADMIN") {
+    return res.status(403).json({ error: "Unauthorized" });
+  }
+
   try {
-    const { id } = req.params;
-    if (!id) {
-      return res.status(400).json({ error: 'User ID is required' });
-    }
-    if (!validator.isUUID(id)) {
-      return res.status(400).json({ error: 'Invalid UUID format' });
+    const foundUser = await userService.getUserById(id);
+    if (!foundUser) {
+      return res.status(404).json({ error: "User not found" });
     }
 
-    const user = await User.findByPk(req.user.id, {
-      attributes: ['nom', 'prenom', 'email', 'telephone', 'role']
-    });
-    if (!user) {
-      return res.status(404).json({ error: 'User not found' });
+    if (foundUser.id !== user.id && user.role !== "ROLE_ADMIN") {
+      return res.status(403).json({ error: "Unauthorized" });
     }
 
-    res.status(200).json(user);
+    res.status(200).json(foundUser);
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
@@ -28,10 +32,16 @@ export const getUser = async (req, res) => {
 
 // Lire tous les utilisateurs
 export const getAllUsers = async (req, res) => {
+  const user = req.user;
+
+  if (user.role !== "ROLE_ADMIN") {
+    return res.status(403).json({ error: "Unauthorized" });
+  }
+
   try {
-    const users = await User.findAll({ attributes: { exclude: ['password'] } });
-    if (!users) { 
-      return res.status(404).json({ error: 'Users not found' });
+    const users = await userService.getAllUsers();
+    if (!users) {
+      return res.status(404).json({ error: "Users not found" });
     }
 
     res.status(200).json(users);
@@ -42,60 +52,73 @@ export const getAllUsers = async (req, res) => {
 
 // Mettre à jour un utilisateur
 export const updateUser = async (req, res) => {
-  
-    try {
-      const { nom, prenom, email, password, telephone, role } = req.body;
-      const user = await User.findByPk(req.params.id);
+  const { id } = req.params;
+  const { nom, prenom, email, password, telephone, role } = req.body;
+  const user = req.user;
 
-      if (!user) {
-        return res.status(404).json({ message: 'User not found' });
-      }
+  if (!id || !isValidUUID(id)) {
+    return res.status(400).json({ error: "Invalid or missing user ID" });
+  }
 
-      if (email && !validator.isEmail(email)) {
-        return res.status(400).json({ error: 'Invalid email format' });
-      }
+  if (email && !isValidEmail(email)) {
+    return res.status(400).json({ error: "Invalid email format" });
+  }
 
-      if (password && !validator.isStrongPassword(password)) {
-        return res.status(400).json({ error: 'Password is not strong enough' });
-      }
+  if (password && !isStrongPassword(password)) {
+    return res.status(400).json({ error: "Password is not strong enough" });
+  }
 
-      user.nom = nom || user.nom;
-      user.prenom = prenom || user.prenom;
-      user.email = email || user.email;
-      
-      if (password) {
-        const salt = await bcrypt.genSalt(10);
-        user.password = await bcrypt.hash(password, salt);
-      }
-      
-      user.telephone = telephone || user.telephone;
-      user.role = role || user.role;
-      await user.save();
-      
-      res.status(200).json(user);
-    } catch (error) {
-      res.status(500).json({ error: error.message });
+  if (user.id !== id && user.role !== "ROLE_ADMIN") {
+    return res.status(403).json({ error: "Unauthorized" });
+  }
+
+  if(role === "ROLE_ADMIN") {
+    return res.status(403).json({ error: "Unauthorized" });
+  }
+
+  try {
+    const updatedUser = await userService.updateUserById(id, {
+      nom,
+      prenom,
+      email,
+      password,
+      telephone,
+      role,
+    });
+    if (!updatedUser) {
+      return res.status(404).json({ error: "User not found" });
     }
+
+    res.status(200).json(updatedUser);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
 };
 
 // Supprimer un utilisateur
 export const deleteUser = async (req, res) => {
+  const { id } = req.params;
+  const user = req.user;
+
+  if (!id || !isValidUUID(id)) {
+    return res.status(400).json({ error: "Invalid or missing user ID" });
+  }
+
+  if (user.id !== id && user.role !== "ROLE_ADMIN") {
+    return res.status(403).json({ error: "Unauthorized" });
+  }
+
   try {
-    const { id } = req.params;
-    if (!id) {
-      return res.status(400).json({ error: 'User ID is required' });
+    const userToDelete = await userService.getUserById(id);
+    if (!userToDelete) {
+      return res.status(404).json({ error: "User not found" });
     }
-    if (!validator.isUUID(id)) {
-      return res.status(400).json({ error: 'Invalid UUID format' });
+    
+    const deletedUser = await userService.deleteUserById(id);
+    if (!deletedUser) {
+      return res.status(404).json({ error: "User not found" });
     }
-
-    const user = await User.findByPk(req.params.id);
-    if (!user) {
-      return res.status(404).json({ message: 'User not found' });
-    }
-
-    await user.destroy();
-    res.status(200).json({ message: 'User deleted' });
+    res.status(200).json({ message: "User deleted" });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
