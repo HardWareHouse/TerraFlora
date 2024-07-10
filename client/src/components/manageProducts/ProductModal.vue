@@ -14,7 +14,7 @@
           </div>
           <div class="mb-4">
             <label for="prix" class="block text-sm font-medium">Prix</label>
-            <input type="number" id="prix" v-model="form.prix" required class="mt-1 p-2 border rounded-md w-full bg-gray-100" />
+            <input type="number" id="prix" v-model="form.prix" step="0.01" required class="mt-1 p-2 border rounded-md w-full bg-gray-100" />
           </div>
           <div class="mb-4">
             <label for="stock" class="block text-sm font-medium">Stock</label>
@@ -64,7 +64,7 @@
             <label for="categorieId" class="block text-sm font-medium">Catégorie</label>
             <select id="categorieId" v-model="form.categorieId" required class="mt-1 p-2 border rounded-md w-full bg-gray-100">
               <option value="">Sélectionner une catégorie</option>
-              <option v-for="categorie in categories" :value="categorie.id">{{ categorie.nom }}</option>
+              <option v-for="categorie in categories" :value="categorie.id" :key="categorie.id">{{ categorie.nom }}</option>
             </select>
           </div>
           <div class="mb-4 md:col-span-2">

@@ -23,6 +23,24 @@ export const getProduct = async (req, res) => {
   }
 };
 
+// Lire les informations d'un produit par nom
+export const getProductByName = async (req, res) => {
+  try {
+    const { name } = req.params;
+    const product = await Produit.findOne({ 
+      where: { nom: name.replace(/-/g, ' ') }, 
+      include: Image 
+    });
+    if (product) {
+      res.status(200).json(product);
+    } else {
+      res.status(404).json({ message: 'Product not found' });
+    }
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
 // Lire tous les produits
 export const getAllProducts = async (req, res) => {
   try {
