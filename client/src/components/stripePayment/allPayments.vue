@@ -6,6 +6,7 @@
         <thead>
           <tr class="bg-gray-100 text-left border-b">
             <th class="p-4">Amount</th>
+            <th class="p-4">Customer</th>
             <th class="p-4">Description</th>
             <th class="p-4">Status</th>
             <th class="p-4">Action</th>
@@ -18,7 +19,9 @@
             class="border-b"
           >
             <td class="p-4">{{ (transaction.amount / 100).toFixed(2) }} €</td>
+            <td class="p-4">{{ transaction.billing_details.name }}</td>
             <td class="p-4">{{ transaction.description }}</td>
+
             <td class="p-4">
               <span
                 v-if="transaction.refunded === false"
@@ -101,6 +104,7 @@ export default {
       try {
         const response = await stripe.charges.list();
         balanceTransactions.value = response.data;
+        console.log(balanceTransactions);
       } catch (error) {
         console.error("Error fetching balance transactions:", error);
       }

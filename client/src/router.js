@@ -18,7 +18,9 @@ import Mentions from "../public/rgpd/mentions.vue";
 import Contact from "./pages/contactPage.vue";
 import ManageProducts from "./pages/manageProducts.vue";
 import success from "./components/stripePayment/success.vue";
+import Cancel from "./components/stripePayment/cancel.vue";
 import AllPayments from "./components/stripePayment/allPayments.vue";
+import Test from "./components/stripePayment/testCheckout.vue";
 
 const routes = [
   {
@@ -118,6 +120,16 @@ const routes = [
     path: "/success",
     name: "Success",
     component: success,
+  },
+  {
+    path: "/cancel",
+    name: "Cancel",
+    component: Cancel,
+  },
+  {
+    path: "/test",
+    name: "Test",
+    component: Test,
   },
 ];
 
