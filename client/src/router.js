@@ -20,7 +20,6 @@ import ManageProducts from "./pages/manageProducts.vue";
 import success from "./components/stripePayment/success.vue";
 import Cancel from "./components/stripePayment/cancel.vue";
 import AllPayments from "./components/stripePayment/allPayments.vue";
-import Test from "./components/stripePayment/testCheckout.vue";
 
 const routes = [
   {
@@ -48,7 +47,7 @@ const routes = [
     path: "/manage-products",
     name: "ManageProducts",
     component: ManageProducts,
-    meta: { requiresAuth: true, roles: ["ROLE_ADMIN", "ROLE_STORE_KEEPER"] },
+    meta: { requiresAuth: false, roles: ["ROLE_ADMIN", "ROLE_STORE_KEEPER"] },
   },
   {
     path: "/wishlist",
@@ -125,11 +124,6 @@ const routes = [
     path: "/cancel",
     name: "Cancel",
     component: Cancel,
-  },
-  {
-    path: "/test",
-    name: "Test",
-    component: Test,
   },
 ];
 
