@@ -70,7 +70,7 @@ export default {
 
         const sessionId = response.data.id;
         const stripe = await loadStripe(
-          "pk_test_51PT1o1RvflFVG7kRTxwFUX1OYaloXE98AQYjAAi1Ij6u5u0nldTu18K8cYjd0o6Ca8Shk4xRh51Ei3ApltZxvE6P0060u2VL4H"
+          `${import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY}`
         );
 
         await stripe.redirectToCheckout({ sessionId });
