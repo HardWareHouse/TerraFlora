@@ -1,8 +1,8 @@
-import Produit from '../modelsSQL/Produit.js';
-import Image from '../modelsSQL/Image.js';
-import { Op } from 'sequelize';
-import validator from 'validator';
-import path from 'path';
+import Produit from "../modelsSQL/Produit.js";
+import Image from "../modelsSQL/Image.js";
+import { Op } from "sequelize";
+import validator from "validator";
+import path from "path";
 
 // Helper pour corriger l'url correcte de l'image
 const generateImageUrl = (filename) => {
@@ -14,7 +14,7 @@ export const getProduct = async (req, res) => {
   try {
     const { id } = req.params;
     if (!validator.isUUID(id)) {
-      return res.status(400).json({ error: 'Invalid UUID format' });
+      return res.status(400).json({ error: "Invalid UUID format" });
     }
     const product = await Produit.findByPk(id, { include: Image });
     res.status(200).json(product);
@@ -27,14 +27,14 @@ export const getProduct = async (req, res) => {
 export const getProductByName = async (req, res) => {
   try {
     const { name } = req.params;
-    const product = await Produit.findOne({ 
-      where: { nom: name.replace(/-/g, ' ') }, 
-      include: Image 
+    const product = await Produit.findOne({
+      where: { nom: name.replace(/-/g, " ") },
+      include: Image,
     });
     if (product) {
       res.status(200).json(product);
     } else {
-      res.status(404).json({ message: 'Product not found' });
+      res.status(404).json({ message: "Product not found" });
     }
   } catch (error) {
     res.status(500).json({ error: error.message });
@@ -47,14 +47,14 @@ export const getAllProducts = async (req, res) => {
     const products = await Produit.findAll({ include: Image });
 
     // Transform image URLs
-    const productsWithImageUrls = products.map(product => {
-      const transformedImages = product.Images.map(image => ({
+    const productsWithImageUrls = products.map((product) => {
+      const transformedImages = product.Images.map((image) => ({
         ...image.toJSON(),
-        imageUrl: generateImageUrl(path.basename(image.imageUrl))
+        imageUrl: generateImageUrl(path.basename(image.imageUrl)),
       }));
       return {
         ...product.toJSON(),
-        Images: transformedImages
+        Images: transformedImages,
       };
     });
 
@@ -68,27 +68,56 @@ export const getAllProducts = async (req, res) => {
 export const createProduct = async (req, res) => {
   const transaction = await Produit.sequelize.transaction();
   try {
-    const { nom, description, prix, stock, marque, couleur, taille, isPromotion, pourcentagePromotion, categorieId } = req.body;
-    const product = await Produit.create({ nom, description, prix, stock, marque, couleur, taille, isPromotion, pourcentagePromotion, categorieId }, { transaction });
+    const {
+      nom,
+      description,
+      prix,
+      stock,
+      marque,
+      couleur,
+      taille,
+      isPromotion,
+      pourcentagePromotion,
+      categorieId,
+      priceId,
+    } = req.body;
+    const product = await Produit.create(
+      {
+        nom,
+        description,
+        prix,
+        stock,
+        marque,
+        couleur,
+        taille,
+        isPromotion,
+        pourcentagePromotion,
+        categorieId,
+        priceId,
+      },
+      { transaction }
+    );
 
     if (req.files && req.files.length > 0) {
-      const images = req.files.map(file => ({
+      const images = req.files.map((file) => ({
         produitId: product.id,
-        imageUrl: file.filename // Just the filename
+        imageUrl: file.filename, // Just the filename
       }));
       await Image.bulkCreate(images, { transaction });
     }
 
     await transaction.commit();
 
-    const productWithImages = await Produit.findByPk(product.id, { include: Image });
-    const transformedImages = productWithImages.Images.map(image => ({
+    const productWithImages = await Produit.findByPk(product.id, {
+      include: Image,
+    });
+    const transformedImages = productWithImages.Images.map((image) => ({
       ...image.toJSON(),
-      imageUrl: generateImageUrl(path.basename(image.imageUrl))
+      imageUrl: generateImageUrl(path.basename(image.imageUrl)),
     }));
     const transformedProduct = {
       ...productWithImages.toJSON(),
-      Images: transformedImages
+      Images: transformedImages,
     };
 
     res.status(201).json(transformedProduct);
@@ -103,7 +132,19 @@ export const updateProduct = async (req, res) => {
   const transaction = await Produit.sequelize.transaction();
   try {
     const { id } = req.params;
-    const { nom, description, prix, stock, marque, couleur, taille, isPromotion, pourcentagePromotion, categorieId } = req.body;
+    const {
+      nom,
+      description,
+      prix,
+      stock,
+      marque,
+      couleur,
+      taille,
+      isPromotion,
+      pourcentagePromotion,
+      categorieId,
+      priceId,
+    } = req.body;
     const product = await Produit.findByPk(id);
 
     if (product) {
@@ -115,33 +156,38 @@ export const updateProduct = async (req, res) => {
       product.couleur = couleur || product.couleur;
       product.taille = taille || product.taille;
       product.isPromotion = isPromotion || product.isPromotion;
-      product.pourcentagePromotion = pourcentagePromotion || product.pourcentagePromotion;
+      product.pourcentagePromotion =
+        pourcentagePromotion || product.pourcentagePromotion;
       product.categorieId = categorieId || product.categorieId;
+      product.priceId = priceId || product.priceId;
+
       await product.save({ transaction });
 
       if (req.files && req.files.length > 0) {
-        const images = req.files.map(file => ({
+        const images = req.files.map((file) => ({
           produitId: product.id,
-          imageUrl: file.filename // Just the filename
+          imageUrl: file.filename, // Just the filename
         }));
         await Image.bulkCreate(images, { transaction });
       }
 
       await transaction.commit();
 
-      const productWithImages = await Produit.findByPk(product.id, { include: Image });
-      const transformedImages = productWithImages.Images.map(image => ({
+      const productWithImages = await Produit.findByPk(product.id, {
+        include: Image,
+      });
+      const transformedImages = productWithImages.Images.map((image) => ({
         ...image.toJSON(),
-        imageUrl: generateImageUrl(path.basename(image.imageUrl))
+        imageUrl: generateImageUrl(path.basename(image.imageUrl)),
       }));
       const transformedProduct = {
         ...productWithImages.toJSON(),
-        Images: transformedImages
+        Images: transformedImages,
       };
 
       res.status(200).json(transformedProduct);
     } else {
-      res.status(404).json({ message: 'Product not found' });
+      res.status(404).json({ message: "Product not found" });
     }
   } catch (error) {
     await transaction.rollback();
@@ -155,9 +201,9 @@ export const deleteProduct = async (req, res) => {
     const product = await Produit.findByPk(req.params.id);
     if (product) {
       await product.destroy();
-      res.status(200).json({ message: 'Product deleted' });
+      res.status(200).json({ message: "Product deleted" });
     } else {
-      res.status(404).json({ message: 'Product not found' });
+      res.status(404).json({ message: "Product not found" });
     }
   } catch (error) {
     res.status(500).json({ error: error.message });
@@ -179,21 +225,24 @@ export const getFilteredProducts = async (req, res) => {
     if (search) {
       whereClause[Op.or] = [
         { nom: { [Op.iLike]: `%${search}%` } },
-        { description: { [Op.iLike]: `%${search}%` } }
+        { description: { [Op.iLike]: `%${search}%` } },
       ];
     }
 
-    const products = await Produit.findAll({ where: whereClause, include: Image });
+    const products = await Produit.findAll({
+      where: whereClause,
+      include: Image,
+    });
 
     // Transform image URLs
-    const productsWithImageUrls = products.map(product => {
-      const transformedImages = product.Images.map(image => ({
+    const productsWithImageUrls = products.map((product) => {
+      const transformedImages = product.Images.map((image) => ({
         ...image.toJSON(),
-        imageUrl: generateImageUrl(path.basename(image.imageUrl))
+        imageUrl: generateImageUrl(path.basename(image.imageUrl)),
       }));
       return {
         ...product.toJSON(),
-        Images: transformedImages
+        Images: transformedImages,
       };
     });
 

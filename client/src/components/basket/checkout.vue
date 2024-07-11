@@ -64,7 +64,7 @@ export default {
         }));
 
         const response = await axios.post(
-          "http://localhost:8000/create-checkout-session",
+          "http://localhost:8000/stripe/create-checkout-session",
           { lineItems }
         );
 
