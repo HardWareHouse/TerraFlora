@@ -1,10 +1,6 @@
 import { ref } from 'vue';
-import axios from 'axios';
+import instance from '../axios';
 import z from 'zod';
-
-const instance = axios.create({
-    baseURL: 'http://localhost:8000/',
-});
 
 const orderSchema = z.object({
     id: z.string().optional(),
@@ -28,11 +24,7 @@ export const useOrder = () => {
                 console.error('Aucun identifiant utilisateur fourni, impossible de récupérer les commandes');
                 return;
             }
-            const response = await instance.get(`orders/${userId}`, {
-                headers: {
-                    Authorization: `Bearer ${localStorage.getItem('token')}`,
-                },
-            });
+            const response = await instance.get(`orders/${userId}`);
     
             if (!response.data) {
                 console.error('Aucune donnée commande trouvée');
@@ -62,12 +54,7 @@ export const useOrder = () => {
             return;
         }
     
-        const response = await instance.post('order', validatedData, {
-            headers: {
-            'Authorization': `${localStorage.getItem('token')}`,
-            },
-        });
-        console.log(response.data);
+        const response = await instance.post('order', validatedData);
         } catch (error) {
         console.error('Error creating order:', error);
         } finally {
@@ -85,12 +72,8 @@ export const useOrder = () => {
             return;
         }
     
-        const response = await instance.put(`order/${orderId}`, validatedData, {
-            headers: {
-            'Authorization': `${localStorage.getItem('token')}`,
-            },
-        });
-        console.log(response.data);
+        const response = await instance.put(`order/${orderId}`, validatedData);
+
         } catch (error) {
         console.error('Error updating order:', error);
         } finally {
@@ -102,12 +85,7 @@ export const useOrder = () => {
     const deleteOrder = async (orderId) => {
         loading.value = true;
         try {
-        const response = await instance.delete(`order/${orderId}`, {
-            headers: {
-            'Authorization': `${localStorage.getItem('token')}`,
-            },
-        });
-        console.log(response.data);
+        const response = await instance.delete(`order/${orderId}`);
         } catch (error) {
         console.error('Error deleting order:', error);
         } finally {

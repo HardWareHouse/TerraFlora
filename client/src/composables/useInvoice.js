@@ -1,10 +1,6 @@
 import { ref } from 'vue';
-import axios from 'axios';
+import instance from '../axios';
 import z from 'zod';
-
-const instance = axios.create({
-    baseURL: 'http://localhost:8000/',
-});
 
 const invoiceSchema = z.object({
     id: z.string().optional(),
@@ -27,11 +23,7 @@ export const useInvoice = () => {
                 console.error('Aucun identifiant utilisateur fourni, impossible de récupérer les factures');
                 return;
             }
-            const response = await instance.get(`invoices/${userId}`, {
-                headers: {
-                    Authorization: `Bearer ${localStorage.getItem('token')}`,
-                },
-            });
+            const response = await instance.get(`invoices/${userId}`);
     
             if (!response.data) {
                 console.error('Aucune donnée facture trouvée');
@@ -60,15 +52,12 @@ export const useInvoice = () => {
             console.error('Données de facture invalides');
             return;
         }
-        const response = await instance.post('invoices', validatedData, {
-            headers: {
-                Authorization: `Bearer ${localStorage.getItem('token')}`,
-            },
-        });
+        const response = await instance.post('invoices', validatedData);
         if (!response.data) {
             console.error('Aucune donnée facture trouvée');
             return;
         }
+
         invoices.value = [...invoices.value, invoiceSchema.parse(response.data)];
         } catch (error) {
             console.error('Error creating invoice:', error);
@@ -85,11 +74,7 @@ export const useInvoice = () => {
             console.error('Données de facture invalides');
             return;
         }
-        const response = await instance.put(`invoices/${validatedData.id}`, validatedData, {
-            headers: {
-                Authorization: `Bearer ${localStorage.getItem('token')}`,
-            },
-        });
+        const response = await instance.put(`invoices/${validatedData.id}`);
         if (!response.data) {
             console.error('Aucune donnée facture trouvée');
             return;
