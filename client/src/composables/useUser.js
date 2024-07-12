@@ -1,10 +1,6 @@
 import { ref } from 'vue';
-import axios from 'axios';
+import instance from '../axios';
 import z from 'zod';
-
-const instance = axios.create({
-    baseURL: 'http://localhost:8000/',
-});
 
 const userSchema = z.object({
     nom: z.string(),
@@ -22,11 +18,7 @@ export const useUser = () => {
     const fetchUser = async (userId) => {
         loading.value = true;
         try {
-            const response = await instance.get(`users/${userId}`, {
-                headers: {
-                    Authorization: `Bearer ${localStorage.getItem('token')}`,
-                },
-            });
+            const response = await instance.get(`users/${userId}`);
             if (!response.data) {
                 console.error('Aucune donnée utilisateur trouvée');
                 return;
@@ -44,11 +36,7 @@ export const useUser = () => {
         loading.value = true;
         try {
             const validatedData = userSchema.parse(updatedUser);
-            const response = await axios.put(`users/${userId}`, validatedData, {
-                headers: {
-                    Authorization: `Bearer ${localStorage.getItem('token')}`,
-                },
-            });
+            const response = await axios.put(`users/${userId}`, validatedData);
             user.value = userSchema.parse(response.data);
         } catch (error) {
             console.error('Erreur lors de la mise à jour de l\'utilisateur:', error);

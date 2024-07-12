@@ -16,7 +16,7 @@ onMounted(async () => {
   }
 });
 
-const isUserLoaded = computed(() => userId.value !== null);
+const isUserLoaded = computed(() => userId.value !== null && userId.value !== undefined);
 provide('userId', userId);
 </script>
 
