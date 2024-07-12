@@ -7,7 +7,6 @@ export const createSession = async (req, res) => {
   try {
     const { lineItems } = req.body;
 
-    console.log(lineItems);
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ["card"],
       billing_address_collection: "required",
@@ -91,6 +90,41 @@ export const createProduct = async (req, res) => {
     });
   }
 
-  console.log("created", product.default_price);
   res.json({ priceId: product.default_price });
+};
+
+export const updatePrice = async (req, res) => {
+  const { id, nom, prix, description, priceId } = req.body;
+  try {
+    // Update the product details
+    const products = await stripe.products.search({
+      query: `active:'true' AND name:'${nom}'`,
+    });
+
+    const productId = products.data[0].id;
+    // Create a new price for the product
+
+    const newPrice = await stripe.prices.create({
+      unit_amount: prix * 100,
+      currency: "eur", // Specify your currency
+      product: `${productId}`,
+    });
+
+    await stripe.products.update(productId, {
+      default_price: `${newPrice.id}`,
+      description: description || "",
+      name: nom,
+    });
+    // Optionally, deactivate the old price
+    await stripe.prices.update(priceId, {
+      active: false,
+    });
+
+    const newPriceId = newPrice.id;
+
+    res.status(200).send({ productId, newPriceId });
+  } catch (error) {
+    console.error("Error updating price:", error);
+    res.status(500).send({ error: error.message });
+  }
 };

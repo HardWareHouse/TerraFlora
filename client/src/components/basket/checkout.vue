@@ -62,7 +62,6 @@ export default {
           price: item.priceId,
           quantity: item.quantity,
         }));
-
         const response = await axios.post(
           "http://localhost:8000/stripe/create-checkout-session",
           { lineItems }

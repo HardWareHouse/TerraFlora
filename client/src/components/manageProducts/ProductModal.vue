@@ -242,7 +242,22 @@ const saveProduct = async () => {
     images.value.forEach((image, index) => {
       formData.append("images", image);
     });
+
     if (props.product) {
+      var newPriceId = "";
+      if (props.product.prix !== form.value.prix) {
+        const updatePayload = {
+          ...props.product,
+          prix: form.value.prix,
+        };
+        const response = await axios.post(
+          "http://localhost:8000/stripe/update-price",
+          updatePayload
+        );
+        newPriceId = response.data.newPriceId;
+      }
+
+      formData.append("newPriceId", newPriceId);
       await axios.put(
         `http://localhost:8000/product/${props.product.id}`,
         formData,
@@ -258,8 +273,9 @@ const saveProduct = async () => {
         form.value
       );
       const priceId = response.data.priceId;
+      formData.append("priceId", priceId);
 
-      await axios.post("http://localhost:8000/product", formData, priceId, {
+      await axios.post("http://localhost:8000/product", formData, {
         headers: {
           "Content-Type": "multipart/form-data",
         },

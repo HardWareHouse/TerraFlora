@@ -129,6 +129,7 @@ export const createProduct = async (req, res) => {
 
 // Mettre à jour un produit
 export const updateProduct = async (req, res) => {
+  console.log(req.body);
   const transaction = await Produit.sequelize.transaction();
   try {
     const { id } = req.params;
@@ -143,9 +144,11 @@ export const updateProduct = async (req, res) => {
       isPromotion,
       pourcentagePromotion,
       categorieId,
-      priceId,
     } = req.body;
+
     const product = await Produit.findByPk(id);
+
+    const priceId = req.body.newPriceId;
 
     if (product) {
       product.nom = nom || product.nom;
