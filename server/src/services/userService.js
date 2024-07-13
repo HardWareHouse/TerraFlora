@@ -1,32 +1,40 @@
 import User from "../modelsSQL/User.js";
 import bcrypt from "bcryptjs";
 
+export const getUser = async (id) => {
+  return await User.findByPk(id);
+};
+
 export const getUserById = async (id) => {
   return await User.findByPk(id, {
     attributes: ["id", "nom", "prenom", "email", "telephone", "role"],
   });
 };
 
+export const getUserByEmail = async (email) => {
+  return await User.findOne({ where: { email } });
+}; 
+
 export const getAllUsers = async () => {
   return await User.findAll({ attributes: { exclude: ["password"] } });
 };
 
 export const updateUserById = async (id, data) => {
-  const user = await User.findByPk(id);
+  let user = await User.findByPk(id);
   if (!user) return null;
 
   if (data.email) user.email = data.email;
   if (data.nom) user.nom = data.nom;
   if (data.prenom) user.prenom = data.prenom;
   if (data.telephone) user.telephone = data.telephone;
-  if (data.role) user.role = data.role;
-
-  if (data.password) {
-    const salt = await bcrypt.genSalt(10);
-    user.password = await bcrypt.hash(data.password, salt);
-  }
+  if (data.password) user.password = data.password;
 
   await user.save();
+  
+  user = await User.findByPk(id, {
+    attributes: ["id", "nom", "prenom", "email", "telephone", "role"],
+  });
+
   return user;
 };
 
@@ -37,4 +45,13 @@ export const deleteUserById = async (id) => {
     return user;
   }
   return null;
+};
+
+export const comparePasswords = async (inputPassword, userPassword) => {
+  try {
+    return await bcrypt.compare(inputPassword, userPassword);
+  } catch (error) {
+    console.error('Erreur lors de la comparaison des mots de passe:', error);
+    throw error;
+  }
 };

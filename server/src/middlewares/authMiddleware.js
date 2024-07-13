@@ -23,6 +23,12 @@ export const authenticate = async (req, res, next) => {
             return res.status(401);
         }
 
+        if (user.isBlocked) {
+            return res.status(401).json({ message: 'Your account has been blocked', code: 'account_blocked' });
+        } else if (!user.isVerified) {
+            return res.status(401).json({ message: 'Account not verified. Please verify your account to log in.', code: 'account_not_verified' });
+        }
+
         req.user = user;
         next();
     } catch (err) {

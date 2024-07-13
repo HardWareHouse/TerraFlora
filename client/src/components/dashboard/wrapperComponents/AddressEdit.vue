@@ -119,7 +119,7 @@ const updateTheAddress = async () => {
     successMessage.value = 'Votre adresse a été mise à jour avec succès!';
     editMode.value = false;
   } catch (error) {
-    successMessage.value = ' Une erreur est survenue lors de la mise à jour de l\'adresse. Veuillez réessayer.';
+    errorMessage.value = ' Une erreur est survenue lors de la mise à jour de l\'adresse. Veuillez réessayer.';
     console.error('Erreur lors de la mise à jour de l\'adresse:', error);
   }
 };

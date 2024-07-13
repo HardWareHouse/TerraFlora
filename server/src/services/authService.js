@@ -22,7 +22,12 @@ export const createUser = async (userData) => {
 };
 
 export const comparePasswords = async (inputPassword, userPassword) => {
-  return await bcrypt.compare(inputPassword, userPassword);
+  try {
+    return await bcrypt.compare(inputPassword, userPassword);
+  } catch (error) {
+    console.error('Erreur lors de la comparaison des mots de passe:', error);
+    throw error;
+  }
 };
 
 export const generateToken = (payload, secret, expiresIn) => {

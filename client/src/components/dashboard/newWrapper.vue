@@ -32,7 +32,7 @@ const components = {
   orders: defineAsyncComponent(() => import('./wrapperComponents/Orders.vue')),
   download: defineAsyncComponent(() => import('./wrapperComponents/Downloads.vue')),
   addressEdit: defineAsyncComponent(() => import('./wrapperComponents/AddressEdit.vue')),
-  emailPreference: defineAsyncComponent(() => import('./wrapperComponents/emailPreference.vue')),
+  emailPreference: defineAsyncComponent(() => import('./wrapperComponents/EmailPreference.vue')),
   accountInfo: defineAsyncComponent(() => import('./wrapperComponents/AccountInfo.vue'))
 };
 

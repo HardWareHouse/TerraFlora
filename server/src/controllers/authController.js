@@ -176,7 +176,7 @@ export const resetPassword = async (req, res) => {
       return res.status(400).json({ msg: "Utilisateur non trouvé." });
     }
 
-    user.password = await bcrypt.hash(password, 10);
+    user.password = password;
     user.lastUpdatedPassword = new Date();
     await user.save();
 

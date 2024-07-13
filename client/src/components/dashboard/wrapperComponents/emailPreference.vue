@@ -111,11 +111,7 @@ const updatePreference = async (preference, value) => {
         'Authorization': `${tokenMailPreference.value}`
       }
     });
-
-    console.log(authStore.mailPreferenceToken);
-    console.log(preference);
-    console.log(value); 
-    console.log(response.data);
+    
   } catch (error) {
     console.error('Error updating preference:', error);
   }

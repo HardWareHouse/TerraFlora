@@ -26,6 +26,6 @@ provide('userId', userId);
     <newWrapper />
   </div>
   <div v-else>
-    Loading...
+    Chargement du dashboard..., <br />Veuillez recharger la page si cela prend trop de temps
   </div>
 </template>
