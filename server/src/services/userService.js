@@ -23,20 +23,30 @@ export const updateUserById = async (id, data) => {
   let user = await User.findByPk(id);
   if (!user) return null;
 
-  if (data.email) user.email = data.email;
-  if (data.nom) user.nom = data.nom;
-  if (data.prenom) user.prenom = data.prenom;
-  if (data.telephone) user.telephone = data.telephone;
-  if (data.password) user.password = data.password;
+  if (
+    (data.email && data.email !== user.email) ||
+    (data.nom && data.nom !== user.nom) ||
+    (data.prenom && data.prenom !== user.prenom) ||
+    (data.telephone && data.telephone !== user.telephone) ||
+    !comparePasswords(data.password, user.password)
+  ) {
 
-  await user.save();
+    if (data.email) user.email = data.email;
+    if (data.nom) user.nom = data.nom;
+    if (data.prenom) user.prenom = data.prenom;
+    if (data.telephone) user.telephone = data.telephone;
+    if (data.password) user.password = data.password;
+
+    await user.save();
+
+    user = await User.findByPk(id, {
+      attributes: ["id", "nom", "prenom", "email", "telephone", "role"],
+    });
   
-  user = await User.findByPk(id, {
-    attributes: ["id", "nom", "prenom", "email", "telephone", "role"],
-  });
-
-  return user;
+    return user;
+  } else return null;  
 };
+
 
 export const deleteUserById = async (id) => {
   const user = await User.findByPk(id);

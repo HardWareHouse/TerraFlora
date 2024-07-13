@@ -95,7 +95,8 @@ watch(user, (newVal) => {
 
 const isFormModified = computed(() => {
   const formKeys = Object.keys(formData.value);
-  return formKeys.some(key => formData.value[key] !== initialData.value[key]);
+  const filteredKeys = formKeys.filter(key => key !== 'currentPassword');
+  return filteredKeys.some(key => formData.value[key] !== initialData.value[key]);
 });
 
 const validateForm = () => {

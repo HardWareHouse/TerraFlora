@@ -116,6 +116,9 @@ export const updateUser = async (req, res) => {
     }
 
     const updatedUser = await userService.updateUserById(id, updatedUserData);
+    if (!updatedUser) {
+      return res.status(400).json({ error: "No data to update" });
+    }
 
     res.status(200).json(updatedUser);
   } catch (error) {
