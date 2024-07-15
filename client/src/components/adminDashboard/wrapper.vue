@@ -34,7 +34,7 @@ const tabs = [
 
 const tabClass = (tab) => {
     return {
-        'py-2 px-4 flex items-center rounded hover:bg-gray-200 transition-colors': true,
+        'py-2 px-4 flex items-center rounded hover:bg-red-600 transition-colors': true,
         'bg-red-600 text-white': activeTab.value === tab,
         'text-gray-700': activeTab.value !== tab,
     };
@@ -42,7 +42,7 @@ const tabClass = (tab) => {
 
 const components = {
     resources: defineAsyncComponent(() => import('./wrapperComponents/resourcesCrud.vue')),
-    statistics: defineAsyncComponent(() => import('./wrapperComponents/adminPanel.vue')),
+    statistics: defineAsyncComponent(() => import('./wrapperComponents/statistical.vue')),
     contacts: defineAsyncComponent(() => import('./wrapperComponents/contacts.vue')),
     others: defineAsyncComponent(() => import('./wrapperComponents/others.vue')),
 };

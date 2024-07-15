@@ -12,8 +12,8 @@
 </template>
 
 <script>
-import Dashboard from './panelComponents/dashboard.vue';
-import WidgetContainer from './panelComponents/widgetContainer.vue';
+import Dashboard from './statisticalComponents/dashboard.vue';
+import WidgetContainer from './statisticalComponents/widgetContainer.vue';
 
 export default {
   name: 'AdminPanel',
