@@ -2,13 +2,17 @@
   <Breadcrumbs />
   <div class="container mx-auto py-8">
     <h2 class="text-3xl font-bold text-center mb-4">Gestion des Produits</h2>
-    <div class="mb-8">
+    <div class="mb-8 flex justify-between items-center">
       <button
         @click="openCreateProductModal"
         class="bg-blue-500 text-white px-4 py-2 rounded"
       >
         Ajouter un Produit
       </button>
+      <select v-model="selectedProductId" @change="updateSelectedProduct" class="form-select">
+        <option value="" disabled>Choisissez un produit</option>
+        <option v-for="product in products" :key="product.id" :value="product.id">{{ product.nom }}</option>
+      </select>
     </div>
     <table class="min-w-full bg-white">
       <thead>
@@ -49,6 +53,7 @@
       @close="closeModal"
       @save="fetchProducts"
     />
+    <StockChart v-if="selectedProductId" :produitId="selectedProductId" />
   </div>
 </template>
 
@@ -57,10 +62,12 @@ import { ref, onMounted } from "vue";
 import axios from "axios";
 import ProductModal from "../components/manageProducts/ProductModal.vue";
 import Breadcrumbs from "../components/manageProducts/Breadcrumbs.vue";
+import StockChart from "../components/manageProducts/StockChart.vue";
 
 const products = ref([]);
 const showModal = ref(false);
 const currentProduct = ref(null);
+const selectedProductId = ref("");
 
 const fetchProducts = async () => {
   try {
@@ -94,6 +101,10 @@ const deleteProduct = async (id) => {
   }
 };
 
+const updateSelectedProduct = () => {
+  // Trigger la méthode fetchStockHistory dans le composant StockChart via le watcher
+};
+
 onMounted(() => {
   fetchProducts();
 });
@@ -102,5 +113,11 @@ onMounted(() => {
 <style scoped>
 .container {
   max-width: 1200px;
+}
+
+.form-select {
+  padding: 0.5rem;
+  border-radius: 0.25rem;
+  border: 1px solid #ccc;
 }
 </style>

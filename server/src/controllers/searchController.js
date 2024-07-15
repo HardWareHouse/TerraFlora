@@ -1,5 +1,6 @@
 import Produit from "../modelsSQL/Produit.js";
 import Image from "../modelsSQL/Image.js";
+import StockHistory from "../modelsSQL/StockHistory.js";
 import { Op } from "sequelize";
 import validator from "validator";
 import path from "path";
@@ -9,6 +10,15 @@ import { getAllUsers } from '../services/userService.js';
 // Helper pour corriger l'url correcte de l'image
 const generateImageUrl = (filename) => {
   return `uploads/${filename}`;
+};
+
+// Enregistrer l'historique des stocks
+const saveStockHistory = async (produitId, stock) => {
+  await StockHistory.create({
+    produitId,
+    stock,
+    date: new Date(),
+  });
 };
 
 // Lire les informations d'un produit
@@ -142,7 +152,7 @@ export const updateProduct = async (req, res) => {
       description,
       prix,
       stock,
-      stockThreshold, // ajouter ce champ
+      stockThreshold,
       marque,
       couleur,
       taille,
@@ -156,6 +166,8 @@ export const updateProduct = async (req, res) => {
     const priceId = req.body.newPriceId;
 
     if (product) {
+      const oldStock = product.stock; // Permet de garder la trace de l'ancien stock du produit
+
       product.nom = nom || product.nom;
       product.description = description || product.description;
       product.prix = prix || product.prix;
@@ -181,6 +193,11 @@ export const updateProduct = async (req, res) => {
       }
 
       await transaction.commit();
+
+      // Enregistrement de l'historique des stocks après une mise à jour réussie
+      if (stock !== oldStock) {
+        await saveStockHistory(product.id, product.stock);
+      }
 
       // Vérification des niveaux de stock et envoi des alertes
       if (product.stock <= product.stockThreshold) {
@@ -268,6 +285,34 @@ export const getFilteredProducts = async (req, res) => {
     });
 
     res.status(200).json(productsWithImageUrls);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+// Récupération de l'historique des stocks
+export const getStockHistory = async (req, res) => {
+  try {
+    const { produitId } = req.params;
+    const { startDate, endDate } = req.query;
+
+    const whereClause = { produitId };
+
+    if (startDate) {
+      whereClause.date = { [Op.gte]: new Date(startDate) };
+    }
+    if (endDate) {
+      whereClause.date = { 
+        ...whereClause.date, 
+        [Op.lte]: new Date(endDate) 
+      };
+    }
+
+    const history = await StockHistory.findAll({
+      where: whereClause,
+      order: [["date", "ASC"]],
+    });
+    res.status(200).json(history);
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
