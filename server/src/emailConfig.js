@@ -3,10 +3,22 @@ import dotenv from 'dotenv';
 
 dotenv.config();
 
-const apiInstance = new brevo.TransactionalEmailsApi();
+let apiInstance;
+if (process.env.NODE_ENV === 'test') {
+  apiInstance = {
+    authentications: {
+      apiKey: {
+        apiKey: process.env.BREVO_PASS_API,
+      },
+    },
+    sendTransacEmail: jest.fn().mockResolvedValue({}),
+  };
+} else {
+  apiInstance = new brevo.TransactionalEmailsApi();
+  let apiKey = apiInstance.authentications['apiKey'];
+  apiKey.apiKey = process.env.BREVO_PASS_API;
+}
 
-let apiKey = apiInstance.authentications['apiKey'];
-apiKey.apiKey = process.env.BREVO_PASS_API;
 
 const templateIds = {
   confirmation: 2,
@@ -101,6 +113,8 @@ export async function sendPreferenceUpdateEmail(user, preference) {
     throw error;
   }
 }
+
+
 
 export async function sendAlertEmailLowStock(user, alertMessage) {
   const sendSmtpEmail = new brevo.SendSmtpEmail();
