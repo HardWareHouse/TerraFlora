@@ -3,7 +3,7 @@
     <div class="bg-white shadow-md rounded-lg overflow-hidden mb-8">
       <div class="px-6 py-4">
         <div class="mb-4">
-          <label for="resourceSelect" class="block text-xl font-bold text-gray-700">Gestion des ressources</label>
+          <label for="resourceSelect" class="block text-xl font-bold text-gray-700">Choisissez une ressource</label>
           <select v-model="selectedResource" id="resourceSelect" class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md mt-3">
             <option v-for="resource in availableResources" :key="resource" :value="resource">{{ resource }}</option>
           </select>

@@ -1,6 +1,5 @@
 <template>
   <div class="container mx-auto px-4 py-8">
-    <ResourcesCrud />
     <Dashboard />
     
     <div class="bg-white shadow-md rounded-lg overflow-hidden mt-8">
@@ -14,14 +13,12 @@
 
 <script>
 import Dashboard from './panelComponents/dashboard.vue';
-import ResourcesCrud from './panelComponents/resourcesCrud.vue';
-import WidgetContainer from './widgetContainer.vue';
+import WidgetContainer from './panelComponents/widgetContainer.vue';
 
 export default {
   name: 'AdminPanel',
   components: {
     Dashboard,
-    ResourcesCrud,
     WidgetContainer,
   },
 };

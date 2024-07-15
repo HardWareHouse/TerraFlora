@@ -27,11 +27,16 @@ const routes = [
     name: "Home",
     component: Home,
   },
+  // {
+  //   path: "/admin",
+  //   name: "Admin",
+  //   component: Admin,
+  //   meta: { requiresAuth: true, roles: ["ROLE_ADMIN"] },
+  // },
   {
     path: "/admin",
     name: "Admin",
     component: Admin,
-    meta: { requiresAuth: true, roles: ["ROLE_ADMIN"] },
   },
   {
     path: "/shop",

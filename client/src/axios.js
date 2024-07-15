@@ -21,8 +21,9 @@ instance.interceptors.response.use(
 
       if (authStore.token) {
         try {
-          await authStore.logout();
-          router.push({ name: 'login' });
+          await authStore.logout().then(() => {
+            router.push({ name: 'login' });
+          });
         } catch (err) {
           console.error('Error while logging out:', err);
         }
