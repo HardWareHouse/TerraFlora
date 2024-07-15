@@ -1,9 +1,15 @@
 <script setup>
-  import breadcrumb from "../components/adminDashboard/breadcrumb.vue";
-  import adminPanel from "../components/adminDashboard/adminPanel.vue";
+import Breadcrumb from "../components/adminDashboard/breadcrumbDashboardAdmin.vue";
+import Wrapper from '../components/adminDashboard/wrapper.vue';
 </script>
 
 <template>
-   <breadcrumb />
-   <adminPanel />
+  <div>
+    <Breadcrumb />
+    <Wrapper />
+  </div>
 </template>
+
+
+
+

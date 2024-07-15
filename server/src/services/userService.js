@@ -1,5 +1,5 @@
 import User from "../modelsSQL/User.js";
-import bcrypt from "bcryptjs";
+import { comparePasswords } from "../helpers/passwordHelper.js";
 
 export const getUser = async (id) => {
   return await User.findByPk(id);
@@ -20,33 +20,28 @@ export const getAllUsers = async () => {
 };
 
 export const updateUserById = async (id, data) => {
-  let user = await User.findByPk(id);
+  const user = await User.findByPk(id);
   if (!user) return null;
 
-  if (
-    (data.email && data.email !== user.email) ||
-    (data.nom && data.nom !== user.nom) ||
-    (data.prenom && data.prenom !== user.prenom) ||
-    (data.telephone && data.telephone !== user.telephone) ||
-    !comparePasswords(data.password, user.password)
-  ) {
-
-    if (data.email) user.email = data.email;
-    if (data.nom) user.nom = data.nom;
-    if (data.prenom) user.prenom = data.prenom;
-    if (data.telephone) user.telephone = data.telephone;
-    if (data.password) user.password = data.password;
-
-    await user.save();
-
-    user = await User.findByPk(id, {
-      attributes: ["id", "nom", "prenom", "email", "telephone", "role"],
-    });
+  const isPasswordMatch = data.password ? await comparePasswords(data.password, user.password) : true;
   
-    return user;
-  } else return null;  
-};
+  const fieldsToUpdate = {};
 
+  if (data.email && data.email !== user.email) fieldsToUpdate.email = data.email;
+  if (data.nom && data.nom !== user.nom) fieldsToUpdate.nom = data.nom;
+  if (data.prenom && data.prenom !== user.prenom) fieldsToUpdate.prenom = data.prenom;
+  if (data.telephone && data.telephone !== user.telephone) fieldsToUpdate.telephone = data.telephone;
+  if (data.password && !isPasswordMatch) fieldsToUpdate.password = data.password;
+
+  if (Object.keys(fieldsToUpdate).length === 0) {
+    return res.status(400).json({ error: "No data to update" });
+  }
+
+  Object.assign(user, fieldsToUpdate);
+  await user.save();
+
+  return getUserById(id);
+};
 
 export const deleteUserById = async (id) => {
   const user = await User.findByPk(id);
@@ -57,11 +52,3 @@ export const deleteUserById = async (id) => {
   return null;
 };
 
-export const comparePasswords = async (inputPassword, userPassword) => {
-  try {
-    return await bcrypt.compare(inputPassword, userPassword);
-  } catch (error) {
-    console.error('Erreur lors de la comparaison des mots de passe:', error);
-    throw error;
-  }
-};

@@ -1,7 +1,7 @@
 import Stripe from "stripe";
 const stripe = Stripe(process.env.VITE_STRIPE_SECRET_KEY);
 
-const YOUR_DOMAIN = "http://localhost:5174";
+const YOUR_DOMAIN = "http://localhost:5173";
 
 export const createSession = async (req, res) => {
   try {

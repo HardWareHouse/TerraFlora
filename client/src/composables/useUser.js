@@ -57,11 +57,21 @@ export const useUser = () => {
 
             if (validatedData.newPassword) {
                 dataToUpdate.newPassword = validatedData.newPassword;
+                dataToUpdate.confirmPassword = validatedData.confirmPassword;
             }
 
             const response = await instance.put(`users/${validatedData.id}`, dataToUpdate);
+            if (!response.data) {
+                console.error('Aucune donnée utilisateur trouvée');
+                return;
+            }
+            else if (response.data.error) {
+                console.error('Erreur lors de la mise à jour de l\'utilisateur:', response.data.error);
+                return;
+            }
+            
             user.value = userSchema.parse(response.data);
-            console.log('Utilisateur mis à jour avec succès:', user.value);
+            return true;
         } catch (error) {
             console.error('Erreur lors de la mise à jour de l\'utilisateur:', error);
         } finally {

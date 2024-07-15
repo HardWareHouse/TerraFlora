@@ -1,7 +1,7 @@
 import * as userService from "../services/userService.js";
 import { isValidUUID } from "../helpers/validatorHelper.js";
 import { isEmailAddressValid } from "../helpers/emailAddressHelper.js";
-import { isPasswordValid } from "../helpers/passwordHelper.js";
+import { isPasswordValid, comparePasswords } from "../helpers/passwordHelper.js";
 
 // Lire les informations d'un utilisateur
 export const getUser = async (req, res) => {
@@ -66,7 +66,7 @@ export const updateUser = async (req, res) => {
   }
 
   try {
-    const { nom, prenom, email, password, telephone } = req.body;
+    const { nom, prenom, email, password, telephone, newPassword, confirmPassword } = req.body;
     if (!nom || !prenom || !email || !password || !telephone) {
       return res.status(400).json({ error: "Missing fields to update" });
     }
@@ -96,7 +96,7 @@ export const updateUser = async (req, res) => {
       return res.status(403).json({ error: "Unauthorized" });
     }
 
-    const passwordMatch = await userService.comparePasswords(password, existingUser.password);
+    const passwordMatch = await comparePasswords(password, existingUser.password);
     if (!passwordMatch) {
       return res.status(401).json({ error: "Invalid password" });
     }
@@ -108,11 +108,20 @@ export const updateUser = async (req, res) => {
       telephone: telephone || existingUser.telephone
     };
 
-    if(req.body.newPassword){
-      if(!isPasswordValid(req.body.newPassword)){
+    if(newPassword){
+      if(!confirmPassword){
+        return res.status(400).json({ error: "Missing confirm password" });
+      }
+
+      if(newPassword !== confirmPassword){
+        return res.status(400).json({ error: "Passwords do not match" });
+      }
+
+      if(!isPasswordValid(newPassword) || !isPasswordValid(confirmPassword)){
         return res.status(400).json({ error: "The new password is not strong enough" });
       }
-      updatedUserData.password = req.body.newPassword;
+      
+      updatedUserData.password = newPassword;
     }
 
     const updatedUser = await userService.updateUserById(id, updatedUserData);
