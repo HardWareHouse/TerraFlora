@@ -1,6 +1,5 @@
 import User from "../modelsSQL/User.js";
 import jwt from "jsonwebtoken";
-import bcrypt from "bcryptjs";
 import { sendConfirmationEmail, sendResetPasswordEmail, sendAccountBlockedEmail } from "../emailConfig.js";
 
 export const findUserByEmail = async (email) => {
@@ -19,15 +18,6 @@ export const createUser = async (userData) => {
   await sendConfirmationEmail(newUser, token);
 
   return newUser;
-};
-
-export const comparePasswords = async (inputPassword, userPassword) => {
-  try {
-    return await bcrypt.compare(inputPassword, userPassword);
-  } catch (error) {
-    console.error('Erreur lors de la comparaison des mots de passe:', error);
-    throw error;
-  }
 };
 
 export const generateToken = (payload, secret, expiresIn) => {

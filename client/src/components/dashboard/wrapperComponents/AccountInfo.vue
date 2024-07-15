@@ -164,9 +164,14 @@ const handleSubmit = async () => {
   }
 
   try {
-    await updateUser(formData.value);
-    initialData.value = { ...formData.value };
-    successMessage.value = 'Les modifications ont été enregistrées avec succès.';
+    const response = await updateUser(formData.value);
+    if (!response) {
+      errorMessage.value = 'Mot de passe actuel incorrect.';
+      return;
+    } else {
+      initialData.value = { ...formData.value };
+      successMessage.value = 'Les modifications ont été enregistrées avec succès.';
+    }
   } catch (error) {
     errorMessage.value = 'Une erreur est survenue lors de la mise à jour des informations.';
   }
