@@ -39,6 +39,24 @@
       subject: 'Feedback sur le site',
       body: 'J\'adore votre nouvelle fonctionnalité !',
       createdAt: new Date('2023-07-10T11:20:00')
+    },
+    {
+      id: 4,
+      subject: 'Problème technique',
+      body: 'Je ne peux pas me connecter à mon compte.',
+      createdAt: new Date('2023-07-09T17:10:00')
+    },
+    {
+      id: 5,
+      subject: 'Demande de partenariat',
+      body: 'Je suis intéressé par une collaboration avec votre entreprise.',
+      createdAt: new Date('2023-07-08T14:30:00')
+    },
+    {
+      id: 6,
+      subject: 'Question sur les tarifs',
+      body: 'Pouvez-vous m\'envoyer vos tarifs ?',
+      createdAt: new Date('2023-07-07T10:45:00')
     }
   ]);
   
