@@ -3,6 +3,8 @@ import Image from "../modelsSQL/Image.js";
 import { Op } from "sequelize";
 import validator from "validator";
 import path from "path";
+import { sendAlertEmailNoStock, sendAlertEmailLowStock } from '../emailConfig.js';
+import { getAllUsers } from '../services/userService.js';
 
 // Helper pour corriger l'url correcte de l'image
 const generateImageUrl = (filename) => {
@@ -73,6 +75,7 @@ export const createProduct = async (req, res) => {
       description,
       prix,
       stock,
+      stockThreshold,
       marque,
       couleur,
       taille,
@@ -87,6 +90,7 @@ export const createProduct = async (req, res) => {
         description,
         prix,
         stock,
+        stockThreshold,
         marque,
         couleur,
         taille,
@@ -138,6 +142,7 @@ export const updateProduct = async (req, res) => {
       description,
       prix,
       stock,
+      stockThreshold, // ajouter ce champ
       marque,
       couleur,
       taille,
@@ -155,6 +160,7 @@ export const updateProduct = async (req, res) => {
       product.description = description || product.description;
       product.prix = prix || product.prix;
       product.stock = stock || product.stock;
+      product.stockThreshold = stockThreshold || product.stockThreshold;
       product.marque = marque || product.marque;
       product.couleur = couleur || product.couleur;
       product.taille = taille || product.taille;
@@ -175,6 +181,18 @@ export const updateProduct = async (req, res) => {
       }
 
       await transaction.commit();
+
+      // Vérification des niveaux de stock et envoi des alertes
+      if (product.stock <= product.stockThreshold) {
+        const users = await getAllUsers();
+        for (const user of users) {
+          if (product.stock === 0) {
+            await sendAlertEmailNoStock(user, `Critique: le produit "${product.nom}" est en rupture de stock.`);
+          } else {
+            await sendAlertEmailLowStock(user, `Alerte: le produit "${product.nom}" a un stock faible (${product.stock} restants).`);
+          }
+        }
+      }
 
       const productWithImages = await Produit.findByPk(product.id, {
         include: Image,

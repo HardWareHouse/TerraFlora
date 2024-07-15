@@ -50,6 +50,16 @@
             />
           </div>
           <div class="mb-4">
+            <label for="stockThreshold" class="block text-sm font-medium">Seuil de Stock</label>
+            <input
+              type="number"
+              id="stockThreshold"
+              v-model="form.stockThreshold"
+              required
+              class="mt-1 p-2 border rounded-md w-full bg-gray-100"
+            />
+          </div>
+          <div class="mb-4">
             <label for="marque" class="block text-sm font-medium">Marque</label>
             <select
               id="marque"
@@ -186,6 +196,7 @@ const form = ref({
   description: "",
   prix: 0,
   stock: 0,
+  stockThreshold: 5, // valeur par défaut
   marque: "",
   couleur: "",
   taille: "",
@@ -208,6 +219,7 @@ watch(
         description: "",
         prix: 0,
         stock: 0,
+        stockThreshold: 5, // valeur par défaut
         marque: "",
         couleur: "",
         taille: "",

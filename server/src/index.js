@@ -16,6 +16,7 @@ import categorieRoutes from "./routes/categorie.js";
 import adresseRoutes from "./routes/adresse.js";
 import stripeRouter from "./routes/stripe.js";
 import path from "path";
+import './cron/stockAlertCron.js';
 
 dotenv.config();
 
