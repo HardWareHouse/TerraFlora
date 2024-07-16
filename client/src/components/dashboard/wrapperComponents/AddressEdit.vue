@@ -1,5 +1,5 @@
 <template>
-  <div class="p-4 bg-white rounded-lg shadow-md">
+  <div id="addressEdit" class="p-4 bg-white rounded-lg shadow-md">
     <h3 class="text-xl font-medium border-b border-gray-200 pb-2">Adresse de facturation</h3>
     <div v-if="address">
       <address class="mt-4 not-italic text-[14px] text-gray-600">

@@ -1,5 +1,5 @@
 <template>
-  <div class="p-4 bg-white rounded-lg shadow-md">
+  <div id="accountInfo" class="p-4 bg-white rounded-lg shadow-md">
     <h3 class="text-xl font-medium border-b border-gray-200 pb-2">Mon compte</h3>
     <div class="mt-4">
       <form @submit.prevent="handleSubmit">

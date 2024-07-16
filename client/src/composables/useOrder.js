@@ -42,11 +42,7 @@ export const useOrder = () => {
     const fetchOrderById = async (orderId) => {
         loading.value = true;
         try {
-            if (!orderId) {
-                console.error('Aucun identifiant de commande fourni, impossible de récupérer la commande');
-                return;
-            }
-            const response = await instance.get(`orders/${orderId}`);
+            const response = await instance.get(`/orders/${orderId}`);
     
             if (!response.data) {
                 console.error('Aucune donnée commande trouvée');

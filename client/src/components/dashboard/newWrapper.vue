@@ -8,7 +8,9 @@ const activeTab = ref('dashboard');
 
 const selectTab = (tab) => {
   activeTab.value = tab;
+  router.push({ hash: `#${tab}` });
 };
+
 
 const tabs = [
   { id: 'dashboard', icon: 'bi-speedometer2', label: 'Tableau de bord' },
@@ -61,7 +63,7 @@ const logout = async () => {
             <template v-for="tab in tabs" :key="tab.id">
               <a
                 v-if="tab.id !== 'logout'"
-                href="#"
+                :href="`#${tab.id}`"
                 :class="tabClass(tab.id)"
                 @click.prevent="selectTab(tab.id)"
               >
@@ -89,6 +91,7 @@ const logout = async () => {
     </div>
   </div>
 </template>
+
 
 <style scoped>
 .fade-enter-active, .fade-leave-active {
