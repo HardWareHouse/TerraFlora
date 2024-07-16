@@ -1,5 +1,5 @@
 <template>
-  <div class="p-6 bg-white rounded-lg shadow-md">
+  <div id="download" class="p-6 bg-white rounded-lg shadow-md">
     <h3 class="text-2xl font-medium mb-4">Factures</h3>
     <div v-if="loading" class="text-center">Chargement...</div>
     <div v-else>
