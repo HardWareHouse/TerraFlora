@@ -21,7 +21,6 @@ export const useOrder = () => {
         loading.value = true;
         try {
             const response = await instance.get(`orders/`);
-    
             if (!response.data) {
                 console.error('Aucune donnée commande trouvée');
                 return;

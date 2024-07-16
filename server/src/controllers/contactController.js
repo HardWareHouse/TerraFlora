@@ -61,6 +61,10 @@ export const getAllContacts = async (req, res) => {
 
   try {
     const contacts = await contactService.getAllContacts();
+    if (!contacts) {
+      return res.status(404).json({ error: "Contacts not found" });
+    }
+
     res.status(200).json(contacts);
   } catch (error) {
     res.status(500).json({ error: error.message });

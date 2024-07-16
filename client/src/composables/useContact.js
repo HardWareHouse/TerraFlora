@@ -11,12 +11,18 @@ const contactSchema = z.object({
   email: z.string(),
 });
 
-const contactUpdateSchema = contactSchema.extend({
-    userId: z.string().optional(),
+const contactUpdateSchema = z.object({
+  id: z.string().optional(),
+  subject: z.string().min(1, "Le sujet est requis").max(50, "Le sujet ne doit pas dépasser 50 caractères"),
+  dateContact: z.string(),
+  status: z.string(),
+  message: z.string().min(1, "Le message est requis").max(300, "Le message ne doit pas dépasser 300 caractères"),
+  email: z.string(),
 });
 
 export const useContact = () => {
   const contact = ref(null);
+  const contacts = ref([]);
   const loading = ref(false);
 
   // Fonction pour envoyer un message de contact
@@ -39,6 +45,29 @@ export const useContact = () => {
     }
   };
 
+  // Fonction pour récuperer tout les contacts
+  const getAllContacts = async () => {
+    loading.value = true;
+    try {
+      const response = await instance.get('contacts');
+      if (!response.data) {
+        throw new Error('Contacts non trouvés');
+      }
+
+      if (Array.isArray(response.data)) {
+        contacts.value = response.data.map((contact) => contactUpdateSchema.parse(contact));
+      } else {
+        console.error('Réponse invalide: les données de commande sont invalides');
+      }
+    } catch (error) {
+      console.error('Erreur lors de la récupération des contacts:', error);
+      throw error;
+    } finally {
+      loading.value = false;
+    }
+  };
+
+  // Fonction pour vérifier si une adresse email est valide
   const isEmailAddressValid = (email) => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return emailRegex.test(email);
@@ -46,7 +75,9 @@ export const useContact = () => {
 
   return {
     contact,
+    contacts,
     loading,
+    getAllContacts,
     sendContactMessage,
     isEmailAddressValid,
   };
