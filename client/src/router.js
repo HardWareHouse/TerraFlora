@@ -11,6 +11,7 @@ import Register from "./pages/register.vue";
 import notFound from "./pages/notFound.vue";
 import ResetPassword from "./pages/resetPassword.vue";
 import ProductDetail from "./pages/productDetail.vue";
+import OrderDetail from "./pages/orderDetail.vue";
 import Checkout from "./pages/checkoutPage.vue";
 import CGU from "../public/rgpd/cgu.vue";
 import Politique from "../public/rgpd/politique_confidentialite.vue";
@@ -47,6 +48,11 @@ const routes = [
     path: "/product/:name",
     name: "ProductDetail",
     component: ProductDetail,
+  },
+  {
+    path: "/orders/:id",
+    name: "OrderDetail",
+    component: OrderDetail,
   },
   {
     path: "/manage-products",
