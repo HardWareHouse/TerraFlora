@@ -56,9 +56,8 @@ import { useRoute } from 'vue-router';
 import { useOrder } from '../../composables/useOrder.js';
 
 const route = useRoute();
-const loading = ref(true);
-const order = ref(null);
-const { fetchOrderById } = useOrder();
+const myOrder = ref(null);
+const { fetchOrderById, order } = useOrder();
 
 const formatDate = (date) => {
     const options = { year: 'numeric', month: 'long', day: 'numeric' };
@@ -73,9 +72,9 @@ onMounted(async () => {
     const orderId = route.params.id;
     if (orderId) {
         try {
-            await fetchOrderById(orderId); // Récupère la commande par ID
-            order.value = order; 
-            console.log(order);
+            await fetchOrderById(orderId);
+            console.log(myOrder.value);
+            myOrder.value = order.value;
         } catch (error) {
             console.error('Erreur lors de la récupération de la commande:', error);
         } finally {
