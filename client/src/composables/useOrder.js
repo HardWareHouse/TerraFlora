@@ -43,6 +43,30 @@ export const useOrder = () => {
             loading.value = false;
         }
     };
+
+    const fetchOrderById = async (orderId) => {
+        loading.value = true;
+        try {
+            if (!orderId) {
+                console.error('Aucun identifiant de commande fourni, impossible de récupérer la commande');
+                return;
+            }
+            const response = await instance.get(`orders/${orderId}`);
+    
+            if (!response.data) {
+                console.error('Aucune donnée commande trouvée');
+                return;
+            }
+    
+            order.value = orderSchema.parse(response.data);
+    
+        } catch (error) {
+            console.error('Error fetching order:', error);
+        } finally {
+            loading.value = false;
+        }
+    };
+    
     
     // A modifier pour correspondre à la structure de la commande
     const createOrder = async (newOrder) => {
@@ -98,6 +122,7 @@ export const useOrder = () => {
         orders,
         loading,
         fetchOrderByUserId,
+        fetchOrderById,
         createOrder,
         updateOrder,
         deleteOrder,
