@@ -1,6 +1,7 @@
 import User from './User.js';
 import Facture from './Facture.js';
 import Commande from './Commande.js';
+import Contact from './Contact.js';
 import Panier from './Panier.js';
 import Promotion from './Promotion.js';
 import Categorie from './Categorie.js';
@@ -29,6 +30,8 @@ DemandeRGPD.belongsTo(User, { foreignKey: 'userId', targetKey: 'id' });
 User.hasMany(Adresse, { foreignKey: 'userId', sourceKey: 'id' });
 Adresse.belongsTo(User, { foreignKey: 'userId', targetKey: 'id' });
 
+User.hasMany(Contact, { foreignKey: 'userId', sourceKey: 'id' });
+Contact.belongsTo(User, { foreignKey: 'userId', targetKey: 'id' });
 // Panier associations
 Panier.hasOne(Commande, { foreignKey: 'panierId', sourceKey: 'id' });
 Commande.belongsTo(Panier, { foreignKey: 'panierId', targetKey: 'id' });
