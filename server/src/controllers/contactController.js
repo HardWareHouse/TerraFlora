@@ -73,25 +73,25 @@ export const createContact = async (req, res) => {
     const user = req.user;
 
     if (!subject || !message || !email || !userId) {
-        return res.status(400).json({ error: "Missing required information" });
+      return res.status(400).json({ error: "Missing required information" });
     }
 
     if (user.id !== userId) {
-        return res.status(403).json({ error: "Unauthorized" });
+      return res.status(403).json({ error: "Unauthorized" });
     }
 
     try {
-    const contact = await contactService.createContact({
-        subject,
-        message,
-        email,
-        userId
-    });
+      const contact = await contactService.createContact({
+          subject,
+          message,
+          email,
+          userId
+      });
 
-    if (!contact) return res.status(400).json({ error: "Contact not created" });
-    res.status(201).json(contact);
+      if (!contact) return res.status(400).json({ error: "Contact not created" });
+      res.status(201).json(contact);
     } catch (error) {
-    res.status(500).json({ error: error.message });
+      res.status(500).json({ error: error.message });
     }
 };
 

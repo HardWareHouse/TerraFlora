@@ -2,6 +2,7 @@
 import { ref, computed, defineAsyncComponent } from 'vue';
 import { useRouter } from 'vue-router'; 
 import { useAuthStore } from '../../pinia/auth.js';
+import { connect } from 'echarts';
 
 const activeTab = ref('dashboard');
 
@@ -11,11 +12,12 @@ const selectTab = (tab) => {
 
 const tabs = [
   { id: 'dashboard', icon: 'bi-speedometer2', label: 'Tableau de bord' },
-  { id: 'orders', icon: 'bi-cart', label: 'Mes commandes' },
+  { id: 'orders', icon: 'bi bi-cart-fill', label: 'Mes commandes' },
   { id: 'download', icon: 'bi-cloud-download', label: 'Mes telechargements' },
   { id: 'addressEdit', icon: 'bi-geo-alt-fill', label: 'Mon adresse' },
   { id: 'accountInfo', icon: 'bi-person', label: 'Mon compte' },
-  { id: 'emailPreference', icon: 'bi-envelope-paper-fill', label: 'Mes préférences' },
+  { id: 'emailPreference', icon: 'bi bi-envelope-paper-fill', label: 'Mes préférences' },
+  { id: 'contact', icon: 'bi-send', label: 'Contactez-nous' },
   { id: 'logout', icon: 'bi-box-arrow-left', label: 'Déconnexion' },
 ];
 
@@ -33,6 +35,7 @@ const components = {
   download: defineAsyncComponent(() => import('./wrapperComponents/Downloads.vue')),
   addressEdit: defineAsyncComponent(() => import('./wrapperComponents/AddressEdit.vue')),
   emailPreference: defineAsyncComponent(() => import('./wrapperComponents/EmailPreference.vue')),
+  contact: defineAsyncComponent(() => import('./wrapperComponents/Contacts.vue')),
   accountInfo: defineAsyncComponent(() => import('./wrapperComponents/AccountInfo.vue'))
 };
 
