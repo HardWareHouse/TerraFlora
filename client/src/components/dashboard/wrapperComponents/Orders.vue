@@ -42,7 +42,7 @@ import { useAuthStore } from '../../../pinia/auth.js';
 import { useOrder } from '../../../composables/useOrder.js';
 
 const authStore = useAuthStore();
-const { orders, loading, fetchOrderByUserId } = useOrder();
+const { orders, loading, fetchOrders } = useOrder();
 
 const userId = inject('userId');
 const myUserId = ref(null);
@@ -59,7 +59,7 @@ const formatDate = (dateString) => {
 
 onMounted(() => {
   if (userId && userId.value) {
-    fetchOrderByUserId(userId.value).then(() => {
+    fetchOrders().then(() => {
       myUserId.value = userId.value;
       myOrders.value = orders.value;
     });

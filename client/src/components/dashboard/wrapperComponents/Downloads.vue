@@ -45,7 +45,7 @@ import { useAuthStore } from '../../../pinia/auth.js';
 import { useInvoice } from '../../../composables/useInvoice.js';
 
 const authStore = useAuthStore();
-const { invoices, loading, fetchInvoicesByUserId } = useInvoice();
+const { invoices, loading, fetchInvoices } = useInvoice();
 
 const userId = inject('userId');
 const myUserId = ref(null);
@@ -61,7 +61,7 @@ const formatDate = (dateString) => {
 
 onMounted(() => {
   if (userId && userId.value) {
-    fetchInvoicesByUserId(userId.value).then(() => {
+    fetchInvoices().then(() => {
       myUserId.value = userId.value;
       myInvoices.value = invoices.value;
     });

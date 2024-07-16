@@ -16,14 +16,10 @@ export const useInvoice = () => {
     const invoice = ref(null);
     const loading = ref(false);
     
-    const fetchInvoicesByUserId = async (userId) => {
+    const fetchInvoices = async () => {
         loading.value = true;
         try {
-            if (!userId) {
-                console.error('Aucun identifiant utilisateur fourni, impossible de récupérer les factures');
-                return;
-            }
-            const response = await instance.get(`invoices/${userId}`);
+            const response = await instance.get(`invoices/`);
     
             if (!response.data) {
                 console.error('Aucune donnée facture trouvée');
@@ -93,7 +89,7 @@ export const useInvoice = () => {
         invoices, 
         invoice, 
         loading, 
-        fetchInvoicesByUserId, 
+        fetchInvoices, 
         createInvoice, 
         updateInvoice 
     };

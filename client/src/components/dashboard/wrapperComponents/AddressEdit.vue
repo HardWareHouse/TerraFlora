@@ -57,7 +57,7 @@ import { useAuthStore } from '../../../pinia/auth.js';
 import { useAddress } from '../../../composables/useAddress.js';
 
 const authStore = useAuthStore();
-const { address, loading, fetchAddressByUserId, createAddress, updateAddress } = useAddress();
+const { address, loading, fetchAddress, createAddress, updateAddress } = useAddress();
 const userId = inject('userId');
 
 const formData = ref({
@@ -78,7 +78,7 @@ const errorMessage = ref('');
 
 onMounted(() => {
   if (userId && userId.value) {
-    fetchAddressByUserId(userId.value).then(() => {
+    fetchAddress().then(() => {
       myUserId.value = userId.value;
     });
   };
