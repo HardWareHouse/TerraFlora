@@ -20,7 +20,7 @@
         </div>
         <div class="mt-4">
           <button type="submit" class="bg-red-600 text-white py-2 px-4 hover:bg-red-700">Envoyer</button>
-          <button type="button" @click="clearForm" class="bg-gray-200 text-gray-700 py-2 px-4 hover:bg-gray-300 ml-2">Annuler</button>
+          <button type="button" @click="clearForm(true)" class="bg-gray-200 text-gray-700 py-2 px-4 hover:bg-gray-300 ml-2">Annuler</button>
         </div>
       </form>
       <p v-if="successMessage" class="mt-4 text-green-500">{{ successMessage }}</p>
@@ -59,7 +59,7 @@ const handleSubmit = async () => {
       errorMessage.value = 'Une erreur est survenue lors de l\'envoi du message. Veuillez réessayer.';
     }
     
-    successMessage.value = 'Votre message a été envoyé avec succès.';
+    successMessage.value = 'Votre message a été envoyé avec succès, nous vous répondrons dans les plus brefs délais.';
     clearForm();
   } catch (error) {
     if (error.response && error.response.status === 400) {

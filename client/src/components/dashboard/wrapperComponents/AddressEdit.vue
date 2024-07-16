@@ -93,7 +93,7 @@ watch(address, (newAddress) => {
       ville: newAddress.ville || '',
       codePostal: newAddress.codePostal || ''
     };
-    originalFormData.value = { ...formData.value }; // Stocker les données originales
+    originalFormData.value = { ...formData.value };
   }
 });
 
