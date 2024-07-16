@@ -36,6 +36,9 @@ export default {
     this.chart = echarts.init(this.$refs.chart);
     await this.fetchStockHistory();
   },
+  watch: {
+    produitId: 'fetchStockHistory'
+  },
   methods: {
     async fetchStockHistory() {
       try {

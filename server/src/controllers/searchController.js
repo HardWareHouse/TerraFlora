@@ -302,9 +302,11 @@ export const getStockHistory = async (req, res) => {
       whereClause.date = { [Op.gte]: new Date(startDate) };
     }
     if (endDate) {
+      const endDateInclusive = new Date(endDate);
+      endDateInclusive.setHours(23, 59, 59, 999);
       whereClause.date = { 
         ...whereClause.date, 
-        [Op.lte]: new Date(endDate) 
+        [Op.lte]: endDateInclusive 
       };
     }
 
