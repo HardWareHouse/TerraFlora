@@ -30,6 +30,20 @@ instance.interceptors.response.use(
       }
     }
 
+    if (error.response && error.response.status === 401) {
+      const authStore = useAuthStore();
+
+      if (authStore.token) {
+        try {
+          await authStore.logout().then(() => {
+            router.push({ name: 'login' });
+          });
+        } catch (err) {
+          console.error('Error while logging out:', err);
+        }
+      }
+    }
+
     return Promise.reject(error);
   }
 );

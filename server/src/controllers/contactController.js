@@ -1,5 +1,6 @@
 import { isValidUUID } from "../helpers/validatorHelper.js";
 import * as contactService from "../services/contactService.js";
+import { getUserByEmail } from "../services/userService.js";
 
 // Lire les informations d'un contact
 export const getContact = async (req, res) => {
@@ -83,6 +84,9 @@ export const createContact = async (req, res) => {
     if (user.id !== userId) {
       return res.status(403).json({ error: "Unauthorized" });
     }
+
+    const existingUserWithMaill = await getUserByEmail(email);
+    if(existingUserWithMaill && existingUserWithMaill.id !== user.id) return res.status(403).json({ error: "Unauthorized" });
 
     try {
       const contact = await contactService.createContact({

@@ -8,6 +8,7 @@ const authStore = useAuthStore();
 const userId = ref(null);
 
 onMounted(async () => {
+  authStore.checkToken;
   userId.value = await authStore.getUseriD();
   if (userId.value === null) {
     authStore.logout().then(() => {
