@@ -1,74 +1,74 @@
-// useForm.js
-import { ref, reactive } from 'vue';
+import { ref } from 'vue';
 import { z } from 'zod';
 import axios from 'axios';
 
-export default function useForm(schema, initialData, transform = null) {
-  const data = reactive({ ...initialData });
+const useForm = (initialValues, schema, onSubmit) => {
+  const form = ref({ ...initialValues });
   const errors = ref({});
   const isSubmitting = ref(false);
   const serverError = ref(null);
-  const abortController = ref(null);
+  let abortController = null;
 
   const validate = () => {
-    const result = schema.safeParse(data);
-    if (!result.success) {
-      errors.value = result.error.errors.reduce((acc, err) => {
-        acc[err.path[0]] = err.message;
-        return acc;
-      }, {});
+    try {
+      schema.parse(form.value);
+      errors.value = {};
+      return true;
+    } catch (e) {
+      const validationErrors = {};
+      e.errors.forEach((error) => {
+        validationErrors[error.path[0]] = error.message;
+      });
+      errors.value = validationErrors;
       return false;
     }
-    errors.value = {};
-    return true;
   };
 
   const handleChange = (field, value) => {
-    if (transform && typeof transform[field] === 'function') {
-      data[field] = transform[field](value);
-    } else {
-      data[field] = value;
+    form.value[field] = value;
+
+    if (field === 'nom') {
+      form.value[field] = value.trim().toUpperCase();
     }
-    validate();
   };
 
-  const submit = async (url, method = 'POST') => {
+  const handleSubmit = async () => {
     if (!validate()) return;
+
     isSubmitting.value = true;
     serverError.value = null;
-    abortController.value = new AbortController();
+
+    abortController = new AbortController();
+
     try {
-      const response = await axios({
-        method,
-        url,
-        data,
-        signal: abortController.value.signal,
-      });
-      return response.data;
+      await onSubmit(form.value, { signal: abortController.signal });
     } catch (error) {
-      if (axios.isCancel(error)) {
-        console.log('Request canceled', error.message);
+      if (error.name === 'AbortError') {
+        console.log('Request was aborted');
       } else {
-        serverError.value = error.response ? error.response.data : error.message;
+        serverError.value = error.message;
       }
     } finally {
       isSubmitting.value = false;
+      abortController = null;
     }
   };
 
-  const cancelRequest = () => {
-    if (abortController.value) {
-      abortController.value.abort();
+  const handleAbort = () => {
+    if (abortController) {
+      abortController.abort();
     }
   };
 
   return {
-    data,
+    form,
     errors,
     isSubmitting,
     serverError,
     handleChange,
-    submit,
-    cancelRequest,
+    handleSubmit,
+    handleAbort,
   };
-}
+};
+
+export default useForm;
