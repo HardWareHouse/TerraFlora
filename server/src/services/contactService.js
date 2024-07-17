@@ -1,8 +1,13 @@
 import Contact from "../modelsSQL/Contact.js";
+import User from "../modelsSQL/User.js";
 
 export const getAllContacts = async () => {
     return await Contact.findAll({
         attributes: { exclude: ["createdAt", "updatedAt", "userId"] },
+        include: {
+            model: User,
+            attributes: ["nom", "prenom"],
+        },
     });
 }
 

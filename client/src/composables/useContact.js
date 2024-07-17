@@ -11,14 +11,15 @@ const contactSchema = z.object({
   email: z.string(),
 });
 
-const contactUpdateSchema = z.object({
-  id: z.string().optional(),
-  subject: z.string().min(1, "Le sujet est requis").max(50, "Le sujet ne doit pas dépasser 50 caractères"),
+const contactUpdateSchema = contactSchema.extend({
   dateContact: z.string(),
   status: z.string(),
-  message: z.string().min(1, "Le message est requis").max(300, "Le message ne doit pas dépasser 300 caractères"),
-  email: z.string(),
-});
+  User: z.object({
+    nom: z.string(),
+    prenom: z.string(),
+  }),
+}).omit({ userId: true });
+
 
 export const useContact = () => {
   const contact = ref(null);
