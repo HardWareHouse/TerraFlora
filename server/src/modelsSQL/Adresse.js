@@ -26,6 +26,16 @@ const Adresse = connection.define('Adresse', {
     codePostal: {
         type: DataTypes.STRING,
         allowNull: false
+    },
+    isDeliveryAddress: {
+        type: DataTypes.BOOLEAN,
+        allowNull: false,
+        defaultValue: false
+    },
+    isBillingAddress: {
+        type: DataTypes.BOOLEAN,
+        allowNull: false,
+        defaultValue: false
     }
 }, {
     tableName: 'Adresses'

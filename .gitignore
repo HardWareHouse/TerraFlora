@@ -27,3 +27,6 @@ server/build/
 
 #Uploads images
 uploads/
+
+# Ash files
+*.ash_history
