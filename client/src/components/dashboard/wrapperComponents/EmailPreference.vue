@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="bg-white p-6 rounded-lg shadow-md">
+    <div id="emailPreference" class="bg-white p-6 rounded-lg shadow-md">
       <h3 class="text-2xl font-medium pb-2 border-b border-gray-200">Mes préferences</h3>
       <p class="text-gray-700 mb-6 mt-4 text-[14px]">
         Les e-mails vous sont envoyés à l'adresse <span class="font-semibold text-red-600">{{ email }}</span>.<br/>

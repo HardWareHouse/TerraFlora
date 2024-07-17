@@ -1,5 +1,5 @@
 <template>
-  <div class="p-6 bg-white rounded-lg shadow-md">
+  <div id="orders" class="p-6 bg-white rounded-lg shadow-md">
     <h3 class="text-2xl font-medium mb-4">Commandes</h3>
     <div v-if="loading" class="text-center">Chargement...</div>
     <div v-else>
@@ -42,7 +42,7 @@ import { useAuthStore } from '../../../pinia/auth.js';
 import { useOrder } from '../../../composables/useOrder.js';
 
 const authStore = useAuthStore();
-const { orders, loading, fetchOrderByUserId } = useOrder();
+const { orders, loading, fetchOrders } = useOrder();
 
 const userId = inject('userId');
 const myUserId = ref(null);
@@ -59,7 +59,7 @@ const formatDate = (dateString) => {
 
 onMounted(() => {
   if (userId && userId.value) {
-    fetchOrderByUserId(userId.value).then(() => {
+    fetchOrders().then(() => {
       myUserId.value = userId.value;
       myOrders.value = orders.value;
     });

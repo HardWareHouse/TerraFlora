@@ -17,15 +17,10 @@ export const useOrder = () => {
     const order = ref(null);
     const loading = ref(false);
     
-    const fetchOrderByUserId = async (userId) => {
+    const fetchOrders = async () => {
         loading.value = true;
         try {
-            if (!userId) {
-                console.error('Aucun identifiant utilisateur fourni, impossible de récupérer les commandes');
-                return;
-            }
-            const response = await instance.get(`orders/${userId}`);
-    
+            const response = await instance.get(`orders/`);
             if (!response.data) {
                 console.error('Aucune donnée commande trouvée');
                 return;
@@ -43,6 +38,26 @@ export const useOrder = () => {
             loading.value = false;
         }
     };
+
+    const fetchOrderById = async (orderId) => {
+        loading.value = true;
+        try {
+            const response = await instance.get(`/orders/${orderId}`);
+    
+            if (!response.data) {
+                console.error('Aucune donnée commande trouvée');
+                return;
+            }
+    
+            order.value = orderSchema.parse(response.data);
+    
+        } catch (error) {
+            console.error('Error fetching order:', error);
+        } finally {
+            loading.value = false;
+        }
+    };
+    
     
     // A modifier pour correspondre à la structure de la commande
     const createOrder = async (newOrder) => {
@@ -97,7 +112,8 @@ export const useOrder = () => {
         order,
         orders,
         loading,
-        fetchOrderByUserId,
+        fetchOrders,
+        fetchOrderById,
         createOrder,
         updateOrder,
         deleteOrder,

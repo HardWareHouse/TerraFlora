@@ -16,10 +16,10 @@ export const useAddress = () => {
   const loading = ref(false);
 
   // Fonction pour récupérer l'adresse par l'ID de l'utilisateur
-  const fetchAddressByUserId = async (userId) => {
+  const fetchAddress = async () => {
     loading.value = true;
     try {
-      const response = await instance.get(`address/${userId}`);
+      const response = await instance.get(`address/`);
       if (!response.data) {
         console.error('Aucune donnée adresse trouvée');
         return;
@@ -86,7 +86,7 @@ export const useAddress = () => {
   return {
     address,
     loading,
-    fetchAddressByUserId,
+    fetchAddress,
     createAddress,
     updateAddress,
   };

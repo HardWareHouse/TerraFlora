@@ -1,5 +1,4 @@
 <template>
-    <!-- <nav class="flex justify-center bg-white shadow-md rounded-lg px-4 py-2 mb-4 cursor-pointer"> -->
     <nav class="flex justify-center px-4 py-2 mb-4 cursor-pointer">
         <ul class="flex space-x-4">
             <li v-for="tab in tabs" :key="tab.id">

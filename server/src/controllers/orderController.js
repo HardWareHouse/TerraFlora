@@ -26,42 +26,23 @@ export const getOrder = async (req, res) => {
   }
 };
 
-// Lire les informations de plusieurs commandes par l'ID de l'utilisateur
-export const getOrdersByUserId = async (req, res) => {
-  const { id } = req.params;
-  const user = req.user;
-
-  if (!id || !isValidUUID(id)) {
-    return res.status(400).json({ error: "Invalid or missing user ID" });
-  }
-
-  if (user.id !== id) {
-    return res.status(403).json({ error: "Unauthorized" });
-  }
-
-  try {
-    const orders = await orderService.getOrdersByUserId(id);
-    if (!orders || orders.length === 0) {
-      return res.status(404).json({ error: "Orders not found" });
-    }
-    res.status(200).json(orders);
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-};
-
 // Lire toutes les commandes
 export const getAllOrders = async (req, res) => {
   const user = req.user;
 
-  if (user.role !== "ROLE_ADMIN") {
-    return res.status(403).json({ error: "Unauthorized" });
-  }
-
   try {
-    const orders = await orderService.getAllOrders();
-    if (!orders) {
-      return res.status(404).json({ error: "Orders not found" });
+    if (user.role === "ROLE_ADMIN") {
+      const orders = await orderService.getAllOrders();
+      if (!orders) {
+        return res.status(404).json({ error: "Orders not found" });
+      }
+      return res.status(200).json(orders);
+    } else {
+      const orders = await orderService.getOrdersByUserId(user.id);
+      if (!orders) {
+        return res.status(404).json({ error: "Orders not found" });
+      }
+      return res.status(200).json(orders);
     }
     res.status(200).json(orders);
   } catch (error) {
