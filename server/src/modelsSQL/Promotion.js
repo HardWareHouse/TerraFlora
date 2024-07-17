@@ -11,11 +11,11 @@ const Promotion = connection.define('Promotion', {
         type: DataTypes.INTEGER,
         allowNull: false
     },
-    dateFin: {
+    dateDebut: {
         type: DataTypes.DATE,
         allowNull: false
     },
-    dateDebut: {
+    dateFin: {
         type: DataTypes.DATE,
         allowNull: false
     }

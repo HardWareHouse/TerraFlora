@@ -1,25 +1,22 @@
-import "./src/modelsSQL/associations.js";
+import "../modelsSQL/associations.js";
+import { connectMongo } from "../mongo.js";
 import mongoose from "mongoose";
-import ProduitMongo from "./src/modelsMongo/Produit.mongo.js";
-import ProduitSQL from "./src/modelsSQL/Produit.js";
-import Categorie from "./src/modelsSQL/Categorie.js";
-import { ObjectId } from "mongodb";
+import ProduitMongo from "../modelsMongo/Produit.mongo.js";
+import ProduitSQL from "../modelsSQL/Produit.js";
+import Categorie from "../modelsSQL/Categorie.js";
 
 async function insertProductToMongo() {
-  await mongoose.connect(process.env.MONGODB_CONNECTION_STRING, {
-    dbName: "terraflora",
-    auth: {
-      username: process.env.MONGODB_USER,
-      password: process.env.MONGODB_PASSWORD,
-    },
-  });
+  await connectMongo();
 
-  let products = await ProduitSQL.findAll({
-    include: Categorie,
-  });
+  let products = await ProduitSQL.findAll(
+    {
+      include: Categorie,
+    }
+  );
 
   await ProduitMongo.create(
     products.map((product) => ({
+      _id: product.id,
       nom: product.nom,
       description: product.description,
       prix: product.prix,

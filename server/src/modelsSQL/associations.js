@@ -53,8 +53,8 @@ Produit.hasMany(Image, { foreignKey: 'produitId' });
 Image.belongsTo(Produit, { foreignKey: 'produitId' });
 
 // Facture associations
-Commande.hasOne(Facture, { foreignKey: 'commandeId', sourceKey: 'id', as: 'facture' });
-Facture.belongsTo(Commande, { foreignKey: 'commandeId', targetKey: 'id', as: 'commande' })
+Commande.hasOne(Facture, { foreignKey: 'commandeId', sourceKey: 'id'});
+Facture.belongsTo(Commande, { foreignKey: 'commandeId', targetKey: 'id'})
 
 Facture.hasMany(Paiement, { foreignKey: 'factureId', sourceKey: 'id' });
 Paiement.belongsTo(Facture, { foreignKey: 'factureId', targetKey: 'id' });
