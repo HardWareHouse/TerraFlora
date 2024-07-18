@@ -1,6 +1,5 @@
 import "../modelsSQL/associations.js";
 import { connectMongo } from "../modelsMongo/mongo.js";
-import mongoose from "mongoose";
 import ContactMongo from "../modelsMongo/Contact.mongo.js";
 import ContactSQL from "../modelsSQL/Contact.js";
 import User from "../modelsSQL/User.js";

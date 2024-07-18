@@ -1,13 +1,10 @@
 import "../modelsSQL/associations.js";
-import { connectMongo } from "../modelsMongo/mongo.js";
-import mongoose from "mongoose";
 import FactureMongo from "../modelsMongo/Facture.mongo.js";
 import FactureSQL from "../modelsSQL/Facture.js";
 import User from "../modelsSQL/User.js";
 import Commande from "../modelsSQL/Commande.js";
 
 async function insertFactureToMongo() {
-    await connectMongo();
 
     let factures = await FactureSQL.findAll(
         {

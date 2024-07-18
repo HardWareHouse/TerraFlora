@@ -1,7 +1,7 @@
 import express from "express";
 import { connectToDatabase, connection } from "./modelsSQL/dataBase.js";
-import "./mongo.js";
-import "../src/modelsSQL/associations.js";
+import { initializeModels } from "./modelsMongo/indexMongo.js";
+import "./modelsSQL/associations.js";
 import bodyParser from "body-parser";
 import cors from "cors";
 import dotenv from "dotenv";
@@ -66,3 +66,5 @@ connectToDatabase()
   .catch((error) => {
     console.error("Unable to connect to the database:", error);
   });
+
+initializeModels();

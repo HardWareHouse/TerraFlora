@@ -1,12 +1,9 @@
 import "../modelsSQL/associations.js";
-import { connectMongo } from "../modelsMongo/mongo.js";
-import mongoose from "mongoose";
 import ProduitMongo from "../modelsMongo/Produit.mongo.js";
 import ProduitSQL from "../modelsSQL/Produit.js";
 import Categorie from "../modelsSQL/Categorie.js";
 
 async function insertProductToMongo() {
-  await connectMongo();
 
   let products = await ProduitSQL.findAll(
     {

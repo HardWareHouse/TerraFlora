@@ -1,5 +1,6 @@
 import fs from 'fs';
 import path from 'path';
+import { connectMongo } from "./mongo.js";
 import mongoose from 'mongoose';
 import { fileURLToPath } from 'url';
 import { dirname } from 'path';
@@ -7,19 +8,33 @@ import { dirname } from 'path';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
-const files = fs.readdirSync(__dirname);
 const db = {};
 
-for (const file of files) {
-  if (["indexMongo.js", "mongo.js"].includes(file)) continue;
-  const modelPath = path.join(__dirname, file);
-  const { default: modelInit } = await import(modelPath);
-  const model = modelInit(mongoose);
-  db[model.modelName] = model;
+async function initializeModels() {
+  await connectMongo();
+  
+  const files = fs.readdirSync(__dirname);
+  
+  for (const file of files) {
+    if (["indexMongo.js", "mongo.js"].includes(file)) continue;
+    
+    const modelPath = path.join(__dirname, file);
+    const { default: modelInit } = await import(modelPath);
+    const model = modelInit(mongoose);
+    db[model.modelName] = model;
+  }
+
+  associateModels();
 }
 
-for (let modelName in db) {
-  if (db[modelName].associateModels) db[modelName].associateModels(db);
+function associateModels() {
+  for (const modelName in db) {
+    if (typeof db[modelName].associateModels === 'function') {
+      db[modelName].associateModels(db);
+    }
+  }
 }
 
-export default db;
+initializeModels();
+
+export { db, initializeModels };

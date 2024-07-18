@@ -1,12 +1,9 @@
 import "../modelsSQL/associations.js";
-import { connectMongo } from "../modelsMongo/mongo.js";
-import mongoose from "mongoose";
 import AdresseMongo from "../modelsMongo/Adresse.mongo.js";
 import AdresseSQL from "../modelsSQL/Adresse.js";
 import User from "../modelsSQL/User.js";
 
 async function insertAdresseToMongo() {
-    await connectMongo();
 
     let adresses = await AdresseSQL.findAll(
         {

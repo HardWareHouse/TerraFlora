@@ -1,12 +1,9 @@
 import "../modelsSQL/associations.js";
-import { connectMongo } from "../modelsMongo/mongo.js";
-import mongoose from "mongoose";
 import CommandeMongo from "../modelsMongo/Commande.mongo.js";
 import CommandeSQL from "../modelsSQL/Commande.js";
 import User from "../modelsSQL/User.js";
 
 async function insertCommandeToMongo() {
-    await connectMongo();
 
     let commandes = await CommandeSQL.findAll(
         {
