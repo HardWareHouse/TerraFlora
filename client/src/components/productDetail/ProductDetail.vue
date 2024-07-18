@@ -6,7 +6,6 @@
           :src="getImageUrl(product.Images[0]?.imageUrl)"
           alt="Product Image"
           class="w-full h-96 object-cover rounded"
-          v-if="product.Images && product.Images.length > 0"
         />
       </div>
       <div class="product-info lg:w-1/2 p-4">
@@ -18,17 +17,12 @@
           <span class="text-gray-500">0 Reviews</span>
         </div>
         <div class="flex items-center mb-4">
-          <span class="text-2xl font-bold text-red-600 mr-2"
-            >${{ product.prix }}</span
-          >
-          <span v-if="product.isPromotion" class="line-through text-gray-500"
-            >${{
-              (
-                product.prix /
-                ((100 - product.pourcentagePromotion) / 100)
-              ).toFixed(2)
-            }}</span
-          >
+          <span class="text-2xl font-bold text-red-600 mr-2">
+            ${{ product.prix }}
+          </span>
+          <span v-if="product.isPromotion" class="line-through text-gray-500">
+            ${{ (product.prix / ((100 - product.pourcentagePromotion) / 100)).toFixed(2) }}
+          </span>
         </div>
         <div class="mb-4 text-green-600 font-semibold">
           {{ product.stock }} IN STOCK
@@ -46,22 +40,11 @@
         </div>
         <div class="flex items-center mb-4">
           <div class="quantity flex items-center mr-4">
-            <button class="px-4 py-2 bg-gray-200" @click="decreaseQuantity">
-              -
-            </button>
-            <input
-              type="text"
-              v-model="quantity"
-              class="w-12 text-center border-t border-b"
-            />
-            <button class="px-4 py-2 bg-gray-200" @click="increaseQuantity">
-              +
-            </button>
+            <button class="px-4 py-2 bg-gray-200" @click="decreaseQuantity">-</button>
+            <input type="text" v-model="quantity" class="w-12 text-center border-t border-b" />
+            <button class="px-4 py-2 bg-gray-200" @click="increaseQuantity">+</button>
           </div>
-          <button
-            class="px-4 py-2 bg-red-600 text-white rounded"
-            @click="addToCart"
-          >
+          <button class="px-4 py-2 bg-red-600 text-white rounded" @click="addToCart">
             Add To Cart
           </button>
         </div>
@@ -121,7 +104,7 @@ onMounted(async () => {
 
 const getImageUrl = (imagePath) => {
   if (!imagePath) {
-    return "/images/default.jpg";
+    return "/images/flower.webp";
   }
   return `http://localhost:8000/uploads/${imagePath.split("/").pop()}`;
 };
