@@ -26,10 +26,6 @@ const useForm = (initialValues, schema, onSubmit) => {
 
   const handleChange = (field, value) => {
     form.value[field] = value;
-
-    if (field === 'nom') {
-      form.value[field] = value.trim().toUpperCase();
-    }
   };
 
   const handleSubmit = async () => {
