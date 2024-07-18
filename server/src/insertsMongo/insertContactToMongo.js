@@ -1,15 +1,14 @@
 import "../modelsSQL/associations.js";
-import { connectMongo } from "../modelsMongo/mongo.js";
 import ContactMongo from "../modelsMongo/Contact.mongo.js";
 import ContactSQL from "../modelsSQL/Contact.js";
 import User from "../modelsSQL/User.js";
 
 async function insertContactToMongo() {
-    await connectMongo();
 
     let contacts = await ContactSQL.findAll(
         {
             include: User,
+            attributes: ['nom', 'prenom', 'email']
         }
     );
 
