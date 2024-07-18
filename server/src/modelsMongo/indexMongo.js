@@ -24,15 +24,6 @@ async function initializeModels() {
     db[model.modelName] = model;
   }
 
-  associateModels();
-}
-
-function associateModels() {
-  for (const modelName in db) {
-    if (typeof db[modelName].associateModels === 'function') {
-      db[modelName].associateModels(db);
-    }
-  }
 }
 
 initializeModels();
