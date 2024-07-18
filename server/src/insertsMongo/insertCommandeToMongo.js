@@ -1,5 +1,5 @@
 import "../modelsSQL/associations.js";
-import { connectMongo } from "../mongo.js";
+import { connectMongo } from "../modelsMongo/mongo.js";
 import mongoose from "mongoose";
 import CommandeMongo from "../modelsMongo/Commande.mongo.js";
 import CommandeSQL from "../modelsSQL/Commande.js";
@@ -35,14 +35,4 @@ async function insertCommandeToMongo() {
     );
 }
 
-insertCommandeToMongo()
-    .then(() => {
-        console.log("Commandes inserted successfully");
-        mongoose.connection.close();
-        process.exit(0);
-    })
-    .catch((err) => {
-        console.error(err);
-        mongoose.connection.close();
-        process.exit(1);
-    });
+export default insertCommandeToMongo;

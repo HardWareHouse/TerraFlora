@@ -1,6 +1,6 @@
 import "../modelsSQL/associations.js";
 import { Op } from 'sequelize';
-import { connectMongo } from "../mongo.js";
+import { connectMongo } from "../modelsMongo/mongo.js";
 import mongoose from "mongoose";
 import UserMongo from "../modelsMongo/User.mongo.js";
 import UserSQL from "../modelsSQL/User.js";
@@ -31,14 +31,4 @@ async function insertUserToMongo() {
   );
 }
 
-insertUserToMongo()
-  .then(() => {
-    console.log("Users inserted successfully");
-    mongoose.connection.close();
-    process.exit(0);
-  })
-  .catch((err) => {
-    console.error(err);
-    mongoose.connection.close();
-    process.exit(1);
-  });
+export default insertUserToMongo;

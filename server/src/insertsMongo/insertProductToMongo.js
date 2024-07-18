@@ -1,5 +1,5 @@
 import "../modelsSQL/associations.js";
-import { connectMongo } from "../mongo.js";
+import { connectMongo } from "../modelsMongo/mongo.js";
 import mongoose from "mongoose";
 import ProduitMongo from "../modelsMongo/Produit.mongo.js";
 import ProduitSQL from "../modelsSQL/Produit.js";
@@ -35,14 +35,4 @@ async function insertProductToMongo() {
   );
 }
 
-insertProductToMongo()
-  .then(() => {
-    console.log("Products inserted successfully");
-    mongoose.connection.close();
-    process.exit(0);
-  })
-  .catch((err) => {
-    console.error(err);
-    mongoose.connection.close();
-    process.exit(1);
-  });
+export default insertProductToMongo;

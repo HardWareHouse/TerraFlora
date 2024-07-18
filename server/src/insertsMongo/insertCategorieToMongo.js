@@ -1,5 +1,5 @@
 import "../modelsSQL/associations.js";
-import { connectMongo } from "../mongo.js";
+import { connectMongo } from "../modelsMongo/mongo.js";
 import mongoose from "mongoose";
 import CategorieMongo from "../modelsMongo/Categorie.mongo.js";
 import CategorieSQL from "../modelsSQL/Categorie.js";
@@ -32,14 +32,4 @@ async function insertCategoriesToMongo() {
     );
 }
 
-insertCategoriesToMongo()
-    .then(() => {
-        console.log("Categories inserted successfully");
-        mongoose.connection.close();
-        process.exit(0);
-    })
-    .catch((err) => {
-        console.error(err);
-        mongoose.connection.close();
-        process.exit(1);
-    });
+export default insertCategoriesToMongo;

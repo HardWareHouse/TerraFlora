@@ -1,5 +1,5 @@
 import "../modelsSQL/associations.js";
-import { connectMongo } from "../mongo.js";
+import { connectMongo } from "../modelsMongo/mongo.js";
 import mongoose from "mongoose";
 import AdresseMongo from "../modelsMongo/Adresse.mongo.js";
 import AdresseSQL from "../modelsSQL/Adresse.js";
@@ -33,14 +33,4 @@ async function insertAdresseToMongo() {
     );
 }
 
-insertAdresseToMongo()
-    .then(() => {
-        console.log("Adresses inserted successfully");
-        mongoose.connection.close();
-        process.exit(0);
-    })
-    .catch((err) => {
-        console.error(err);
-        mongoose.connection.close();
-        process.exit(1);
-    });
+export default insertAdresseToMongo;

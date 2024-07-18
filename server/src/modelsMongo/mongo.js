@@ -14,7 +14,18 @@ export const connectMongo = async () => {
         },
       },
     );
+    console.log("MongoDB connection successful");
   } catch (error) {
-    console.log(error);
+    console.log("MongoDB connection error:", error);
   }
 } 
+
+export const disconnectMongo = async () => {
+  try {
+    await mongoose.connection.close();
+    console.log('MongoDB connection closed');
+  } catch (error) {
+    console.log('Error closing MongoDB connection:', error);
+    process.exit(1);
+  }
+};

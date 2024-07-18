@@ -1,5 +1,5 @@
 import "../modelsSQL/associations.js";
-import { connectMongo } from "../mongo.js";
+import { connectMongo } from "../modelsMongo/mongo.js";
 import mongoose from "mongoose";
 import PromotionMongo from "../modelsMongo/Promotion.mongo.js";
 import PromotionSQL from "../modelsSQL/Promotion.js";
@@ -20,14 +20,4 @@ async function insertPromotionToMongo() {
 }
 
 
-insertPromotionToMongo()
-    .then(() => {
-        console.log("Promotions inserted successfully");
-        mongoose.connection.close();
-        process.exit(0);
-    })
-    .catch((err) => {
-        console.error(err);
-        mongoose.connection.close();
-        process.exit(1);
-    });
+export default insertPromotionToMongo;

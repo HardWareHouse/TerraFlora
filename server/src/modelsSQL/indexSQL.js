@@ -1,4 +1,4 @@
-import {connection} from "./dataBase.js";
+import { connection } from "./dataBase.js";
 import Adresse from './Adresse.js';
 import Categorie from './Categorie.js';
 import Contact from "./Contact.js";

@@ -1,5 +1,5 @@
 import "../modelsSQL/associations.js";
-import { connectMongo } from "../mongo.js";
+import { connectMongo } from "../modelsMongo/mongo.js";
 import mongoose from "mongoose";
 import FactureMongo from "../modelsMongo/Facture.mongo.js";
 import FactureSQL from "../modelsSQL/Facture.js";
@@ -43,14 +43,4 @@ async function insertFactureToMongo() {
     );
 }
 
-insertFactureToMongo()
-    .then(() => {
-        console.log("Factures inserted successfully");
-        mongoose.connection.close();
-        process.exit(0);
-    })
-    .catch((err) => {
-        console.error(err);
-        mongoose.connection.close();
-        process.exit(1);
-    });
+export default insertFactureToMongo;
