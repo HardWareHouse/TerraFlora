@@ -16,7 +16,7 @@ async function insertCommandeToMongo() {
 
     await CommandeMongo.create(
         commandes.map((commande) => ({
-            _id: commande.numero,
+            _id: commande.id,
             numero: commande.numero,
             statut: commande.statut,
             dateCommande: commande.dateCommande,

@@ -23,7 +23,7 @@ async function insertFactureToMongo() {
 
     await FactureMongo.create(
         factures.map((facture) => ({
-            _id: facture.numero,
+            _id: facture.id,
             numero: facture.numero,
             dateFacture: facture.dateFacturation,
             datePaiementDue: facture.datePaiementDue,
