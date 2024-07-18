@@ -7,8 +7,10 @@ async function insertAdresseToMongo() {
 
     let adresses = await AdresseSQL.findAll(
         {
-            include: User,
-            attributes: ['nom', 'prenom', 'email']
+            include: {
+                model: User,
+                attributes: ['nom', 'prenom', 'email']
+            },
         }
     );
 

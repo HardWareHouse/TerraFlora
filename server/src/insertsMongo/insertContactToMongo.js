@@ -7,8 +7,10 @@ async function insertContactToMongo() {
 
     let contacts = await ContactSQL.findAll(
         {
-            include: User,
-            attributes: ['nom', 'prenom', 'email']
+            include: {
+                model: User,
+                attributes: ['nom', 'prenom', 'email']
+            },
         }
     );
 
