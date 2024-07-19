@@ -3,34 +3,49 @@ import AdresseMongo from "../modelsMongo/Adresse.mongo.js";
 import AdresseSQL from "../modelsSQL/Adresse.js";
 import User from "../modelsSQL/User.js";
 
-async function insertAdresseToMongo() {
+async function insertOrUpdateAdresseInMongo(adresseSQL) {
+    const adresseMongo = await AdresseMongo.findById(adresseSQL.id).exec();
 
-    let adresses = await AdresseSQL.findAll(
-        {
-            include: {
-                model: User,
-                attributes: ['nom', 'prenom', 'email']
-            },
+    const newAdresse = {
+        _id: adresseSQL.id,
+        voie: adresseSQL.voie,
+        numero: adresseSQL.numero,
+        rue: adresseSQL.rue,
+        ville: adresseSQL.ville,
+        codePostal: adresseSQL.codePostal,
+        isDeliveryAddress: adresseSQL.isDeliveryAddress,
+        isBillingAddress: adresseSQL.isBillingAddress,
+        user: {
+            nom: adresseSQL.User.nom,
+            prenom: adresseSQL.User.prenom,
+            email: adresseSQL.User.email,
+        },
+    };
+
+    if (adresseMongo) {
+        const isSame = Object.keys(newAdresse).every(key => 
+            JSON.stringify(newAdresse[key]) === JSON.stringify(adresseMongo[key])
+        );
+
+        if (!isSame) {
+            await AdresseMongo.findByIdAndUpdate(adresseSQL.id, newAdresse).exec();
         }
-    );
+    } else {
+        await AdresseMongo.create(newAdresse);
+    }
+}
 
-    await AdresseMongo.create(
-        adresses.map((adresse) => ({
-            _id: adresse.id,
-            voie: adresse.voie,
-            numero: adresse.numero,
-            rue: adresse.rue,
-            ville: adresse.ville,
-            codePostal: adresse.codePostal,
-            isDeliveryAddress: adresse.isDeliveryAddress,
-            isBillingAddress: adresse.isBillingAddress,
-            user: {
-                nom: adresse.User.nom,
-                prenom: adresse.User.prenom,
-                email: adresse.User.email,
-            },
-        }))
-    );
+async function insertAdresseToMongo() {
+    let adresses = await AdresseSQL.findAll({
+        include: {
+            model: User,
+            attributes: ['nom', 'prenom', 'email']
+        },
+    });
+
+    for (const adresse of adresses) {
+        await insertOrUpdateAdresseInMongo(adresse);
+    }
 }
 
 export default insertAdresseToMongo;

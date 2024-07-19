@@ -3,33 +3,48 @@ import CommandeMongo from "../modelsMongo/Commande.mongo.js";
 import CommandeSQL from "../modelsSQL/Commande.js";
 import User from "../modelsSQL/User.js";
 
-async function insertCommandeToMongo() {
+async function insertOrUpdateCommandeInMongo(commandeSQL) {
+    const commandeMongo = await CommandeMongo.findById(commandeSQL.id).exec();
 
-    let commandes = await CommandeSQL.findAll(
-        {
-            include: {
-                model: User,
-                attributes: ['nom', 'prenom', 'email']
-            }
+    const newCommande = {
+        _id: commandeSQL.id,
+        numero: commandeSQL.numero,
+        statut: commandeSQL.statut,
+        dateCommande: commandeSQL.dateCommande,
+        total: commandeSQL.total,
+        dateLivraisonPrevue: commandeSQL.dateLivraisonPrevue,
+        dateLivraisonFinale: commandeSQL.dateLivraisonFinale,
+        user: {
+            nom: commandeSQL.User.nom,
+            prenom: commandeSQL.User.prenom,
+            email: commandeSQL.User.email
         }
-    );
+    };
 
-    await CommandeMongo.create(
-        commandes.map((commande) => ({
-            _id: commande.id,
-            numero: commande.numero,
-            statut: commande.statut,
-            dateCommande: commande.dateCommande,
-            total: commande.total,
-            dateLivraisonPrevue: commande.dateLivraisonPrevue,
-            dateLivraisonFinale: commande.dateLivraisonFinale,
-            user: {
-                nom: commande.User.nom,
-                prenom: commande.User.prenom,
-                email: commande.User.email
-            }
-        })),
-    );
+    if (commandeMongo) {
+        const isSame = Object.keys(newCommande).every(key => 
+            JSON.stringify(newCommande[key]) === JSON.stringify(commandeMongo[key])
+        );
+
+        if (!isSame) {
+            await CommandeMongo.findByIdAndUpdate(commandeSQL.id, newCommande).exec();
+        }
+    } else {
+        await CommandeMongo.create(newCommande);
+    }
+}
+
+async function insertCommandeToMongo() {
+    let commandes = await CommandeSQL.findAll({
+        include: {
+            model: User,
+            attributes: ['nom', 'prenom', 'email']
+        }
+    });
+
+    for (const commande of commandes) {
+        await insertOrUpdateCommandeInMongo(commande);
+    }
 }
 
 export default insertCommandeToMongo;

@@ -3,35 +3,50 @@ import ContactMongo from "../modelsMongo/Contact.mongo.js";
 import ContactSQL from "../modelsSQL/Contact.js";
 import User from "../modelsSQL/User.js";
 
-async function insertContactToMongo() {
+async function insertOrUpdateContactInMongo(contactSQL) {
+    const contactMongo = await ContactMongo.findById(contactSQL.id).exec();
 
-    let contacts = await ContactSQL.findAll(
-        {
-            include: {
-                model: User,
-                attributes: ['nom', 'prenom', 'email']
-            },
+    const newContact = {
+        _id: contactSQL.id,
+        subject: contactSQL.subject,
+        message: contactSQL.message,
+        email: contactSQL.email,
+        dateContact: contactSQL.dateContact,
+        status: contactSQL.status,
+        response: contactSQL.response,
+        dateResponse: contactSQL.dateResponse,
+        isResponded: contactSQL.isResponded,
+        user: {
+            nom: contactSQL.User.nom,
+            prenom: contactSQL.User.prenom,
+            email: contactSQL.User.email,
+        },
+    };
+
+    if (contactMongo) {
+        const isSame = Object.keys(newContact).every(key => 
+            JSON.stringify(newContact[key]) === JSON.stringify(contactMongo[key])
+        );
+
+        if (!isSame) {
+            await ContactMongo.findByIdAndUpdate(contactSQL.id, newContact).exec();
         }
-    );
+    } else {
+        await ContactMongo.create(newContact);
+    }
+}
 
-    await ContactMongo.create(
-        contacts.map((contact) => ({
-            _id: contact.id,
-            subject: contact.subject,
-            message: contact.message,
-            email: contact.email,
-            dateContact: contact.dateContact,
-            status: contact.status,
-            response: contact.response,
-            dateResponse: contact.dateResponse,
-            isResponded: contact.isResponded,
-            user: {
-                nom: contact.User.nom,
-                prenom: contact.User.prenom,
-                email: contact.User.email,
-            },
-        }))
-    );
+async function insertContactToMongo() {
+    let contacts = await ContactSQL.findAll({
+        include: {
+            model: User,
+            attributes: ['nom', 'prenom', 'email']
+        }
+    });
+
+    for (const contact of contacts) {
+        await insertOrUpdateContactInMongo(contact);
+    }
 }
 
 export default insertContactToMongo;

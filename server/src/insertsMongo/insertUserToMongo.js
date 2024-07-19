@@ -3,29 +3,45 @@ import { Op } from 'sequelize';
 import UserMongo from "../modelsMongo/User.mongo.js";
 import UserSQL from "../modelsSQL/User.js";
 
+async function insertOrUpdateUserInMongo(userSQL) {
+    const userMongo = await UserMongo.findById(userSQL.id).exec();
+
+    const newUser = {
+        _id: userSQL.id,
+        nom: userSQL.nom,
+        prenom: userSQL.prenom,
+        email: userSQL.email,
+        telephone: userSQL.telephone,
+        role: userSQL.role,
+        isVerified: userSQL.isVerified,
+        isBlocked: userSQL.isBlocked,
+    };
+
+    if (userMongo) {
+        const isSame = Object.keys(newUser).every(key => 
+            JSON.stringify(newUser[key]) === JSON.stringify(userMongo[key])
+        );
+
+        if (!isSame) {
+            await UserMongo.findByIdAndUpdate(userSQL.id, newUser).exec();
+        }
+    } else {
+        await UserMongo.create(newUser);
+    }
+}
 
 async function insertUserToMongo() {
+    let users = await UserSQL.findAll({
+        where: {
+            role: {
+                [Op.ne]: "ROLE_ADMIN"
+            }
+        },
+    });
 
-  let users = await UserSQL.findAll({
-    where: {
-        role: {
-            [Op.ne]: "ROLE_ADMIN"
-        }
-    },
-  });
-
-  await UserMongo.create(
-      users.map((user) => ({
-          _id: user.id,
-          nom: user.nom,
-          prenom: user.prenom,
-          email: user.email,
-          telephone: user.telephone,
-          role: user.role,
-          isVerified: user.isVerified,
-          isBlocked: user.isBlocked,
-      })),
-  );
+    for (const user of users) {
+        await insertOrUpdateUserInMongo(user);
+    }
 }
 
 export default insertUserToMongo;
