@@ -4,13 +4,14 @@ import { useRouter } from 'vue-router';
 import { useAuthStore } from '../../pinia/auth.js';
 import { connect } from 'echarts';
 
+const authStore = useAuthStore();
+const router = useRouter();
 const activeTab = ref('dashboard');
 
 const selectTab = (tab) => {
   activeTab.value = tab;
   router.push({ hash: `#${tab}` });
 };
-
 
 const tabs = [
   { id: 'dashboard', icon: 'bi-speedometer2', label: 'Tableau de bord' },
@@ -42,8 +43,7 @@ const components = {
 };
 
 const activeTabComponent = computed(() => components[activeTab.value] || 'div');
-const authStore = useAuthStore();
-const router = useRouter();
+
 
 const logout = async () => {
   await authStore.logout();
