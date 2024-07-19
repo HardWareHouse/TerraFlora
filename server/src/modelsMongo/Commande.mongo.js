@@ -16,23 +16,23 @@ const commandeSchema = new mongoose.Schema(
         },
         statut: {
             type: String,
-            enum: ["En attente", "En cours de traitement", "Expédiée", "Livrée", "Annulée", "Retournée"],
+            enum: ["En cours de traitement", "Expédiée", "Livrée", "Annulée", "Retournée"],
             required: true,
         },
         dateCommande: {
             type: Date,
             required: true,
         },
+        dateLivraisonFinale: {
+            type: Date,
+            required: false,
+        },
         total: {
             type: Number,
             required: true,
         },
-        dateLivraisonPrevue: {
-            type: Date,
-            required: false,
-        },
-        dateLivraisonFinale: {
-            type: Date,
+        trackingNumber: {
+            type: String,
             required: false,
         },
         user: {
@@ -69,8 +69,8 @@ commandeSchema.index(
         numero: "text",
         statut: "text",
         dateCommande: "text",
-        "user.nom": "text",
-        "user.prenom": "text",
+        total: "text",
+        dateLivraisonFinale: "text",
         "user.email": "text"
     },
     { name: "searchIndex" }

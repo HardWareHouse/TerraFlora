@@ -11,9 +11,9 @@ async function insertOrUpdateCommandeInMongo(commandeSQL) {
         numero: commandeSQL.numero,
         statut: commandeSQL.statut,
         dateCommande: commandeSQL.dateCommande,
-        total: commandeSQL.total,
-        dateLivraisonPrevue: commandeSQL.dateLivraisonPrevue,
         dateLivraisonFinale: commandeSQL.dateLivraisonFinale,
+        total: commandeSQL.total,
+        trackingNumber: commandeSQL.trackingNumber,
         user: {
             nom: commandeSQL.User.nom,
             prenom: commandeSQL.User.prenom,
