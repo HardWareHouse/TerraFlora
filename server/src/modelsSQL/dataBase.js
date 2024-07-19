@@ -1,6 +1,6 @@
 import { Sequelize } from 'sequelize';
 
-const connection = new Sequelize(process.env.POSTGRES_LINK)
+const connection = new Sequelize(process.env.POSTGRES_LINK, {dialect: 'postgres'});
 
 const connectToDatabase = async () => {
   try {
