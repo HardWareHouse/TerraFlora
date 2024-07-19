@@ -48,6 +48,9 @@ server.use("/categories", categorieRoutes);
 server.use("/emailPreferences", emailPreferenceRoutes);
 server.use("/uploads", express.static(path.join("src/uploads")));
 server.use("/stripe", stripeRouter);
+server.use("/hello", (req, res, next) => {
+  res.sendStatus(200);
+});
 
 server.use((err, req, res, next) => {
   console.error("Error encountered:", err.stack);
