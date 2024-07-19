@@ -4,9 +4,10 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "node --env_file=.env --watch src/index.js ",
+    "dev": "node --env-file=.env --watch src/index.js ",
+    "prod": "node --env-file=.env src/index.js",
     "start": "node src/index.js",
-    "test": "node node_modules/jest/bin/jest.js"
+    "test": "jest"
   },
   "dependencies": {
     "@getbrevo/brevo": "^2.1.1",

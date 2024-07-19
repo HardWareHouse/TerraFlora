@@ -6,7 +6,16 @@
 </template>
 
 <script>
+import { useCartStore } from "../../pinia/cart.js";
+
 export default {
   name: "SuccessPage",
+  setup() {
+    const cartStore = useCartStore();
+
+    cartStore.clearCart();
+
+    return {};
+  },
 };
 </script>

@@ -23,6 +23,7 @@ services:
     volumes:
       - ./server:/home/node
     environment:
+      - POSTGRES_LINK=postgres://root:password@postgres:5432/app
       - MONGODB_CONNECTION_STRING=mongodb://mongo:27017/terraflora?authSource=admin
       - MONGODB_USER=root
       - MONGODB_PASSWORD=password
