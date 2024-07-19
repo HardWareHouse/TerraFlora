@@ -11,14 +11,16 @@ import Register from "./pages/register.vue";
 import notFound from "./pages/notFound.vue";
 import ResetPassword from "./pages/resetPassword.vue";
 import ProductDetail from "./pages/productDetail.vue";
+import OrderDetail from "./pages/orderDetail.vue";
 import Checkout from "./pages/checkoutPage.vue";
 import CGU from "../public/rgpd/cgu.vue";
 import Politique from "../public/rgpd/politique_confidentialite.vue";
 import Mentions from "../public/rgpd/mentions.vue";
 import Contact from "./pages/contactPage.vue";
 import ManageProducts from "./pages/manageProducts.vue";
-// import Stripe from "./pages/stripePayment.vue";
 import success from "./components/stripePayment/success.vue";
+import Cancel from "./components/stripePayment/cancel.vue";
+import AllPayments from "./components/stripePayment/allPayments.vue";
 
 const routes = [
   {
@@ -26,11 +28,17 @@ const routes = [
     name: "Home",
     component: Home,
   },
+  // {
+  //   path: "/admin",
+  //   name: "Admin",
+  //   component: Admin,
+  //   meta: { requiresAuth: true, roles: ["ROLE_ADMIN"] },
+  // },
   {
     path: "/admin",
     name: "Admin",
     component: Admin,
-    meta: { requiresAuth: true, roles: ["ROLE_ADMIN"] },
+    meta: { requiresAuth: true },
   },
   {
     path: "/shop",
@@ -38,15 +46,20 @@ const routes = [
     component: Shop,
   },
   {
-    path: "/product/:id",
+    path: "/product/:name",
     name: "ProductDetail",
     component: ProductDetail,
+  },
+  {
+    path: "/orders/:id",
+    name: "OrderDetail",
+    component: OrderDetail,
   },
   {
     path: "/manage-products",
     name: "ManageProducts",
     component: ManageProducts,
-    meta: { requiresAuth: true, roles: ["ROLE_ADMIN", "ROLE_STORE_KEEPER"] },
+    meta: { requiresAuth: false, roles: ["ROLE_ADMIN", "ROLE_STORE_KEEPER"] },
   },
   {
     path: "/wishlist",
@@ -109,15 +122,20 @@ const routes = [
     name: "Contact",
     component: Contact,
   },
-  // {
-  //   path: "/stripe",
-  //   name: "Stripe",
-  //   component: Stripe,
-  // },
+  {
+    path: "/stripe",
+    name: "Stripe",
+    component: AllPayments,
+  },
   {
     path: "/success",
     name: "Success",
     component: success,
+  },
+  {
+    path: "/cancel",
+    name: "Cancel",
+    component: Cancel,
   },
 ];
 

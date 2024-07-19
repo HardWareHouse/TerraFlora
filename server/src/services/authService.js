@@ -1,6 +1,5 @@
 import User from "../modelsSQL/User.js";
 import jwt from "jsonwebtoken";
-import bcrypt from "bcryptjs";
 import { sendConfirmationEmail, sendResetPasswordEmail, sendAccountBlockedEmail } from "../emailConfig.js";
 
 export const findUserByEmail = async (email) => {
@@ -19,10 +18,6 @@ export const createUser = async (userData) => {
   await sendConfirmationEmail(newUser, token);
 
   return newUser;
-};
-
-export const comparePasswords = async (inputPassword, userPassword) => {
-  return await bcrypt.compare(inputPassword, userPassword);
 };
 
 export const generateToken = (payload, secret, expiresIn) => {

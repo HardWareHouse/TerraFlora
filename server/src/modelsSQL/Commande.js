@@ -9,26 +9,32 @@ const Commande = connection.define('Commande', {
     },
     numero: {
         type: DataTypes.STRING,
-        allowNull: false
+        allowNull: false,
+        unique: true
     },
     statut: {
         type: DataTypes.STRING,
-        allowNull: false
+        allowNull: false,
+        defaultValue: 'En cours de traitement',
+        validate: {
+            isIn: [['En cours de traitement', 'Expédiée', 'Livrée', 'Annulée', 'Retournée']]
+        }
     },
     dateCommande: {
         type: DataTypes.DATE,
-        allowNull: false
+        allowNull: false,
+        defaultValue: DataTypes.NOW
+    },
+    dateLivraisonFinale: {
+        type: DataTypes.DATE,
+        allowNull: true
     },
     total: {
         type: DataTypes.FLOAT,
         allowNull: false
     },
-    dateLivraisonPrevue: {
-        type: DataTypes.DATE,
-        allowNull: true
-    },
-    dateLivraisonFinale: {
-        type: DataTypes.DATE,
+    trackingNumber: {
+        type: DataTypes.STRING,
         allowNull: true
     }
 }, {

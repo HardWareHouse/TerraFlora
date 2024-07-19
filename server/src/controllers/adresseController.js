@@ -24,44 +24,24 @@ export const getAddress = async (req, res) => {
   }
 };
 
-// Lire les informations d'une adresse par l'ID de l'utilisateur
-export const getAddressByUserId = async (req, res) => {
-  const { id } = req.params;
-  const user = req.user;
-
-  if (!id || !isValidUUID(id)) {
-    return res.status(400).json({ error: "Invalid or missing user ID" });
-  }
-
-  if (user.id !== id) {
-    return res.status(403).json({ error: "Unauthorized" });
-  }
-
-  try {
-    const address = await addressService.getAddressByUserId(id);
-    if (!address) {
-      return res.status(404).json({ error: "Address not found" });
-    }
-
-    if (address.userId !== user.id && user.role !== "ROLE_ADMIN") return res.status(403).json({ error: "Unauthorized" });
-
-    res.status(200).json(address);
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-};
-
 // Lire toutes les adresses
 export const getAllAddresses = async (req, res) => {
   const user = req.user;
 
-  if (user.role !== "ROLE_ADMIN") {
-    return res.status(403).json({ error: "Unauthorized" });
-  }
-
   try {
-    const addresses = await addressService.getAllAddresses();
-    res.status(200).json(addresses);
+    if (user.role === "ROLE_ADMIN") {
+      const addresses = await addressService.getAllAddresses();
+      if (!addresses) {
+        return res.status(404).json({ error: "Addresses not found" });
+      }
+      return res.status(200).json(addresses);
+    } else {
+      const addresses = await addressService.getAddressByUserId(user.id);
+      if (!addresses) {
+        return res.status(404).json({ error: "Addresses not found" });
+      }
+      return res.status(200).json(addresses);
+    }
   } catch (error) {
     res.status(500).json({ error: error.message });
   }

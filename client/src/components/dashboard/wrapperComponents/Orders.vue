@@ -1,5 +1,5 @@
 <template>
-  <div class="p-6 bg-white rounded-lg shadow-md">
+  <div id="orders" class="p-6 bg-white rounded-lg shadow-md">
     <h3 class="text-2xl font-medium mb-4">Commandes</h3>
     <div v-if="loading" class="text-center">Chargement...</div>
     <div v-else>
@@ -9,19 +9,19 @@
             <tr class="bg-gray-100">
               <th class="px-4 py-2 border border-gray-200">Numéro de commande</th>
               <th class="px-4 py-2 border border-gray-200">Date de commande</th>
-              <th class="px-4 py-2 border border-gray-200">Statuts de livraison</th>
+              <th class="px-4 py-2 border border-gray-200">Status</th>
               <th class="px-4 py-2 border border-gray-200">Total</th>
               <th class="px-4 py-2 border border-gray-200">Action</th>
             </tr>
           </thead>
           <tbody>
             <tr v-for="order in myOrders" :key="order.id">
-              <td class="p-4 border border-gray-200">C#{{ order.numero }}</td>
-              <td class="p-4 border border-gray-200">{{ formatDate(order.dateCommande) }}</td>
-              <td class="p-4 border border-gray-200">{{ order.statut }}</td>
-              <td class="p-4 border border-gray-200">{{ order.total }} €</td>
-              <td class="p-4 border border-gray-200">
-                <router-link :to="'/orders/' + order.id" class="bg-red-600 text-white px-4 py-3">
+              <td class="p-3 border border-gray-200 lg:p-4">C#{{ order.numero }}</td>
+              <td class="p-3 border border-gray-200 lg:p-4">{{ formatDate(order.dateCommande) }}</td>
+              <td class="p-3 border border-gray-200 lg:p-4">{{ order.statut }}</td>
+              <td class="p-3 border border-gray-200 lg:p-4">{{ order.total }} €</td>
+              <td class="p-3 border border-gray-200 lg:p-4">
+                <router-link :to="'/orders/' + order.id" class="bg-red-600 text-white px-3 py-3 rounded-lg">
                   Voir
                 </router-link>
               </td>
@@ -42,7 +42,7 @@ import { useAuthStore } from '../../../pinia/auth.js';
 import { useOrder } from '../../../composables/useOrder.js';
 
 const authStore = useAuthStore();
-const { orders, loading, fetchOrderByUserId } = useOrder();
+const { orders, loading, fetchOrders } = useOrder();
 
 const userId = inject('userId');
 const myUserId = ref(null);
@@ -59,7 +59,7 @@ const formatDate = (dateString) => {
 
 onMounted(() => {
   if (userId && userId.value) {
-    fetchOrderByUserId(userId.value).then(() => {
+    fetchOrders().then(() => {
       myUserId.value = userId.value;
       myOrders.value = orders.value;
     });

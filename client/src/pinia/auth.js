@@ -1,13 +1,6 @@
 import { defineStore } from 'pinia';
-import axios from 'axios';
+import instance from '../axios.js';
 import z from 'zod';
-
-const instance = axios.create({
-  baseURL: 'http://localhost:8000/',
-  headers: {
-    'Content-Type': 'application/json',
-  },
-});
 
 const userSchema = z.object({
   id: z.string(),
@@ -24,8 +17,8 @@ const userSchema = z.object({
 
 export const useAuthStore = defineStore('auth', {
   state: () => ({
-    token: null,
-    tokenMailPreference: null,
+    token: localStorage.getItem('token') || null,
+    tokenMailPreference: localStorage.getItem('tokenMailPreference') || null,
     nom: "",
     id: "",
     prenom: "",
@@ -60,7 +53,6 @@ export const useAuthStore = defineStore('auth', {
       const token = localStorage.getItem('token');
       if (token) {
         this.token = token;
-        instance.defaults.headers.common['Authorization'] = `Bearer ${token}`;
       }
     },
     setUserData(token, tokenMailPreference, userData) {
@@ -76,8 +68,6 @@ export const useAuthStore = defineStore('auth', {
       this.wantsMailNewProduct = userData.wantsMailNewProduct;
       this.wantsMailNewsletter = userData.wantsMailNewsletter;
       this.wantsMailRestockProduct = userData.wantsMailRestockProduct;
-
-      instance.defaults.headers.common['Authorization'] = `Bearer ${token}`;
 
       localStorage.setItem('token', token);
       localStorage.setItem('tokenMailPreference', tokenMailPreference);
@@ -100,7 +90,6 @@ export const useAuthStore = defineStore('auth', {
 
       localStorage.removeItem('token');
       localStorage.removeItem('tokenMailPreference');
-      delete instance.defaults.headers.common['Authorization'];
     },
     async getUseriD() {
       try {
@@ -109,12 +98,9 @@ export const useAuthStore = defineStore('auth', {
           console.error('No token found');
           return;
         }
-        
-        const response = await instance.get('auth/verify-token', {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
+    
+        const response = await instance.get('auth/verify-token');
+    
         const userId = response.data.userId;
         if (!userId) {
           console.error('No user found');

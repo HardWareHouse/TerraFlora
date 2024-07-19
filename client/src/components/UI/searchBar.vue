@@ -13,7 +13,7 @@
         />
         <button @click="performSearch" class="text-white px-4 py-2 flex items-center space-x-2 focus:outline-none">
           <i class="bi bi-search" style="font-size: 2rem; color: white;"></i>
-          <span class="text-xl">Rechercher</span>
+          <span class="hidden  lg:text-xl">Rechercher</span>
         </button>
       </div>
     </div>

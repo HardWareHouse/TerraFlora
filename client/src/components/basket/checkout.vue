@@ -1,7 +1,7 @@
 <template>
   <div class="container flex justify-between w-full my-10">
-    <div class="w-2/5">
-      <div class="bg-gray-100 p-4 rounded shadow-md">
+    <div class="w-full lg:w-2/5">
+      <div class="bg-gray-100 p-4 rounded shadow-md flex flex-col">
         <h2 class="text-2xl font-semibold mb-4">Total du Panier</h2>
         <div class="flex justify-between items-center py-2 border-b">
           <span>Sous-total</span>
@@ -17,28 +17,13 @@
           <span>Total</span>
           <span class="text-red-600">{{ total }}€</span>
         </div>
-        <!-- <div>
-          <stripe-checkout
-            ref="checkoutRef"
-            mode="payment"
-            :pk="publishableKey"
-            :line-items="lineItems"
-            :success-url="successURL"
-            :cancel-url="cancelURL"
-            @loading="(v) => (loading = v)"
-          />
-          <button
-            @click="submit"
-            class="w-full bg-red-600 text-white py-2 mt-4 rounded"
-          >
-            Passer à la caisse
-          </button>
-        </div> -->
-        <RouterLink
-          to="/checkout"
-          class="w-full bg-red-600 text-white py-2 mt-4 rounded"
-          >Passer à la caisse
-        </RouterLink>
+        <button
+          @click="submit"
+          class="w-3/4 mx-auto mt-4 bg-red-500 text-white py-2 rounded-md"
+          id="checkout-button"
+        >
+          Payer
+        </button>
       </div>
     </div>
   </div>
@@ -53,68 +38,45 @@ const cartStore = useCartStore();
 const subTotal = computed(() => {
   return cartStore.cartTotal || 0;
 });
+
 const shipping = ref(10);
 
 const total = computed(() => {
   return (subTotal.value + shipping.value).toFixed(2);
 });
-
-const proceedToCheckout = () => {
-  console.log("Proceeding to checkout...");
-};
 </script>
-<!--
 
 <script>
-import { StripeCheckout } from "@vue-stripe/vue-stripe";
+import axios from "axios";
+import { loadStripe } from "@stripe/stripe-js";
 import { useCartStore } from "../../pinia/cart.js";
 
 export default {
-  components: {
-    StripeCheckout,
-  },
-  data() {
-    return {
-      loading: false,
-      publishableKey: `${import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY}`,
-      lineItems: [],
-      successURL: `${window.location.origin}/success`,
-      cancelURL: `${window.location.origin}/cancel`,
-    };
-  },
-  computed: {
-    cartItems() {
-      const cartStore = useCartStore();
-      return cartStore.items || [];
-    },
-  },
-  watch: {
-    cartItems: {
-      handler(newItems) {
-        if (Array.isArray(newItems)) {
-          this.updateLineItems(newItems);
-        } else {
-          console.error("cartItems is not an array:", newItems);
-        }
-      },
-      immediate: true,
-    },
-  },
   methods: {
-    updateLineItems(cartItems) {
-      this.lineItems = cartItems.map((item) => ({
-        price: item.priceId,
-        quantity: item.quantity,
-      }));
-    },
-    submit() {
-      if (this.lineItems.length === 0) {
-        console.error("lineItems is empty, cannot proceed to checkout");
-        return;
+    async submit() {
+      try {
+        const cartStore = useCartStore();
+        const cartItems = cartStore.items || [];
+
+        const lineItems = cartItems.map((item) => ({
+          price: item.priceId,
+          quantity: item.quantity,
+        }));
+        const response = await axios.post(
+          "http://localhost:8000/stripe/create-checkout-session",
+          { lineItems }
+        );
+
+        const sessionId = response.data.id;
+        const stripe = await loadStripe(
+          `${import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY}`
+        );
+
+        await stripe.redirectToCheckout({ sessionId });
+      } catch (error) {
+        console.error("Error during checkout:", error);
       }
-      this.$refs.checkoutRef.redirectToCheckout();
     },
   },
 };
 </script>
--->

@@ -1,6 +1,7 @@
-import {connection} from "./dataBase.js";
+import { connection } from "./dataBase.js";
 import Adresse from './Adresse.js';
 import Categorie from './Categorie.js';
+import Contact from "./Contact.js";
 import Facture from './Facture.js';
 import DemandeRGPD from './DemandeRGPD.js';
 import MethodePaiement from './MethodePaiement.js';
@@ -16,6 +17,7 @@ const db = {
   connection,
   Adresse,
   Categorie,
+  Contact,
   Facture,
   DemandeRGPD,
   MethodePaiement,

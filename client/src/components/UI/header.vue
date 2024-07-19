@@ -15,10 +15,10 @@
       </div>
     </div>
     <p class="border-t border-gray-200 w-full"></p>
-    <div class="container mx-auto flex items-center justify-between px-4">
+    <div class="container mx-auto flex items-center justify-around px-4 lg:justify-between">
       <div><a href="/"><img src="../../assets/homePage/TerraFlora_logo.png" alt="Terra Flora" class="h-32" /></a></div>
-      <nav class="flex space-x-6 text-sm font-medium">
-        <router-link to="/" class="text-gray-700">ACCUEIL</router-link>
+      <nav class="flex space-x-0 mr-4 text-sm font-medium lg:space-x-6">
+        <router-link to="/" class="text-gray-700 hidden lg:block">ACCUEIL</router-link> 
         <div class="relative group">
           <router-link to="/shop" class="text-gray-700">BOUTIQUE</router-link>
         </div>

@@ -3,6 +3,11 @@ import { v4 as uuidv4 } from "uuid";
 
 const produitSchema = new mongoose.Schema(
   {
+    _id: {
+      type: String,
+      default: uuidv4,
+      required: true,
+    },
     nom: {
       type: String,
       required: true,

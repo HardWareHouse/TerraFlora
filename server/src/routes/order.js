@@ -2,7 +2,6 @@ import Router from 'express';
 import { 
     getOrder, 
     getAllOrders,
-    getOrdersByUserId, 
     createOrder, 
     updateOrder, 
     deleteOrder 
@@ -11,8 +10,8 @@ import { authenticate, authorizeAdmin } from '../middlewares/authMiddleware.js';
 
 const router = Router();
 
-router.get('/', authenticate, authorizeAdmin, getAllOrders);
-router.get('/:id', authenticate, getOrdersByUserId);
+router.get('/', authenticate, getAllOrders);
+router.get('/:id', authenticate, getOrder);
 router.post('/', authenticate, createOrder);
 router.put('/:id', authenticate, updateOrder);
 router.delete('/:id', authenticate, authorizeAdmin, deleteOrder);

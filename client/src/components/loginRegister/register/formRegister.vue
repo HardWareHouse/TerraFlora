@@ -1,6 +1,6 @@
 <template>
-  <div class="container flex items-center justify-center my-20">
-    <div class="w-full max-w-3xl p-8 space-y-8 bg-white rounded-lg shadow-md">
+  <div class=" flex items-center justify-center my-20">
+    <div class="container p-8 space-y-8 bg-white rounded-lg shadow-md">
       <h2 class="text-3xl font-semibold text-center text-gray-900">Register</h2>
       <form class="mt-8 space-y-6" @submit.prevent="handleSubmit">
         <div class="space-y-4">
@@ -52,25 +52,36 @@
               class="relative block w-full px-3 py-3 text-[14px] bg-gray-100 text-gray-900 placeholder-gray-500 border border-gray-300 focus:outline-none sm:text-sm"
               placeholder="Telephone" />
           </div>
-          <div class="flex items-center">
-            <input v-model="haveConsented" id="haveConsented" name="haveConsented" type="checkbox"
-              class="w-4 h-4 text-red-600 border-gray-300 rounded focus:ring-red-500" />
-            <label for="haveConsented" class="ml-2 text-sm text-gray-900">I consent to the terms and conditions</label>
-
-
-            <input v-model="wantsMailNewProduct" id="haveConsented" name="haveConsented" type="checkbox"
-              class="w-4 h-4 text-red-600 border-gray-300 rounded focus:ring-red-500" />
-            <label for="haveConsented" class="ml-2 text-sm text-gray-900">Je veux recevoir les mails de nouveaux produits</label>
-            <input v-model="wantsMailRestockProduct" id="haveConsented" name="haveConsented" type="checkbox"
-              class="w-4 h-4 text-red-600 border-gray-300 rounded focus:ring-red-500" />
-            <label for="haveConsented" class="ml-2 text-sm text-gray-900">Je veux recevoir les mails de restock de produit</label>
-            <input v-model="wantsMailChangingPrice" id="haveConsented" name="haveConsented" type="checkbox"
-              class="w-4 h-4 text-red-600 border-gray-300 rounded focus:ring-red-500" />
-            <label for="haveConsented" class="ml-2 text-sm text-gray-900">Je veux recevoir les mails de changement de prix</label>
-            <input v-model="wantsMailNewsletter" id="haveConsented" name="haveConsented" type="checkbox"
-              class="w-4 h-4 text-red-600 border-gray-300 rounded focus:ring-red-500" />
-            <label for="haveConsented" class="ml-2 text-sm text-gray-900">Je veux recevoir les mails de newsletter</label>
+          <div class="flex flex-wrap-reverse justify-around items-center lg:justify-start">
+              <input v-model="haveConsented" id="haveConsented" name="haveConsented" type="checkbox"
+                class="w-4 h-4 text-red-600 border-gray-300 rounded focus:ring-red-500" />
+              <label for="haveConsented" class="ml-2 text-sm text-gray-900">I consent to the terms and conditions</label>
           </div>
+              <label for="haveConsented" class="ml-2 text-sm text-gray-900">Je veux recevoir les mails : </label>
+            <div class="flex justify-around lg:justify-start">
+                <div class="flex flex-wrap-reverse justify-around items-center">
+                  <input v-model="wantsMailNewProduct" id="haveConsented" name="haveConsented" type="checkbox"
+                  class="w-4 h-4 text-red-600 border-gray-300 rounded focus:ring-red-500" />
+                  <label for="haveConsented" class="ml-2 text-sm text-gray-900">de nouveaux produits</label>
+              </div>
+              <div class="flex flex-wrap-reverse justify-around items-center lg:ml-10">
+                <input v-model="wantsMailRestockProduct" id="haveConsented" name="haveConsented" type="checkbox"
+                class="w-4 h-4 text-red-600 border-gray-300 rounded focus:ring-red-500" />
+                <label for="haveConsented" class="ml-2 text-sm text-gray-900">de restock de produit</label>
+              </div>
+            </div>
+            <div class="flex justify-around lg:justify-start" >
+              <div class="flex flex-wrap-reverse justify-around items-center">
+                  <input v-model="wantsMailChangingPrice" id="haveConsented" name="haveConsented" type="checkbox"
+                  class="w-4 h-4 text-red-600 border-gray-300 rounded focus:ring-red-500" />
+                  <label for="haveConsented" class="ml-2 text-sm text-gray-900">de changement de prix</label>
+              </div> 
+              <div class="flex flex-wrap-reverse justify-around items-center lg:ml-8">
+                  <input v-model="wantsMailNewsletter" id="haveConsented" name="haveConsented" type="checkbox"
+                    class="w-4 h-4 text-red-600 border-gray-300 rounded focus:ring-red-500" />
+                  <label for="haveConsented" class="ml-2 text-sm text-gray-900">de newsletter</label>
+              </div>
+            </div>
         </div>
         <div>
           <button type="submit"
@@ -147,6 +158,6 @@ const handleSubmit = async () => {
 
 <style scoped>
 .container {
-  max-width: 1200px;
+  max-width: 900px;
 }
 </style>

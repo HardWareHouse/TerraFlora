@@ -9,11 +9,13 @@ const Facture = connection.define('Facture', {
     },
     numero: {
         type: DataTypes.STRING,
-        allowNull: false
+        allowNull: false,
+        unique: true
     },
     dateFacturation: {
         type: DataTypes.DATE,
-        allowNull: false
+        allowNull: false,
+        defaultValue: DataTypes.NOW
     },
     datePaiementDue: {
         type: DataTypes.DATE,
@@ -21,7 +23,11 @@ const Facture = connection.define('Facture', {
     },
     statutPaiement: {
         type: DataTypes.STRING,
-        allowNull: false
+        allowNull: false,
+        defaultValue: 'En attente',
+        validate: {
+            isIn: [['En attente', 'En cours de paiement', 'Payée', 'Impayée']]  
+        }
     },
     total: {
         type: DataTypes.FLOAT,

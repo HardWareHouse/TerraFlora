@@ -34,9 +34,9 @@
               {{ row.prix }}
             </td>
             <td class="py-2 px-4">
-              <button @click="updateQuantity(row.id, row.quantity - 1)" class="px-2 py-1 text-black">-</button>
+              <button @click="updateQuantity(row.id, row.quantity - 1, row.stock)" class="px-2 py-1 text-black">-</button>
               <span class="px-2">{{ row.quantity }}</span>
-              <button @click="updateQuantity(row.id, row.quantity + 1)" class="px-2 py-1 text-black">+</button>
+              <button @click="updateQuantity(row.id, row.quantity + 1, row.stock)" class="px-2 py-1 text-black">+</button>
             </td>
             <td class="py-2 px-4 border-x-2">
               {{ (row.prix * row.quantity).toFixed(2) }}
@@ -140,8 +140,10 @@ const removeItem = (id) => {
   cartStore.removeItem(id);
 };
 
-const updateQuantity = (id, quantity) => {
-  cartStore.updateQuantity(id, quantity);
+const updateQuantity = (id, quantity, stock) => {
+  if (quantity >= 1 && quantity <= stock) {
+    cartStore.updateQuantity(id, quantity);
+  }
 };
 
 const exportToCSV = () => {

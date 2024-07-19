@@ -18,7 +18,7 @@
                 <i class="bi bi-cart"></i>
                 <span class="absolute right-full mr-2 bg-red-600 text-white px-2 py-1 rounded z-10">Add to Cart</span>
               </button>
-              <button @click.stop="goToProductDetail(product.id)" class="relative bg-white text-red-600 p-2 border border-red-600 rounded-full shadow-lg hover:bg-red-100 transition duration-300">
+              <button @click.stop="goToProductDetail(product)" class="relative bg-white text-red-600 p-2 border border-red-600 rounded-full shadow-lg hover:bg-red-100 transition duration-300">
                 <i class="bi bi-eye"></i>
                 <span class="absolute right-full mr-2 bg-red-600 text-white px-2 py-1 rounded z-10">Voir en détail</span>
               </button>
@@ -71,8 +71,13 @@ function addToCart(product) {
   cartStore.addToCart(product, 1);
 }
 
-function goToProductDetail(productId) {
-  router.push({ name: 'ProductDetail', params: { id: productId } });
+function goToProductDetail(product) {
+  if (!product || !product.nom) {
+    console.error("Invalid product data", product);
+    return;
+  }
+  const productName = encodeURIComponent(product.nom);
+  router.push({ name: 'ProductDetail', params: { name: productName } });
 }
 </script>
 

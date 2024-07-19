@@ -2,7 +2,7 @@
 </script>
 
 <template>
-    <div class="bg-gray-100 py-20 w-full">
+    <div class="bg-gray-100 py-14 w-full">
       <div class="container mx-auto text-center">
         <h1 class="text-3xl font-semibold mb-2">Mon Dashboard Admin</h1>
         <nav class="text-sm font-medium text-gray-500" aria-label="Breadcrumb">

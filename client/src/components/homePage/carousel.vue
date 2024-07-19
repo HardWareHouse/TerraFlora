@@ -3,11 +3,11 @@
         <Slide v-for="(slide, index) in slides" :key="index">
             <div class="w-full h-full">
                 <img class="w-full h-[510px] object-cover" :src="slide.src" :alt="slide.alt" />
-                <div class="absolute top-36 left-20 text-left text-white">
+                <div class="absolute top-36 left-8 text-left text-white lg:left-20">
                     <h2 class="text-[#CC2121] font-bold text-xl text-[30px] font-['Yesteryear']">{{ slide.title }}</h2>
                     <h1 class="font-bold text-4xl text-black">{{ slide.mainText }}</h1>
                     <p class="mt-10">
-                    <p class="bg-[#CC2121] text-white font-bold py-2 px-4 w-28">
+                    <p class="bg-[#CC2121] text-white font-bold py-2 pl-3 w-28">
                         <RouterLink to="/shop">{{ slide.buttonText }}</RouterLink>
                     </p>
                     </p>

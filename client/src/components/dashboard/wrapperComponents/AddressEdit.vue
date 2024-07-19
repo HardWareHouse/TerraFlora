@@ -1,5 +1,5 @@
 <template>
-  <div class="p-4 bg-white rounded-lg shadow-md">
+  <div id="addressEdit" class="p-4 bg-white rounded-lg shadow-md">
     <h3 class="text-xl font-medium border-b border-gray-200 pb-2">Adresse de facturation</h3>
     <div v-if="address">
       <address class="mt-4 not-italic text-[14px] text-gray-600">
@@ -57,7 +57,7 @@ import { useAuthStore } from '../../../pinia/auth.js';
 import { useAddress } from '../../../composables/useAddress.js';
 
 const authStore = useAuthStore();
-const { address, loading, fetchAddressByUserId, createAddress, updateAddress } = useAddress();
+const { address, loading, fetchAddress, createAddress, updateAddress } = useAddress();
 const userId = inject('userId');
 
 const formData = ref({
@@ -78,7 +78,7 @@ const errorMessage = ref('');
 
 onMounted(() => {
   if (userId && userId.value) {
-    fetchAddressByUserId(userId.value).then(() => {
+    fetchAddress().then(() => {
       myUserId.value = userId.value;
     });
   };
@@ -93,7 +93,7 @@ watch(address, (newAddress) => {
       ville: newAddress.ville || '',
       codePostal: newAddress.codePostal || ''
     };
-    originalFormData.value = { ...formData.value }; // Stocker les données originales
+    originalFormData.value = { ...formData.value };
   }
 });
 
@@ -119,7 +119,7 @@ const updateTheAddress = async () => {
     successMessage.value = 'Votre adresse a été mise à jour avec succès!';
     editMode.value = false;
   } catch (error) {
-    successMessage.value = ' Une erreur est survenue lors de la mise à jour de l\'adresse. Veuillez réessayer.';
+    errorMessage.value = ' Une erreur est survenue lors de la mise à jour de l\'adresse. Veuillez réessayer.';
     console.error('Erreur lors de la mise à jour de l\'adresse:', error);
   }
 };

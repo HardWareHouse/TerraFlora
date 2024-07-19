@@ -1,6 +1,7 @@
 import User from './User.js';
 import Facture from './Facture.js';
 import Commande from './Commande.js';
+import Contact from './Contact.js';
 import Panier from './Panier.js';
 import Promotion from './Promotion.js';
 import Categorie from './Categorie.js';
@@ -29,6 +30,8 @@ DemandeRGPD.belongsTo(User, { foreignKey: 'userId', targetKey: 'id' });
 User.hasMany(Adresse, { foreignKey: 'userId', sourceKey: 'id' });
 Adresse.belongsTo(User, { foreignKey: 'userId', targetKey: 'id' });
 
+User.hasMany(Contact, { foreignKey: 'userId', sourceKey: 'id' });
+Contact.belongsTo(User, { foreignKey: 'userId', targetKey: 'id' });
 // Panier associations
 Panier.hasOne(Commande, { foreignKey: 'panierId', sourceKey: 'id' });
 Commande.belongsTo(Panier, { foreignKey: 'panierId', targetKey: 'id' });
@@ -50,7 +53,11 @@ Produit.hasMany(Image, { foreignKey: 'produitId' });
 Image.belongsTo(Produit, { foreignKey: 'produitId' });
 
 // Facture associations
-Facture.belongsTo(User, { foreignKey: 'userId', targetKey: 'id' });
+Commande.hasOne(Facture, { foreignKey: 'commandeId', sourceKey: 'id'});
+Facture.belongsTo(Commande, { foreignKey: 'commandeId', targetKey: 'id'})
+
+Facture.hasMany(Paiement, { foreignKey: 'factureId', sourceKey: 'id' });
+Paiement.belongsTo(Facture, { foreignKey: 'factureId', targetKey: 'id' });
 
 // Paiement associations
 MethodePaiement.hasMany(Paiement, { foreignKey: 'methodePaiementId', sourceKey: 'id' });

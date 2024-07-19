@@ -1,3 +1,5 @@
+import bcrypt from "bcryptjs";
+
 export const isPasswordValid = (password) => {
     const minLength = 12;
     const hasUpperCase = /[A-Z]/.test(password);
@@ -21,4 +23,12 @@ export const isPasswordExpired = (lastUpdatedPassword) => {
     );
     return diffInDays >= 60;
 };
-  
+
+export const comparePasswords = async (inputPassword, userPassword) => {
+  try {
+    return await bcrypt.compare(inputPassword, userPassword);
+  } catch (error) {
+    console.error('Erreur lors de la comparaison des mots de passe:', error);
+    throw error;
+  }
+};

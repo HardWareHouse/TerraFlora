@@ -1,5 +1,7 @@
 import * as userService from "../services/userService.js";
-import { isValidUUID, isValidEmail, isStrongPassword } from "../helpers/validatorHelper.js";
+import { isValidUUID } from "../helpers/validatorHelper.js";
+import { isEmailAddressValid } from "../helpers/emailAddressHelper.js";
+import { isPasswordValid, comparePasswords } from "../helpers/passwordHelper.js";
 
 // Lire les informations d'un utilisateur
 export const getUser = async (req, res) => {
@@ -53,47 +55,87 @@ export const getAllUsers = async (req, res) => {
 // Mettre à jour un utilisateur
 export const updateUser = async (req, res) => {
   const { id } = req.params;
-  const { nom, prenom, email, password, telephone, role } = req.body;
   const user = req.user;
 
-  if (!id || !isValidUUID(id)) {
-    return res.status(400).json({ error: "Invalid or missing user ID" });
+  if (!isValidUUID(id)) {
+    return res.status(400).json({ error: "Invalid user ID format" });
   }
 
-  if (email && !isValidEmail(email)) {
-    return res.status(400).json({ error: "Invalid email format" });
-  }
-
-  if (password && !isStrongPassword(password)) {
-    return res.status(400).json({ error: "Password is not strong enough" });
-  }
-
-  if (user.id !== id && user.role !== "ROLE_ADMIN") {
-    return res.status(403).json({ error: "Unauthorized" });
-  }
-
-  if(role === "ROLE_ADMIN") {
-    return res.status(403).json({ error: "Unauthorized" });
+  if (user.id !== id) {
+    return res.status(403).json({ error: "Unauthorize" });
   }
 
   try {
-    const updatedUser = await userService.updateUserById(id, {
-      nom,
-      prenom,
-      email,
-      password,
-      telephone,
-      role,
-    });
-    if (!updatedUser) {
+    const { nom, prenom, email, password, telephone, newPassword, confirmPassword } = req.body;
+    if (!nom || !prenom || !email || !password || !telephone) {
+      return res.status(400).json({ error: "Missing fields to update" });
+    }
+
+    if(req.body.role || req.body.id) {
+      return res.status(403).json({ error: "Unauthorized" });
+    }
+
+    if (email && !isEmailAddressValid(email)) {
+      return res.status(400).json({ error: "Invalid email format" });
+    }
+
+    const existingUserWithEmail = await userService.getUserByEmail(email);
+    if (existingUserWithEmail && existingUserWithEmail.id !== id) {
+      return res.status(409).json({ error: "Email already in use" });
+    }
+  
+    if (password && !isPasswordValid(password)) {
+      return res.status(400).json({ error: "Password is not strong enough" });
+    }
+
+    const existingUser = await userService.getUser(id);
+    if (!existingUser) {
       return res.status(404).json({ error: "User not found" });
+    }
+    if(existingUser.id !== user.id) {
+      return res.status(403).json({ error: "Unauthorized" });
+    }
+
+    const passwordMatch = await comparePasswords(password, existingUser.password);
+    if (!passwordMatch) {
+      return res.status(401).json({ error: "Invalid password" });
+    }
+
+    const updatedUserData = {
+      nom: nom || existingUser.nom,
+      prenom: prenom || existingUser.prenom,
+      email: email || existingUser.email,
+      telephone: telephone || existingUser.telephone
+    };
+
+    if(newPassword){
+      if(!confirmPassword){
+        return res.status(400).json({ error: "Missing confirm password" });
+      }
+
+      if(newPassword !== confirmPassword){
+        return res.status(400).json({ error: "Passwords do not match" });
+      }
+
+      if(!isPasswordValid(newPassword) || !isPasswordValid(confirmPassword)){
+        return res.status(400).json({ error: "The new password is not strong enough" });
+      }
+      
+      updatedUserData.password = newPassword;
+    }
+
+    const updatedUser = await userService.updateUserById(id, updatedUserData);
+    if (!updatedUser) {
+      return res.status(400).json({ error: "No data to update" });
     }
 
     res.status(200).json(updatedUser);
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    console.error("Error updating user:", error);
+    res.status(500).json({ error: "Internal Server Error" });
   }
 };
+
 
 // Supprimer un utilisateur
 export const deleteUser = async (req, res) => {

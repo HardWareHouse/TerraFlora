@@ -25,6 +25,11 @@ const Produit = connection.define(
       type: DataTypes.INTEGER,
       allowNull: false,
     },
+    stockThreshold: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      defaultValue: 5,
+    },
     marque: {
       type: DataTypes.STRING,
       allowNull: false,

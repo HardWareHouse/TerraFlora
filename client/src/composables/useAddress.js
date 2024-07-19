@@ -1,10 +1,6 @@
 import { ref } from 'vue';
-import axios from 'axios';
+import instance from '../axios';
 import z from 'zod';
-
-const instance = axios.create({
-    baseURL: 'http://localhost:8000/',
-});
 
 const addressSchema = z.object({
   id: z.string().optional(),
@@ -20,14 +16,10 @@ export const useAddress = () => {
   const loading = ref(false);
 
   // Fonction pour récupérer l'adresse par l'ID de l'utilisateur
-  const fetchAddressByUserId = async (userId) => {
+  const fetchAddress = async () => {
     loading.value = true;
     try {
-      const response = await instance.get(`address/${userId}`, {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem('token')}`,
-        },
-      });
+      const response = await instance.get(`address/`);
       if (!response.data) {
         console.error('Aucune donnée adresse trouvée');
         return;
@@ -52,11 +44,7 @@ export const useAddress = () => {
       }
 
       validatedData.userId = userId;
-      const response = await instance.post('address', validatedData, {
-        headers: {
-          'Authorization': `${localStorage.getItem('token')}`,
-        },
-      });
+      const response = await instance.post('address', validatedData);
 
       if (!response.data) {
         console.error('Aucune donnée adresse trouvée');
@@ -81,11 +69,7 @@ export const useAddress = () => {
         return;
       }
 
-      const response = await instance.put(`address/${addressId}`, validatedData, {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem('token')}`,
-        },
-      });
+      const response = await instance.put(`address/${addressId}`, validatedData);
       if (!response.data) {
         console.error('Aucune donnée adresse trouvée');
         return;
@@ -102,7 +86,7 @@ export const useAddress = () => {
   return {
     address,
     loading,
-    fetchAddressByUserId,
+    fetchAddress,
     createAddress,
     updateAddress,
   };

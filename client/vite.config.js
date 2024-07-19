@@ -11,4 +11,10 @@ export default defineConfig({
       usePolling: true,
     },
   },
+  optimizeDeps: {
+    exclude: [
+      "chunk-IH3QLC44.js?v=36a8aa14", // Replace with the name of the problematic module
+      // Add more modules if needed
+    ],
+  },
 });

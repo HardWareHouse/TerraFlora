@@ -3,16 +3,30 @@ import dotenv from 'dotenv';
 
 dotenv.config();
 
-const apiInstance = new brevo.TransactionalEmailsApi();
+let apiInstance;
+if (process.env.NODE_ENV === 'test') {
+  apiInstance = {
+    authentications: {
+      apiKey: {
+        apiKey: process.env.BREVO_PASS_API,
+      },
+    },
+    sendTransacEmail: jest.fn().mockResolvedValue({}),
+  };
+} else {
+  apiInstance = new brevo.TransactionalEmailsApi();
+  let apiKey = apiInstance.authentications['apiKey'];
+  apiKey.apiKey = process.env.BREVO_PASS_API;
+}
 
-let apiKey = apiInstance.authentications['apiKey'];
-apiKey.apiKey = process.env.BREVO_PASS_API;
 
 const templateIds = {
   confirmation: 2,
   forgotPassword: 3,
   accountBlocked: 4,
-  preferenceUpdate: 5
+  preferenceUpdate: 5,
+  alertStock: 6,
+  noStock: 7,
 };
 
 export async function sendConfirmationEmail(user, token) {
@@ -87,6 +101,50 @@ export async function sendPreferenceUpdateEmail(user, preference) {
   sendSmtpEmail.params = {
     NOM: user.nom,
     PREFERENCE: preference,
+  };
+
+  try {
+    await apiInstance.sendTransacEmail(sendSmtpEmail);
+  } catch (error) {
+    if (error instanceof brevo.HttpError) {
+      console.log('HttpError statusCode', error.statusCode);
+      console.log('HttpError body', error.body);
+    }
+    throw error;
+  }
+}
+
+
+
+export async function sendAlertEmailLowStock(user, alertMessage) {
+  const sendSmtpEmail = new brevo.SendSmtpEmail();
+
+  sendSmtpEmail.to = [{ email: user.email, name: user.nom }];
+  sendSmtpEmail.templateId = templateIds.alertStock;
+  sendSmtpEmail.params = {
+    FULLNAME: user.nom,
+    stock: alertMessage,
+  };
+
+  try {
+    await apiInstance.sendTransacEmail(sendSmtpEmail);
+  } catch (error) {
+    if (error instanceof brevo.HttpError) {
+      console.log('HttpError statusCode', error.statusCode);
+      console.log('HttpError body', error.body);
+    }
+    throw error;
+  }
+}
+
+export async function sendAlertEmailNoStock(user, alertMessage) {
+  const sendSmtpEmail = new brevo.SendSmtpEmail();
+
+  sendSmtpEmail.to = [{ email: user.email, name: user.nom }];
+  sendSmtpEmail.templateId = templateIds.alertStock;
+  sendSmtpEmail.params = {
+    FULLNAME: user.nom,
+    stock: alertMessage,
   };
 
   try {

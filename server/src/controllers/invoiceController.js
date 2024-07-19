@@ -24,44 +24,24 @@ export const getInvoice = async (req, res) => {
   }
 };
 
-// Lire les informations de plusieurs factures par l'ID de l'utilisateur
-export const getInvoiceByUserId = async (req, res) => {
-  const { id } = req.params;
-  const user = req.user;
-
-  if (!id || !isValidUUID(id)) {
-    return res.status(400).json({ error: "Invalid or missing user ID" });
-  }
-
-  if (user.id !== id) {
-    return res.status(403).json({ error: "Unauthorized" });
-  }
-
-  try {
-    const invoices = await invoiceService.getInvoicesByUserId(id);
-    if (!invoices || invoices.length === 0) {
-      return res.status(404).json({ error: "Invoices not found" });
-    }
-    res.status(200).json(invoices);
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-};
-
 // Lire toutes les factures
 export const getAllInvoices = async (req, res) => {
   const user = req.user;
 
-  if (user.role !== "ROLE_ADMIN") {
-    return res.status(403).json({ error: "Unauthorized" });
-  }
-
   try {
-    const invoices = await invoiceService.getAllInvoices();
-    if (!invoices) {
-      return res.status(404).json({ error: "Invoices not found" });
+    if (user.role === "ROLE_ADMIN") {
+      const invoices = await invoiceService.getAllInvoices();
+      if (!invoices) {
+        return res.status(404).json({ error: "Invoices not found" });
+      }
+      return res.status(200).json(invoices);
+    } else {
+      const invoices = await invoiceService.getInvoicesByUserId(user.id);
+      if (!invoices) {
+        return res.status(404).json({ error: "Invoices not found" });
+      }
+      return res.status(200).json(invoices);
     }
-    res.status(200).json(invoices);
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
