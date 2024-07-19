@@ -38,7 +38,7 @@ const routes = [
     path: "/admin",
     name: "Admin",
     component: Admin,
-    meta: { requiresAuth: true},
+    meta: { requiresAuth: true },
   },
   {
     path: "/shop",

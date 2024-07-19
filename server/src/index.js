@@ -17,12 +17,19 @@ import emailPreferenceRoutes from "./routes/emailPreference.js";
 import categorieRoutes from "./routes/categorie.js";
 import adresseRoutes from "./routes/adresse.js";
 import stripeRouter from "./routes/stripe.js";
+import webhookRouter from "./routes/webhook.js";
 import path from "path";
-import './cron/stockAlertCron.js';
+import "./cron/stockAlertCron.js";
 
 dotenv.config();
 
 const server = express();
+
+server.use(
+  "/webhook",
+  express.raw({ type: "application/json" }),
+  webhookRouter
+);
 
 server.use(bodyParser.json());
 server.use(express.urlencoded({ extended: true }));
@@ -51,17 +58,17 @@ server.use((err, req, res, next) => {
 connectToDatabase()
   .then(() => {
     console.log("Connected to SQL database successfully.");
-    
+
     return connection.sync();
   })
   .then(() => {
     console.log("SQL database & tables created!");
-    
+
     return initializeModels();
   })
   .then(() => {
     console.log("MongoDB models initialized.");
-    
+
     return denormalizeData();
   })
   .then(() => {

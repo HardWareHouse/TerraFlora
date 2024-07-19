@@ -45,8 +45,8 @@ export const createSession = async (req, res) => {
       ],
       line_items: lineItems,
       mode: "payment",
-      success_url: `${YOUR_DOMAIN}/success`,
-      cancel_url: `${YOUR_DOMAIN}/cancel`,
+      success_url: `http://localhost:5173/success?session_id={CHECKOUT_SESSION_ID}`,
+      cancel_url: `http://localhost:5173/cancel`,
       automatic_tax: { enabled: true },
     });
 
@@ -127,4 +127,11 @@ export const updatePrice = async (req, res) => {
     console.error("Error updating price:", error);
     res.status(500).send({ error: error.message });
   }
+};
+
+export const fulfillCheckout = async (sessionId) => {
+  const checkoutSession = await stripe.checkout.sessions.retrieve(sessionId, {
+    expand: ["line_items"],
+  });
+  console.log("checkoutSession", checkoutSession.line_items.data);
 };
