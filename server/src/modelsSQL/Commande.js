@@ -12,10 +12,22 @@ const Commande = connection.define('Commande', {
         allowNull: false,
         unique: true
     },
+    statut: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        defaultValue: 'En cours de traitement',
+        validate: {
+            isIn: [['En cours de traitement', 'Expédiée', 'Livrée', 'Annulée', 'Retournée']]
+        }
+    },
     dateCommande: {
         type: DataTypes.DATE,
         allowNull: false,
         defaultValue: DataTypes.NOW
+    },
+    dateLivraisonFinale: {
+        type: DataTypes.DATE,
+        allowNull: true
     },
     total: {
         type: DataTypes.FLOAT,
