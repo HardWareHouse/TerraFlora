@@ -36,19 +36,21 @@
           <span v-if="product.pourcentagePromotion"
             class="absolute top-0 right-0 bg-green-600 text-white text-xs px-2 py-1 rounded-bl-lg">{{ product.pourcentagePromotion }}% OFF</span>
           <div class="absolute right-0 top-0 bottom-0 flex flex-col items-center justify-center space-y-2 opacity-0 hover:opacity-100 transition-opacity">
-            <button class="relative bg-red-600 text-white p-2 rounded-full shadow-lg hover:bg-red-700 transition duration-300" @click.stop="addToCart(product)">
+            <button v-if="product.stock > 0" class="relative bg-red-600 text-white p-2 rounded-full shadow-lg hover:bg-red-700 transition duration-300" @click.stop="addToCart(product)">
               <i class="bi bi-cart"></i>
-              <span class="absolute right-full mr-2 bg-red-600 text-white px-2 py-1 rounded z-10">Add to Cart</span>
+              <span class="absolute right-full mr-2 bg-red-600 text-white px-2 py-1 rounded z-10"> Ajouter au panier</span>
             </button>
             <button class="relative bg-white text-red-600 p-2 border border-red-600 rounded-full shadow-lg hover:bg-red-100 transition duration-300" @click.stop="goToProductDetail(product)">
               <i class="bi bi-eye"></i>
-              <span class="absolute right-full mr-2 bg-red-600 text-white px-2 py-1 rounded z-10">Add to Wishlist</span>
+              <span class="absolute right-full mr-2 bg-red-600 text-white px-2 py-1 rounded z-10">Voir produit</span>
             </button>
           </div>
         </div>
         <div class="product-info mt-4 text-center">
           <h3 class="text-lg font-semibold">{{ product.nom }}</h3>
           <p class="text-gray-500">${{ product.prix }}</p>
+          <p v-if="product.stock <= product.stockThreshold && product.stock > 0" class="text-yellow-500 text-sm">Il reste très peu de produits en stock</p>
+          <p v-if="product.stock === 0" class="text-red-600 text-sm">En rupture de stock</p>
         </div>
       </div>
     </div>
@@ -68,13 +70,15 @@
           <p class="text-gray-500">{{ product.prix }} €</p>
           <p class="mt-2 text-gray-700">{{ product.description }}</p>
           <div class="flex space-x-2 mt-4">
-            <button class="px-4 py-2 bg-red-600 text-white rounded shadow hover:bg-red-700 transition duration-300" @click.stop="addToCart(product)">
-              Add to Cart
+            <button v-if="product.stock > 0" class="px-4 py-2 bg-red-600 text-white rounded shadow hover:bg-red-700 transition duration-300" @click.stop="addToCart(product)">
+              <i class="bi bi-cart-plus"></i> Ajouter au panier
             </button>
             <button class="px-4 py-2 bg-white text-red-600 border border-red-600 rounded hover:bg-red-100 transition duration-300" @click.stop="goToProductDetail(product)">
               <i class="bi bi-eye"></i>
             </button>
           </div>
+          <p v-if="product.stock <= product.stockThreshold && product.stock > 0" class="text-yellow-500 text-sm mt-2">Il reste très peu de produits en stock</p>
+          <p v-if="product.stock === 0" class="text-red-600 text-sm mt-2">En rupture de stock</p>
         </div>
       </div>
     </div>
@@ -122,7 +126,6 @@ function getImageUrl(imagePath) {
   return `http://localhost:8000/${imagePath}`;
 }
 
-
 watch(() => props.filters, fetchProducts, { immediate: true });
 watch(() => route.query.search, fetchProducts, { immediate: true });
 watch(sortBy, fetchProducts, { immediate: true });
@@ -158,7 +161,11 @@ function goToProductDetail(product) {
 }
 
 function addToCart(product) {
-  cartStore.addToCart(product, 1);
+  if (product.stock > 0) {
+    cartStore.addToCart(product, 1);
+  } else {
+    alert('Ce produit est en rupture de stock');
+  }
 }
 </script>
 
@@ -187,5 +194,13 @@ button span {
 button:hover span {
   display: inline-block;
   z-index: 10;
+}
+
+.text-yellow-500 {
+  font-size: 0.875rem;
+}
+
+.text-red-600 {
+  font-size: 0.875rem; 
 }
 </style>

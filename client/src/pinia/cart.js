@@ -11,6 +11,11 @@ export const useCartStore = defineStore('cart', {
     },
     actions: {
         addToCart(product, quantity = 1) {
+            if (product.stock <= 0) {
+                alert('Ce produit est en rupture de stock');
+                return;
+            }
+            
             const existingProduct = this.items.find(item => item.id === product.id);
             if (existingProduct) {
                 existingProduct.quantity += quantity;

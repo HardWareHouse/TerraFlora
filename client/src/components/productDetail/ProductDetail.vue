@@ -17,16 +17,13 @@
           <span class="text-gray-500">0 Reviews</span>
         </div>
         <div class="flex items-center mb-4">
-          <span class="text-2xl font-bold text-red-600 mr-2">
-            ${{ product.prix }}
-          </span>
-          <span v-if="product.isPromotion" class="line-through text-gray-500">
-            ${{ (product.prix / ((100 - product.pourcentagePromotion) / 100)).toFixed(2) }}
-          </span>
+          <span class="text-2xl font-bold text-red-600 mr-2">${{ product.prix }}</span>
+          <span v-if="product.isPromotion" class="line-through text-gray-500">${{ (product.prix / ((100 - product.pourcentagePromotion) / 100)).toFixed(2) }}</span>
         </div>
-        <div class="mb-4 text-green-600 font-semibold">
-          {{ product.stock }} IN STOCK
+        <div :class="{'text-red-600': product.stock === 0, 'text-yellow-500': product.stock <= product.stockThreshold && product.stock > 0, 'text-green-600': product.stock > product.stockThreshold}" class="mb-4 font-semibold">
+          {{ product.stock }} EN STOCK
         </div>
+        <p v-if="product.stock <= product.stockThreshold && product.stock > 0" class="mb-4 text-yellow-500 text-sm"> <i class="bi bi-exclamation-triangle"></i> Il reste très peu de produits en stock</p>
         <p class="mb-4">{{ product.description }}</p>
         <div class="mb-4">
           <div>
@@ -40,17 +37,14 @@
         </div>
         <div class="flex items-center mb-4">
           <div class="quantity flex items-center mr-4">
-            <button class="px-4 py-2 bg-gray-200" @click="decreaseQuantity">-</button>
-            <input type="text" v-model="quantity" class="w-12 text-center border-t border-b" />
-            <button class="px-4 py-2 bg-gray-200" @click="increaseQuantity">+</button>
+            <button :disabled="quantity <= 1 || product.stock === 0" class="px-4 py-2 bg-gray-200" @click="decreaseQuantity">-</button>
+            <input type="number" v-model.number="quantity" class="w-12 text-center border-t border-b" :disabled="product.stock === 0" @input="validateQuantity" min="1" :max="product.stock" />
+            <button :disabled="quantity >= product.stock || product.stock === 0" class="px-4 py-2 bg-gray-200" @click="increaseQuantity">+</button>
           </div>
-          <button class="px-4 py-2 bg-red-600 text-white rounded" @click="addToCart">
-            Add To Cart
-          </button>
+          <button v-if="product.stock > 0" class="px-4 py-2 bg-red-600 text-white rounded" @click="addToCart"><i class="bi bi-cart-plus"></i> Ajouter au panier</button>
+          <span v-else class="text-red-600">Rupture de stock</span>
         </div>
-        <button class="px-4 py-2 border rounded" @click="addToWishlist">
-          Add to Wishlist
-        </button>
+        <button class="px-4 py-2 border rounded" @click="addToWishlist">Add to Wishlist</button>
       </div>
     </div>
   </div>
@@ -114,12 +108,25 @@ const decreaseQuantity = () => {
 };
 
 const increaseQuantity = () => {
-  quantity.value++;
+  if (quantity.value < product.value.stock) quantity.value++;
+};
+
+const validateQuantity = () => {
+  if (quantity.value < 1) {
+    quantity.value = 1;
+  } else if (quantity.value > product.value.stock) {
+    quantity.value = product.value.stock;
+  }
 };
 
 const addToCart = () => {
-  cartStore.addToCart(product.value, quantity.value);
-  console.log(`Added ${quantity.value} ${product.value.nom} to cart`);
+  validateQuantity();
+  if (product.value.stock > 0) {
+    cartStore.addToCart(product.value, quantity.value);
+    console.log(`Added ${quantity.value} ${product.value.nom} to cart`);
+  } else {
+    alert('Ce produit est en rupture de stock');
+  }
 };
 
 const addToWishlist = () => {
@@ -131,6 +138,16 @@ const addToWishlist = () => {
 .product-detail-container {
   max-width: 1200px;
   margin: 0 auto;
+}
+
+.quantity input {
+  -moz-appearance: textfield;
+  appearance: textfield;
+}
+
+.quantity input::-webkit-outer-spin-button,
+.quantity input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
 }
 
 .breadcrumbs a {
