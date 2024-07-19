@@ -100,7 +100,7 @@ export const updateAddress = async (req, res) => {
       return res.status(404).json({ error: "Address not found" });
     }
 
-    if (address.userId !== user.id) {
+    if (address.user._id !== user.id) {
       return res.status(403).json({ error: "Unauthorized" });
     }
 

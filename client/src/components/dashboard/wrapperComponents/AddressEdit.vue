@@ -53,10 +53,8 @@
 
 <script setup>
 import { ref, watch, onMounted, inject } from 'vue';
-import { useAuthStore } from '../../../pinia/auth.js';
 import { useAddress } from '../../../composables/useAddress.js';
 
-const authStore = useAuthStore();
 const { address, loading, fetchAddress, createAddress, updateAddress } = useAddress();
 const userId = inject('userId');
 
@@ -106,7 +104,7 @@ const updateTheAddress = async () => {
   }
 
   if (JSON.stringify(formData.value) === JSON.stringify(originalFormData.value)) {
-    console.log('Aucun changement détecté');
+    errorMessage.value = 'Aucun changement détecté.';
     return;
   }
 

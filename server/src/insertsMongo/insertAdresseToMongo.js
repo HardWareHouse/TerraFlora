@@ -16,6 +16,7 @@ async function insertOrUpdateAdresseInMongo(adresseSQL) {
         isDeliveryAddress: adresseSQL.isDeliveryAddress,
         isBillingAddress: adresseSQL.isBillingAddress,
         user: {
+            _id: adresseSQL.User.id,
             nom: adresseSQL.User.nom,
             prenom: adresseSQL.User.prenom,
             email: adresseSQL.User.email,
@@ -39,7 +40,7 @@ async function insertAdresseToMongo() {
     let adresses = await AdresseSQL.findAll({
         include: {
             model: User,
-            attributes: ['nom', 'prenom', 'email']
+            attributes: ['id','nom', 'prenom', 'email']
         },
     });
 

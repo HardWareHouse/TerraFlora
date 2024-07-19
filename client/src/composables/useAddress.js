@@ -9,6 +9,8 @@ const addressSchema = z.object({
   numero: z.string(),
   ville: z.string(),
   codePostal: z.string(),
+  // isDeliveryAddress: z.boolean(),
+  // isBillingAddress: z.boolean(),
 });
 
 export const useAddress = () => {
