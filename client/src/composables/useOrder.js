@@ -5,6 +5,7 @@ import z from 'zod';
 const orderSchema = z.object({
     id: z.string().optional(),
     numero: z.string().min(1).max(255),
+    statut: z.string().min(1).max(255),
     dateCommande: z.string(),
     total: z.number(),
     trackingNumber: z.string().nullable(),

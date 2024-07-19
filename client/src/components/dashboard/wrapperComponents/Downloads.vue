@@ -9,7 +9,7 @@
             <tr class="bg-gray-100">
               <th class="px-4 py-2 border border-gray-200">Numéro de Facture</th>
               <th class="px-4 py-2 border border-gray-200">Date de Facturation</th>
-              <th class="px-4 py-2 border border-gray-200">Statut de Paiement</th>
+              <th class="px-4 py-2 border border-gray-200">Status de Paiement</th>
               <th class="px-4 py-2 border border-gray-200">Total</th>
               <th class="px-4 py-2 border border-gray-200">Action</th>
             </tr>

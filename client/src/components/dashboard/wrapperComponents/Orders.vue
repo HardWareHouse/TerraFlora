@@ -9,6 +9,7 @@
             <tr class="bg-gray-100">
               <th class="px-4 py-2 border border-gray-200">Numéro de commande</th>
               <th class="px-4 py-2 border border-gray-200">Date de commande</th>
+              <th class="px-4 py-2 border border-gray-200">Status</th>
               <th class="px-4 py-2 border border-gray-200">Total</th>
               <th class="px-4 py-2 border border-gray-200">Action</th>
             </tr>
@@ -17,6 +18,7 @@
             <tr v-for="order in myOrders" :key="order.id">
               <td class="p-3 border border-gray-200 lg:p-4">C#{{ order.numero }}</td>
               <td class="p-3 border border-gray-200 lg:p-4">{{ formatDate(order.dateCommande) }}</td>
+              <td class="p-3 border border-gray-200 lg:p-4">{{ order.statut }}</td>
               <td class="p-3 border border-gray-200 lg:p-4">{{ order.total }} €</td>
               <td class="p-3 border border-gray-200 lg:p-4">
                 <router-link :to="'/orders/' + order.id" class="bg-red-600 text-white px-3 py-3 rounded-lg">
