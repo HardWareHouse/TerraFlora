@@ -5,6 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "node --env_file=.env --watch src/index.js ",
+    "prod": "node --env_file=.env src/index.js",
     "start": "node src/index.js",
     "test": "jest"
   },
