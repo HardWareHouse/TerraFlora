@@ -1,6 +1,6 @@
 <template>
-    <div class="container flex items-center justify-center my-20">
-        <div class="w-full max-w-md p-8 space-y-8 bg-white rounded-lg shadow-md">
+    <div class="flex items-center justify-center my-20">
+        <div class="w-full container max-w-md p-8 space-y-8 bg-white rounded-lg shadow-md">
             <h2 class="text-3xl font-semibold text-center text-gray-900">Reinitialisez votre mot de passe</h2>
             <form class="mt-8 space-y-6" @submit.prevent="handleSubmit">
                 <div class="space-y-4">
@@ -48,6 +48,6 @@ const handleSubmit = async () => {
 
 <style scoped>
 .container {
-    max-width: 1200px;
+    max-width: 900px;
 }
 </style>

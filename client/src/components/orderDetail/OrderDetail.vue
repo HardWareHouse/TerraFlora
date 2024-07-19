@@ -98,7 +98,6 @@
                   'X-Okapi-Key': `${import.meta.env.VITE_LA_POSTE_API_KEY}`,
               },
           });
-          console.log(response.data);   
           trackingInfo.value = response.data;
       } catch (error) {
           console.error('Error fetching tracking info:', error);

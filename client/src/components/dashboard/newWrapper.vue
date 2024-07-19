@@ -55,7 +55,7 @@ const logout = async () => {
 </script>
 
 <template>
-  <div class="my-account-wrapper py-8">
+  <div class="my-account-wrapper py-8 px-6">
     <div class="container mx-auto flex flex-col md:flex-row">
       <div class="w-full md:w-1/4 mb-4 md:mb-0">
         <div class="bg-white shadow-md rounded-lg">

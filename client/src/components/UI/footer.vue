@@ -3,7 +3,7 @@
     <div class="container mx-auto my-20">
       <div class="flex w-full">
         <!-- My Account -->
-        <div class="w-1/3">
+        <div class="pl-6 w-1/3">
           <h3 class="text-lg font-semibold mb-4">Mon compte</h3>
           <ul class="">
             <li class="mb-4">
