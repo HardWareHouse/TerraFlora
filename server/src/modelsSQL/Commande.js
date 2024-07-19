@@ -12,14 +12,6 @@ const Commande = connection.define('Commande', {
         allowNull: false,
         unique: true
     },
-    statut: {
-        type: DataTypes.STRING,
-        allowNull: false,
-        defaultValue: 'En cours de traitement',
-        validate: {
-            isIn: [['En attente', 'En cours de traitement', 'Expédiée', 'Livrée', 'Annulée', 'Retournée']]
-        }
-    },
     dateCommande: {
         type: DataTypes.DATE,
         allowNull: false,
@@ -29,12 +21,8 @@ const Commande = connection.define('Commande', {
         type: DataTypes.FLOAT,
         allowNull: false
     },
-    dateLivraisonPrevue: {
-        type: DataTypes.DATE,
-        allowNull: true
-    },
-    dateLivraisonFinale: {
-        type: DataTypes.DATE,
+    trackingNumber: {
+        type: DataTypes.STRING,
         allowNull: true
     }
 }, {

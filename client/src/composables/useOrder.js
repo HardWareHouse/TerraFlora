@@ -5,11 +5,9 @@ import z from 'zod';
 const orderSchema = z.object({
     id: z.string().optional(),
     numero: z.string().min(1).max(255),
-    statut: z.string().min(1).max(255),
     dateCommande: z.string(),
     total: z.number(),
-    dateLivraisonPrevue: z.string().nullable(),
-    dateLivraisonFinale: z.string().nullable(),
+    trackingNumber: z.string().nullable(),
 });
 
 export const useOrder = () => {
@@ -48,7 +46,6 @@ export const useOrder = () => {
                 console.error('Aucune donnée commande trouvée');
                 return;
             }
-    
             order.value = orderSchema.parse(response.data);
     
         } catch (error) {
