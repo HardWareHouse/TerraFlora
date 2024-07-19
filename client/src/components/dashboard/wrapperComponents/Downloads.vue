@@ -16,17 +16,14 @@
           </thead>
           <tbody>
             <tr v-for="invoice in myInvoices" :key="invoice.id">
-              <td class="p-4 border border-gray-200">F#{{ invoice.numero }}</td>
-              <td class="p-4 border border-gray-200">{{ formatDate(invoice.dateFacturation) }}</td>
-              <td class="p-4 border border-gray-200">{{ invoice.statutPaiement }}</td>
-              <td class="p-4 border border-gray-200">{{ invoice.total }} €</td>
-              <td class="p-4 border border-gray-200">
-                <router-link to="/basket" class="bg-red-600 text-white px-4 py-3">
-                  <i class="bi bi-cloud-download mr-2"></i>Telecharger
+              <td class="p-3 border border-gray-200 md:p-4 lg:p-4">F#{{ invoice.numero }}</td>
+              <td class="p-3 border border-gray-200 lg:p-4">{{ formatDate(invoice.dateFacturation) }}</td>
+              <td class="p-3 border border-gray-200 lg:p-4">{{ invoice.statutPaiement }}</td>
+              <td class="p-3 border border-gray-200 lg:p-4">{{ invoice.total }} €</td>
+              <td class="p-3 border border-gray-200 lg:p-4">
+                <router-link to="/basket" class="bg-red-600 text-white px-3 py-3 rounded-lg">
+                  <i class="bi bi-cloud-download"></i>
                 </router-link>
-                <!-- <router-link :to="'/invoices/' + invoice.id" class="bg-red-600 text-white px-4 py-3">
-                  Voir
-                </router-link> -->
               </td>
             </tr>
           </tbody>
