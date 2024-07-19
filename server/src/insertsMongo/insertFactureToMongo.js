@@ -4,40 +4,55 @@ import FactureSQL from "../modelsSQL/Facture.js";
 import User from "../modelsSQL/User.js";
 import Commande from "../modelsSQL/Commande.js";
 
-async function insertFactureToMongo() {
+async function insertOrUpdateFactureInMongo(factureSQL) {
+    const factureMongo = await FactureMongo.findById(factureSQL.id).exec();
 
-    let factures = await FactureSQL.findAll(
-        {
-            include: [
-                {
-                    model: User,
-                    attributes: ['nom', 'prenom', 'email']
-                },
-                {
-                    model: Commande,
-                    attributes: ['numero']
-                }
-            ]
+    const newFacture = {
+        _id: factureSQL.id,
+        numero: factureSQL.numero,
+        dateFacture: factureSQL.dateFacturation,
+        datePaiementDue: factureSQL.datePaiementDue,
+        total: factureSQL.total,
+        user: {
+            nom: factureSQL.User.nom,
+            prenom: factureSQL.User.prenom,
+            email: factureSQL.User.email,
+        },
+        commande: {
+            numero: factureSQL.Commande.numero,
+        },
+    };
+
+    if (factureMongo) {
+        const isSame = Object.keys(newFacture).every(key => 
+            JSON.stringify(newFacture[key]) === JSON.stringify(factureMongo[key])
+        );
+
+        if (!isSame) {
+            await FactureMongo.findByIdAndUpdate(factureSQL.id, newFacture).exec();
         }
-    );
+    } else {
+        await FactureMongo.create(newFacture);
+    }
+}
 
-    await FactureMongo.create(
-        factures.map((facture) => ({
-            _id: facture.id,
-            numero: facture.numero,
-            dateFacture: facture.dateFacturation,
-            datePaiementDue: facture.datePaiementDue,
-            total: facture.total,
-            user: {
-                nom: facture.User.nom,
-                prenom: facture.User.prenom,
-                email: facture.User.email
+async function insertFactureToMongo() {
+    let factures = await FactureSQL.findAll({
+        include: [
+            {
+                model: User,
+                attributes: ['nom', 'prenom', 'email']
             },
-            commande: {
-                numero: facture.Commande.numero
+            {
+                model: Commande,
+                attributes: ['numero']
             }
-        })),
-    );
+        ]
+    });
+
+    for (const facture of factures) {
+        await insertOrUpdateFactureInMongo(facture);
+    }
 }
 
 export default insertFactureToMongo;
