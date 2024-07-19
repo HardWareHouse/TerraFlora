@@ -1,7 +1,8 @@
 import express from "express";
 import { connectToDatabase, connection } from "./modelsSQL/dataBase.js";
-import { initializeModels } from "./modelsMongo/indexMongo.js";
 import "./modelsSQL/associations.js";
+import { initializeModels } from "./modelsMongo/indexMongo.js";
+import { denormalizeData } from "./bin/denormalizeIntoMongo.js";
 import bodyParser from "body-parser";
 import cors from "cors";
 import dotenv from "dotenv";
@@ -27,7 +28,7 @@ server.use(bodyParser.json());
 server.use(express.urlencoded({ extended: true }));
 server.use(cors());
 
-// Existing routes
+// routes
 server.use("/users", userRouter);
 server.use("/auth", authRouter);
 server.use("/admin", adminRouter);
@@ -41,30 +42,36 @@ server.use("/emailPreferences", emailPreferenceRoutes);
 server.use("/uploads", express.static(path.join("src/uploads")));
 server.use("/stripe", stripeRouter);
 
-// Stripe Checkout route
-
-server.listen(8000, "0.0.0.0", () => {
-  console.log("Server listening on port 8000");
-});
-
 server.use((err, req, res, next) => {
-  console.error(err.stack);
+  console.error("Error encountered:", err.stack);
   res.status(500).send("Something broke!");
 });
 
+// Connection à la base de données SQL et MongoDB
 connectToDatabase()
   .then(() => {
-    connection
-      .sync()
-      .then(() => {
-        console.log("Database & tables created!");
-      })
-      .catch((error) => {
-        console.error("Unable to sync database:", error);
-      });
+    console.log("Connected to SQL database successfully.");
+    
+    return connection.sync();
+  })
+  .then(() => {
+    console.log("SQL database & tables created!");
+    
+    return initializeModels();
+  })
+  .then(() => {
+    console.log("MongoDB models initialized.");
+    
+    return denormalizeData();
+  })
+  .then(() => {
+    console.log("MongoDB migrations completed.");
+
+    // Lancement du serveur Express
+    server.listen(8000, "0.0.0.0", () => {
+      console.log("Server listening on port 8000");
+    });
   })
   .catch((error) => {
-    console.error("Unable to connect to the database:", error);
+    console.error("An error occurred during setup:", error);
   });
-
-initializeModels();

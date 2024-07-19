@@ -9,8 +9,8 @@ const __dirname = dirname(__filename);
 
 const migrationsDir = path.join(__dirname, '../insertsMongo');
 
-const runMigrations = async () => {
-  await connectMongo();
+export const denormalizeData = async (isMongoConnected = true) => {
+  if(!isMongoConnected) await connectMongo();
 
   const files = fs.readdirSync(migrationsDir);
   for (const file of files) {
@@ -26,13 +26,9 @@ const runMigrations = async () => {
         }
       } catch (error) {
         console.error(`Error executing migration ${file}:`, error);
-        process.exit(1);
       }
     }
   }
 
   await disconnectMongo();
-  process.exit(0);
 };
-
-runMigrations();
