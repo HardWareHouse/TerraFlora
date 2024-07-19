@@ -88,7 +88,7 @@ onMounted(async () => {
     if (product.value.Images && product.value.Images.length > 0) {
       product.value.Images = product.value.Images.map((image) => ({
         ...image,
-        imageUrl: `http://localhost:8000/uploads/${image.imageUrl.split("/").pop()}`,
+        imageUrl: `uploads/${image.imageUrl.split("/").pop()}`,
       }));
     }
   } catch (error) {
@@ -100,7 +100,7 @@ const getImageUrl = (imagePath) => {
   if (!imagePath) {
     return "/images/flower.webp";
   }
-  return `http://localhost:8000/uploads/${imagePath.split("/").pop()}`;
+  return `http://localhost:8000/${imagePath}`;
 };
 
 const decreaseQuantity = () => {
