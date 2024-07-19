@@ -1,6 +1,6 @@
 <template>
   <div class="container flex justify-between w-full my-10">
-    <div class="w-2/5">
+    <div class="w-full lg:w-2/5">
       <div class="bg-gray-100 p-4 rounded shadow-md flex flex-col">
         <h2 class="text-2xl font-semibold mb-4">Total du Panier</h2>
         <div class="flex justify-between items-center py-2 border-b">
