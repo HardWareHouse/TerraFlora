@@ -120,12 +120,14 @@ const validateQuantity = () => {
 };
 
 const addToCart = () => {
-  validateQuantity();
-  if (product.value.stock > 0) {
+  const cartItem = cartStore.items.find(item => item.id === product.value.id);
+  const totalQuantity = cartItem ? cartItem.quantity + quantity.value : quantity.value;
+
+  if (totalQuantity <= product.value.stock) {
     cartStore.addToCart(product.value, quantity.value);
     console.log(`Added ${quantity.value} ${product.value.nom} to cart`);
   } else {
-    alert('Ce produit est en rupture de stock');
+    alert('La quantité totale demandée dépasse le stock disponible.');
   }
 };
 

@@ -161,10 +161,14 @@ function goToProductDetail(product) {
 }
 
 function addToCart(product) {
-  if (product.stock > 0) {
+  const cartItem = cartStore.items.find(item => item.id === product.id);
+  const totalQuantity = cartItem ? cartItem.quantity + 1 : 1;
+
+  if (totalQuantity <= product.stock) {
     cartStore.addToCart(product, 1);
+    console.log(`Added 1 ${product.nom} to cart`);
   } else {
-    alert('Ce produit est en rupture de stock');
+    alert('La quantité totale demandée dépasse le stock disponible');
   }
 }
 </script>
