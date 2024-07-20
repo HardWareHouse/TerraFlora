@@ -319,3 +319,45 @@ export const getStockHistory = async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 };
+
+// Soustraire le stock après paiement réussi
+export const subtractStock = async (req, res) => {
+  const { items } = req.body;
+
+  try {
+    for (const item of items) {
+      const { id, quantity } = item;
+      const product = await Produit.findByPk(id);
+      if (product) {
+        if (product.stock >= quantity) {
+          product.stock -= quantity;
+          await product.save();
+
+          // Enregistrer l'historique des stocks
+          await saveStockHistory(product.id, product.stock);
+
+          // Vérification des niveaux de stock et envoi des alertes
+          if (product.stock <= product.stockThreshold) {
+            const users = await getAllUsers();
+            for (const user of users) {
+              if (product.stock === 0) {
+                await sendAlertEmailNoStock(user, `Critique: le produit "${product.nom}" est en rupture de stock.`);
+              } else {
+                await sendAlertEmailLowStock(user, `Alerte: le produit "${product.nom}" a un stock faible (${product.stock} restants).`);
+              }
+            }
+          }
+        } else {
+          return res.status(400).json({ message: `Not enough stock available for ${product.nom}.` });
+        }
+      } else {
+        return res.status(404).json({ message: `Product with id ${id} not found.` });
+      }
+    }
+    res.status(200).json({ message: "Stock updated successfully." });
+  } catch (error) {
+    console.error("Error in subtractStock:", error.message);
+    res.status(500).json({ error: error.message });
+  }
+};
+
