@@ -52,6 +52,28 @@ const userSchema = new mongoose.Schema(
             default: false,
             required: true,
         },
+        wantsMailNewProduct:{
+            type: Boolean,
+            default: false,
+            required: true,
+        
+        },
+        wantsMailRestockProduct: {
+            type: Boolean,
+            default: false,
+            required: true,
+        
+        },
+        wantsMailChangingPrice: {
+            type: Boolean,
+            default: false,
+            required: true,
+        },
+        wantsMailNewsletter: {
+            type: Boolean,
+            default: false,
+            required: true,
+        },
     },
     {
         collection: "Users",
