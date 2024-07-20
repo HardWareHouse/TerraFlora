@@ -67,6 +67,6 @@ const handleSubmit = () => {
 
 <style scoped>
 .container {
-    max-width: 900px;
+    max-width: 500px;
 }
 </style>
