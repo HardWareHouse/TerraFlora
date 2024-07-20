@@ -22,11 +22,30 @@ const getAddressWithAlias = async (id) => {
   ]).then(results => results[0] || null);
 };
 
+export const getAllAddresses = async () => {
+  return await AdresseMongo.find().select({
+    id: '$_id',
+    voie: 1,
+    rue: 1,
+    numero: 1,
+    ville: 1,
+    codePostal: 1,
+    isDeliveryAddress: 1,
+    isBillingAddress: 1,
+    user: 1,
+    _id: 0
+  });
+};
+
+export const getAddressById = async (id) => {
+  return getAddressWithAlias(id);
+};
+
 export const createAddress = async (data) => {
   const { userId, voie, rue, numero, ville, codePostal, isDeliveryAddress, isBillingAddress } = data;
   
   try {
-    const addressSQL = await AdresseSQL.create({ userId, voie, rue, numero, ville, codePostal });
+    const addressSQL = await AdresseSQL.create({ userId, voie, rue, numero, ville, codePostal, isDeliveryAddress, isBillingAddress });
     const user = await User.findByPk(userId);
     
     await AdresseMongo.create({
@@ -53,24 +72,6 @@ export const createAddress = async (data) => {
   }
 };
 
-export const getAddressById = async (id) => {
-  return getAddressWithAlias(id);
-};
-
-export const getAllAddresses = async () => {
-  return await AdresseMongo.find().select({
-    id: '$_id',
-    voie: 1,
-    rue: 1,
-    numero: 1,
-    ville: 1,
-    codePostal: 1,
-    isDeliveryAddress: 1,
-    isBillingAddress: 1,
-    user: 1,
-    _id: 0
-  });
-};
 
 export const getAddressByUserId = async (userId) => {
   const adresse = await AdresseMongo.aggregate([
@@ -105,8 +106,8 @@ export const updateAddressById = async (id, data) => {
       if (data.numero) updatedAddress.numero = data.numero;
       if (data.ville) updatedAddress.ville = data.ville;
       if (data.codePostal) updatedAddress.codePostal = data.codePostal;
-      if (data.isDeliveryAddress !== undefined) updatedAddress.isDeliveryAddress = data.isDeliveryAddress;
-      if (data.isBillingAddress !== undefined) updatedAddress.isBillingAddress = data.isBillingAddress;  
+      if (data.isDeliveryAddress != undefined) updatedAddress.isDeliveryAddress = data.isDeliveryAddress;
+      if (data.isBillingAddress != undefined) updatedAddress.isBillingAddress = data.isBillingAddress;  
 
       await AdresseMongo.findByIdAndUpdate(id, { $set: updatedAddress }, { new: true });
       return getAddressWithAlias(id);
