@@ -16,7 +16,7 @@ export const getInvoice = async (req, res) => {
     }
 
     const user = req.user;
-    if (invoice.userId !== user.id && user.role !== "ROLE_ADMIN") return res.status(403).json({ error: "Unauthorized" });
+    if (invoice.user._id !== user.id && user.role !== "ROLE_ADMIN") return res.status(403).json({ error: "Unauthorized" });
 
     res.status(200).json(invoice);
   } catch (error) {
@@ -105,7 +105,7 @@ export const updateInvoice = async (req, res) => {
       return res.status(404).json({ error: "Invoice not found" });
     }
 
-    if (invoice.userId !== user.id && user.role !== "ROLE_ADMIN") return res.status(403).json({ error: "Unauthorized" });
+    if (invoice.user._id !== user.id && user.role !== "ROLE_ADMIN") return res.status(403).json({ error: "Unauthorized" });
     
     const updatedInvoice = await invoiceService.updateInvoiceById(id, { userId, panierId, total });
     if (!updatedInvoice) {
@@ -133,7 +133,7 @@ export const deleteInvoice = async (req, res) => {
       return res.status(404).json({ error: "Invoice not found" });
     }
 
-    if (invoice.userId !== user.id && user.role !== "ROLE_ADMIN") return res.status(403).json({ error: "Unauthorized" });
+    if (invoice.user._id !== user.id && user.role !== "ROLE_ADMIN") return res.status(403).json({ error: "Unauthorized" });
     
     const deletedInvoice = await invoiceService.deleteInvoiceById(id);
     if (!deletedInvoice) {

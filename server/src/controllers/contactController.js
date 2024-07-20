@@ -96,7 +96,7 @@ export const updateContact = async (req, res) => {
         if (!existingContact) {
             return res.status(404).json({ error: "Contact not found" });
         }
-        if (user.id !== existingContact.userId && user.role !== "ROLE_ADMIN") return res.status(403).json({ error: "Unauthorized" });
+        if (user.id !== existingContact.user._id && user.role !== "ROLE_ADMIN") return res.status(403).json({ error: "Unauthorized" });
 
         const contact = await contactService.updateContact(id, data);
         if (!contact) return res.status(400).json({ error: "Contact not updated" });
@@ -119,7 +119,7 @@ export const deleteContact = async (req, res) => {
         if (!existingContact) {
             return res.status(404).json({ error: "Contact not found" });
         }
-        if (user.id !== existingContact.userId && user.role !== "ROLE_ADMIN") return res.status(403).json({ error: "Unauthorized" });
+        if (user.id !== existingContact.user._id && user.role !== "ROLE_ADMIN") return res.status(403).json({ error: "Unauthorized" });
 
         const deletedContact = await contactService.deleteContact(id);
         if (!deletedContact) return res.status(400).json({ error: "Contact not deleted" });

@@ -14,7 +14,12 @@ const factureSchema = new mongoose.Schema(
             required: true,
             unique: true,
         },
-        dateFacture: {
+        statutPaiement: {
+            type: String,
+            enum: ['En attente', 'En cours de paiement', 'Payée', 'Impayée'],
+            required: true,
+        },
+        dateFacturation: {
             type: Date,
             required: true,
         },
@@ -28,6 +33,11 @@ const factureSchema = new mongoose.Schema(
         },
         user: {
             type: {
+                _id: {
+                    type: String,
+                    default: uuidv4,
+                    required: true,
+                },
                 nom: {
                     type: String,
                     required: true,

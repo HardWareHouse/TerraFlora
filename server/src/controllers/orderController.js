@@ -16,7 +16,7 @@ export const getOrder = async (req, res) => {
       return res.status(404).json({ error: "Order not found" });
     }
 
-    if (order.userId !== user.id && user.role !== "ROLE_ADMIN") {
+    if (order.user._id !== user.id && user.role !== "ROLE_ADMIN") {
       return res.status(403).json({ error: "Unauthorized" });
     }
 
@@ -117,7 +117,7 @@ export const updateOrder = async (req, res) => {
       return res.status(404).json({ error: "Order not found" });
     }
 
-    if (order.userId !== user.id && user.role !== "ROLE_ADMIN") {
+    if (order.user._id !== user.id && user.role !== "ROLE_ADMIN") {
       return res.status(403).json({ error: "Unauthorized" });
     }
 
@@ -147,7 +147,7 @@ export const deleteOrder = async (req, res) => {
       return res.status(404).json({ error: "Order not found" });
     }
 
-    if (order.userId !== user.id && user.role !== "ROLE_ADMIN") {
+    if (order.user._id !== user.id && user.role !== "ROLE_ADMIN") {
       return res.status(403).json({ error: "Unauthorized" });
     }
 
