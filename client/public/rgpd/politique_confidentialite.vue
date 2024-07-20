@@ -16,10 +16,10 @@
       Cette politique de confidentialité a pour objectif de vous informer de la
       manière dont notre Société collecte, utilise, et traite vos données à
       caractère personnel (ci-après « données personnelles »), en tant que
-      client, créancier, prospect, débiteur, fournisseur, partenaire,
-      utilisateur de notre site Internet ou candidat, ainsi que des droits dont
-      vous pouvez vous prévaloir sur le traitement de vos données personnelles
-      et la façon de les mettre en œuvre.
+      client, prospect, débiteur, fournisseur, partenaire, utilisateur de notre
+      site Internet ou candidat, ainsi que des droits dont vous pouvez vous
+      prévaloir sur le traitement de vos données personnelles et la façon de les
+      mettre en œuvre.
     </p>
 
     <h2 class="text-xl font-semibold mb-4">
@@ -65,7 +65,7 @@
     </ul>
     <p class="mb-4">
       Nous pouvons collecter des données à caractère personnel de manière
-      directe et indirect. L’utilisateur s’engage à ne fournir que des données
+      directe et indirecte. L’utilisateur s’engage à ne fournir que des données
       sincères, exactes, complètes et mises à jour et à ne pas usurper celles
       d’un tiers. Les catégories de données que nous traitons sont :
     </p>
@@ -76,14 +76,8 @@
       </li>
       <li class="mb-2">Données financières de paiement : carte bancaire,</li>
       <li class="mb-2">
-        Données formulaire de contact site web : raison sociale de la société,
-        nom et prénom, coordonnées (mail, téléphone, adresse),
+        Données formulaire de contact site web : nom et prénom, adresse mail
       </li>
-      <li class="mb-2">
-        Données site web consultation de dossiers : identifiant et mot de passe
-        de connexion, date et heure de connexion, adresse IP,
-      </li>
-      <li class="mb-2">Données relatives à l’utilisation d’un formulaire</li>
     </ul>
 
     <h2 class="text-xl font-semibold mb-4">
@@ -100,11 +94,6 @@
         légitimes poursuivis par notre Société ou par un tiers, sauf si ces
         intérêts dérogent aux intérêts ou droits ou libertés fondamentales, qui
         exigent la protection des données personnelles.
-      </li>
-      <li class="mb-2">
-        <strong>Intérêt public :</strong> notre Société utilise vos données
-        personnelles pour exécuter les missions d'intérêt public dont notre
-        Société est investie.
       </li>
       <li class="mb-2">
         <strong>Consentement :</strong> Dans certaines circonstances, et avant
@@ -138,7 +127,8 @@
       Nous n’offrons pas ni ne vendons vos données à caractère personnel à
       d’autres entreprises à des fins de prospection commerciale. Nous
       transférons vos données personnelles en dehors de l’Union Européenne. Nous
-      utilisons un hébergeur américain pour notre site.
+      utilisons un hébergeur américain agréé par le Data Privacy Framework pour
+      notre site.
     </p>
     <p class="mb-4">
       Dans certains cas, vos données à caractère personnel peuvent être
@@ -146,18 +136,15 @@
     </p>
     <ul class="list-disc ml-6 mb-4">
       <li class="mb-2">
-        Organismes publics et acteurs judiciaires concernés : Les organismes
-        publics comme les autorités fiscales, les autorités judiciaires ou
-        juridictionnelles, les services de police ou autres autorités publiques
-        ou auxiliaires de justice qui peuvent nous demander communication de vos
-        données personnelles. Nous pouvons avoir l’obligation de répondre à
-        leurs requêtes, après l’analyse du bien-fondé et de la légitimité de la
-        demande.
-      </li>
-      <li class="mb-2">
         Prestataires et sous-traitants : Nous travaillons avec différents
-        prestataires tels que fournisseur informatique, prestataire d’outils de
-        gestion. Ces différents partenaires auront parfois la qualité de
+        prestataires tels que fournisseur informatique (<a
+          href="https://www.digitalocean.com/legal/privacy-policy"
+          >DigitalOcean</a
+        >), prestataire d’outils de gestion (<a
+          href="https://developer.laposte.fr/data-privacy"
+          >La Poste</a
+        >) et de paiement (<a href="https://stripe.com/en-fr/privacy">Stripe</a
+        >). Ces différents partenaires auront parfois la qualité de
         sous-traitant au sens du RGPD. Les sous-traitants peuvent traiter vos
         données personnelles pour la prestation de ces services. Nos contrats de
         sous-traitance comportent les clauses nécessaires au respect de la
@@ -165,11 +152,6 @@
         de leur traitement. Les sous-traitants agissent conformément à nos
         instructions. Nous restons responsables, même si nous avons recours à
         ces tiers.
-      </li>
-      <li class="mb-2">
-        Clients : si vous êtes débiteur, dans le cadre de la réalisation de nos
-        services, nous pouvons être amenés à communiquer vos données
-        personnelles à vos créanciers qui sont nos clients.
       </li>
     </ul>
 
@@ -204,7 +186,7 @@
       <li class="mb-2">Gestion des cookies : 13 mois</li>
       <li class="mb-2">
         Candidats : En tant que candidat, vos données sont conservées pour une
-        durée de 2 ans à compter de la fin du processus de recrutement, sauf
+        durée de 6 mois à compter de la fin du processus de recrutement, sauf
         accord contraire avec vous.
       </li>
     </ul>
@@ -318,13 +300,6 @@
       publicité ciblée. Vous pouvez paramétrer vos choix en matière de cookies
       en configurant votre navigateur Internet ou en utilisant des outils tiers
       vous permettant de désactiver certains types de cookies.
-    </p>
-
-    <h2 class="text-xl font-semibold mb-4">10. CONTACT</h2>
-    <p class="mb-4">
-      Si vous avez des questions ou des préoccupations concernant cette
-      politique de confidentialité, ou si vous souhaitez exercer vos droits,
-      veuillez nous contacter à l'adresse suivante : aria@llamascripters.com.
     </p>
   </div>
 </template>
