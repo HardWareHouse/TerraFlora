@@ -5,12 +5,12 @@ import z from 'zod';
 const addressSchema = z.object({
   id: z.string().optional(),
   voie: z.enum(['allée', 'avenue', 'boulevard', 'chemin', 'cours', 'impasse', 'passage', 'place', 'quai', 'route', 'rue', 'square', 'voie']),
-  rue: z.string(),
-  numero: z.string(),
-  ville: z.string(),
-  codePostal: z.string(),
-  // isDeliveryAddress: z.boolean(),
-  // isBillingAddress: z.boolean(),
+  rue: z.string().min(1).max(50),
+  numero: z.string().min(1).max(4),
+  ville: z.string().min(1).max(50),
+  codePostal: z.string().min(5).max(5),
+  isDeliveryAddress: z.boolean(),
+  isBillingAddress: z.boolean(),
 });
 
 export const useAddress = () => {
@@ -85,11 +85,33 @@ export const useAddress = () => {
     }
   };
 
+  //Fonction pour supprimer l'adresse par son ID
+  const deleteAddress = async (addressId) => {
+    loading.value = true;
+    try {
+      const response = await instance.delete(`address/${addressId}`);
+      if (!response.data) {
+        console.error('Aucune donnée adresse trouvée');
+        return;
+      }
+      
+      addressDeleted = addressSchema.parse(response.data);
+      if (addressDeleted) {
+        address.value = null;
+      }
+    } catch (error) {
+      console.error('Erreur lors de la suppression de l\'adresse:', error);
+    } finally {
+      loading.value = false;
+    }
+  };
+
   return {
     address,
     loading,
     fetchAddress,
     createAddress,
     updateAddress,
+    deleteAddress,
   };
 };
