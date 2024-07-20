@@ -8,9 +8,18 @@ const userSchema = z.object({
     prenom: z.string(),
     email: z.string(),
     telephone: z.string(),
+    wantsMailNewProduct: z.boolean(),
+    wantsMailRestockProduct: z.boolean(),
+    wantsMailChangingPrice: z.boolean(),
+    wantsMailNewsletter: z.boolean(),
 });
 
-const updateUserSchema = userSchema.extend({
+const updateUserSchema = userSchema.omit({
+    wantsMailNewProduct: true,
+    wantsMailRestockProduct: true,
+    wantsMailChangingPrice: true,
+    wantsMailNewsletter: true,
+}).extend({
     currentPassword: z.string().min(1, "Mot de passe actuel est requis"),
     newPassword: z.string().optional(),
     confirmPassword: z.string().optional(),
@@ -18,6 +27,7 @@ const updateUserSchema = userSchema.extend({
     message: "Les mots de passe ne correspondent pas",
     path: ["confirmPassword"],
 });
+
 
 export const useUser = () => {
     const user = ref(null);
