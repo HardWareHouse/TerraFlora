@@ -1,4 +1,5 @@
 import { defineStore } from 'pinia';
+import axios from 'axios';
 
 export const useCartStore = defineStore('cart', {
     state: () => ({
@@ -70,6 +71,16 @@ export const useCartStore = defineStore('cart', {
             if (timeDifference > 15) {
                 this.clearCart();
                 localStorage.removeItem('cart');
+            }
+        },
+        async subtractStock() {
+            try {
+                const response = await axios.post('http://localhost:8000/product/subtract-stock', {
+                    items: this.items
+                });
+                console.log('Stock updated successfully:', response.data);
+            } catch (error) {
+                console.error('Error updating stock:', error);
             }
         }
     }
