@@ -6,7 +6,7 @@
     <div v-else class="grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
       <div v-for="contact in allOrders" :key="contact.id" class="bg-white shadow-md rounded-lg overflow-hidden">
         <div class="px-6 py-4">
-          <div class="font-bold text-lg mb-2">{{ contact.User.nom.toUpperCase() }} {{ contact.User.prenom }}</div>
+          <div class="font-bold text-lg mb-2">{{ contact.user.nom.toUpperCase() }} {{ contact.user.prenom }}</div>
           <div class="text-medium font-semibold mb-2">{{ contact.subject }} : {{ contact.status }}</div>
             <p v-if="contact.message.length > 100" class="text-gray-700 text-base">{{ contact.message.slice(0, 100) }}...</p>
             <p v-else class="text-gray-700 text-base">{{ contact.message }}</p>

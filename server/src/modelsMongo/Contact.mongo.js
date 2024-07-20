@@ -43,6 +43,11 @@ const contactSchema = new mongoose.Schema(
         },
         user: {
             type: {
+                _id: {
+                    type: String,
+                    default: uuidv4,
+                    required: true,
+                },
                 nom: {
                     type: String,
                     required: true,

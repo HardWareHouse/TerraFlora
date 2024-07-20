@@ -46,7 +46,10 @@ export const createAddress = async (data) => {
   
   try {
     const addressSQL = await AdresseSQL.create({ userId, voie, rue, numero, ville, codePostal, isDeliveryAddress, isBillingAddress });
+    if (!addressSQL) throw new Error('Address not created');
+
     const user = await User.findByPk(userId);
+    if (!user) throw new Error('User not found');
     
     await AdresseMongo.create({
       _id: addressSQL.id,
@@ -125,7 +128,7 @@ export const deleteAddressById = async (id) => {
     if (addressSQL) {
       await addressSQL.destroy();
       await AdresseMongo.findByIdAndDelete(id);
-      return { message: 'Address deleted' };
+      return true;
     }
     return null;
   } catch (error) {

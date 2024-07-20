@@ -2,56 +2,6 @@ import { isValidUUID } from "../helpers/validatorHelper.js";
 import * as contactService from "../services/contactService.js";
 import { getUserByEmail } from "../services/userService.js";
 
-// Lire les informations d'un contact
-export const getContact = async (req, res) => {
-  const { id } = req.params;
-  const user = req.user;
-
-  if (!id || !isValidUUID(id)) {
-    return res.status(400).json({ error: "Invalid or missing contact ID" });
-  }
-
-  try {
-    const contact = await contactService.getContactById(id);
-    if (!contact) {
-      return res.status(404).json({ error: "Contact not found" });
-    }
-
-    if (contact.userId !== user.id && user.role !== "ROLE_ADMIN") return res.status(403).json({ error: "Unauthorized" });
-
-    res.status(200).json(contact);
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-};
-
-// Lire les informations d'un contact par l'ID de l'utilisateur
-export const getContactByUserId = async (req, res) => {
-  const { id } = req.params;
-  const user = req.user;
-
-  if (!id || !isValidUUID(id)) {
-    return res.status(400).json({ error: "Invalid or missing user ID" });
-  }
-
-  if (user.id !== id) {
-    return res.status(403).json({ error: "Unauthorized" });
-  }
-
-  try {
-    const contact = await contactService.getContactByUserId(id);
-    if (!contact) {
-      return res.status(404).json({ error: "Contact not found" });
-    }
-
-    if (contact.userId !== user.id && user.role !== "ROLE_ADMIN") return res.status(403).json({ error: "Unauthorized" });
-
-    res.status(200).json(contact);
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-};
-
 // Lire tous les contacts
 export const getAllContacts = async (req, res) => {
   const user = req.user;
@@ -67,6 +17,29 @@ export const getAllContacts = async (req, res) => {
     }
 
     res.status(200).json(contacts);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+// Lire les informations d'un contact
+export const getContact = async (req, res) => {
+  const { id } = req.params;
+  const user = req.user;
+
+  if (!id || !isValidUUID(id)) {
+    return res.status(400).json({ error: "Invalid or missing contact ID" });
+  }
+
+  try {
+    const contact = await contactService.getContactById(id);
+    if (!contact) {
+      return res.status(404).json({ error: "Contact not found" });
+    }
+
+    if (contact.user._id !== user.id && user.role !== "ROLE_ADMIN") return res.status(403).json({ error: "Unauthorized" });
+
+    res.status(200).json(contact);
   } catch (error) {
     res.status(500).json({ error: error.message });
   }

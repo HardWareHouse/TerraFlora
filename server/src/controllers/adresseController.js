@@ -135,7 +135,7 @@ export const deleteAddress = async (req, res) => {
     
     const deleteAddress = await addressService.deleteAddressById(id);
     if (!deleteAddress) {
-      return res.status(404).json({ error: "Address not found" });
+      return res.status(404).json({ error: "Address not deleted" });
     }
     
     res.status(204).json({ message: "Address deleted" });

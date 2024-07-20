@@ -14,9 +14,10 @@ const contactSchema = z.object({
 const contactUpdateSchema = contactSchema.extend({
   dateContact: z.string(),
   status: z.string(),
-  User: z.object({
+  user: z.object({
     nom: z.string(),
     prenom: z.string(),
+    email: z.string(),
   }),
 }).omit({ userId: true });
 
