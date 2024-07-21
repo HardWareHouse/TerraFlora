@@ -14,6 +14,10 @@ const userSchema = z.object({
     wantsMailNewsletter: z.boolean(),
 });
 
+const adminUserSchema = userSchema.extend({
+    role: z.string(),
+});
+
 const updateUserSchema = userSchema.omit({
     wantsMailNewProduct: true,
     wantsMailRestockProduct: true,
@@ -31,6 +35,7 @@ const updateUserSchema = userSchema.omit({
 
 export const useUser = () => {
     const user = ref(null);
+    const users = ref([]);
     const loading = ref(false);
 
     // Fonction pour récupérer l'utilisateur par son ID
@@ -43,8 +48,31 @@ export const useUser = () => {
                 return;
             }
             user.value = userSchema.parse(response.data);
+            
         } catch (error) {
             console.error('Erreur lors de la récupération de l\'utilisateur:', error);
+        } finally {
+            loading.value = false;
+        }
+    };
+
+    // Fonction pour récupérer tous les utilisateurs
+    const fetchUsers = async () => {
+        loading.value = true;
+        try {
+            const response = await instance.get(`users`);
+            if (!response.data) {
+                console.error('Aucune donnée utilisateur trouvée');
+                return;
+            }
+
+            if (Array.isArray(response.data)) {
+                users.value = response.data.map((user) => adminUserSchema.parse(user));
+            } else {
+                console.error('Réponse invalide: les données de user sont invalides');
+            }
+        } catch (error) {
+            console.error('Erreur lors de la récupération des utilisateurs:', error);
         } finally {
             loading.value = false;
         }
@@ -112,8 +140,10 @@ export const useUser = () => {
 
     return {
         user,
+        users,
         loading,
         fetchUser,
+        fetchUsers,
         updateUser,
         isPasswordValid,
         isEmailAddressValid,

@@ -1,6 +1,5 @@
 import FactureSQL from "../modelsSQL/Facture.js";
 import FactureMongo from "../modelsMongo/Facture.mongo.js";
-import Commande from "../modelsSQL/Commande.js";
 
 const getFactureWithAlias = async (id) => {
   return await FactureMongo.aggregate([
@@ -13,6 +12,7 @@ const getFactureWithAlias = async (id) => {
         dateFacturation: 1,
         datePaiementDue: 1,
         total: 1,
+        user: 1,
         _id: 0
       }
     }
@@ -38,6 +38,7 @@ export const getInvoicesByUserId = async (userId) => {
         dateFacturation: 1,
         datePaiementDue: 1,
         total: 1,
+        user: 1,
         _id: 0,
       }
     }
@@ -53,7 +54,7 @@ export const getAllInvoices = async () => {
     datePaiementDue: 1,
     total: 1,
     user: 1,
-    Commande: 1,
+    commande: 1,
     _id: 0,
   });
 };

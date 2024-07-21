@@ -40,6 +40,7 @@ export const getOrdersByUserId = async (userId) => {
         dateLivraisonFinale: 1,
         total: 1,
         trackingNumber: 1,
+        user: 1,
         _id: 0,
       }
     }

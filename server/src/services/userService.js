@@ -32,6 +32,10 @@ export const getAllUsers = async () => {
     email: 1,
     telephone: 1,
     role: 1,
+    wantsMailNewProduct: 1,
+    wantsMailRestockProduct: 1,
+    wantsMailChangingPrice: 1,
+    wantsMailNewsletter: 1,
     _id: 0,
   });
 };
