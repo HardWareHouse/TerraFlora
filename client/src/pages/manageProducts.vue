@@ -37,12 +37,13 @@
             >
               <i class="bi bi-pencil"></i>
             </button>
-            <button
-              @click="deleteProduct(product.id)"
-              class="bg-red-500 text-white px-4 py-2 rounded"
+            <delete-button
+              :on-confirm="() => deleteProduct(product.id)"
+              button-class="bg-red-500 text-white px-4 py-2 rounded"
+              confirmation-message="Êtes-vous sûr de vouloir supprimer ce produit ?"
             >
               <i class="bi bi-trash"></i>
-            </button>
+            </delete-button>
           </td>
         </tr>
       </tbody>
@@ -63,6 +64,7 @@ import axios from "axios";
 import ProductModal from "../components/manageProducts/ProductModal.vue";
 import Breadcrumbs from "../components/manageProducts/Breadcrumbs.vue";
 import StockChart from "../components/manageProducts/StockChart.vue";
+import DeleteButton from "../components/challengesRequirement/deleteButton.vue";
 
 const products = ref([]);
 const showModal = ref(false);
