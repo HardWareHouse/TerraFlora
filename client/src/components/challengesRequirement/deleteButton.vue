@@ -5,7 +5,7 @@
     </button>
     <div v-if="isModalOpen" class="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-75">
       <div class="bg-white p-6 rounded-lg shadow-lg text-center">
-        <p class="mb-4 text-lg">Êtes-vous sûr de vouloir supprimer cette adresse ?</p>
+        <p class="mb-4 text-lg">{{ confirmationMessage }}</p>
         <div class="flex justify-center space-x-4">
           <button @click="confirmDelete" :disabled="isLoading" class="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700 disabled:opacity-50">
             Confirmer
@@ -20,7 +20,7 @@
     </div>
   </div>
 </template>
-  
+
 <script setup>
 import { ref } from 'vue';
 
@@ -32,6 +32,10 @@ const props = defineProps({
   buttonClass: {
     type: String,
     default: ''
+  },
+  confirmationMessage: {
+    type: String,
+    default: 'Êtes-vous sûr de vouloir supprimer cette donnée ?'
   }
 });
 
@@ -60,25 +64,24 @@ const confirmDelete = async () => {
 };
 </script>
 
+  <style scoped>
+  .modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
   
-<style scoped>
-.modal-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0.5);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.modal {
-  background: white;
-  padding: 20px;
-  border-radius: 8px;
-  text-align: center;
-}
-</style>
+  .modal {
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    text-align: center;
+  }
+  </style>
   
