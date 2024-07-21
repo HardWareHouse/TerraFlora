@@ -1,11 +1,16 @@
 <template>
     <nav class="flex justify-center px-4 py-2 mb-4 cursor-pointer">
         <ul class="flex space-x-4">
-            <li v-for="tab in tabs" :key="tab.id">
-                <a :class="tabClass(tab.id)" @click.prevent="selectTab(tab.id)">
-                    <i :class="`bi ${tab.icon} mr-2`"></i> {{ tab.label }}
-                </a>
-            </li>
+            <template v-for="tab in tabs" :key="tab.id">
+                <li>
+                    <a
+                        :class="tabClass(tab.id)"
+                        @click="tab.id === 'logout' ? logout() : selectTab(tab.id)"
+                    >
+                        <i :class="`bi ${tab.icon} mr-2`"></i> {{ tab.label }}
+                    </a>
+                </li>
+            </template>
         </ul>
     </nav>
     <div class="bg-white shadow-md rounded-lg p-4">
@@ -17,8 +22,12 @@
 
 <script setup>
 import { ref, computed, defineAsyncComponent } from 'vue';
+import { useRouter } from 'vue-router';
+import { useAuthStore } from '../../pinia/auth.js';
 
 const activeTab = ref('resources');
+const authStore = useAuthStore();
+const router = useRouter();
 
 const selectTab = (tab) => {
     activeTab.value = tab;
@@ -29,6 +38,7 @@ const tabs = [
     { id: 'statistics', icon: 'bi-bar-chart-line-fill', label: 'Statistiques' },
     { id: 'contacts', icon: 'bi-people-fill', label: 'Contacts' },
     { id: 'others', icon: 'bi-three-dots', label: 'Autres' },
+    { id: 'logout', icon: 'bi-box-arrow-right', label: 'Déconnexion' },
 ];
 
 const tabClass = (tab) => {
@@ -49,6 +59,14 @@ const components = {
 const activeTabComponent = computed(() => {
     return components[activeTab.value];
 });
+
+const logout = async () => {
+  await authStore.logout();
+
+  if (!authStore.token) {
+    router.push('/');
+  }
+};
 </script>
 
 <style scoped>
