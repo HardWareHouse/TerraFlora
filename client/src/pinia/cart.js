@@ -1,30 +1,84 @@
 import { defineStore } from 'pinia';
 import axios from 'axios';
+import { useAuthStore } from './../pinia/auth.js'; 
 
 export const useCartStore = defineStore('cart', {
     state: () => ({
         items: [],
-        lastActivity: null,
+        cartId: null,
+        userId: null,
     }),
     getters: {
-        cartTotal: (state) => state.items.reduce((acc, item) => acc + item.prix * item.quantity, 0),
-        cartItemCount: (state) => state.items.length,
+        cartTotal: (state) => state.items.reduce((acc, item) => acc + parseFloat(item.prix) * item.quantity, 0),
+                cartItemCount: (state) => state.items.length,
     },
     actions: {
-        addToCart(product, quantity = 1) {
+        async fetchUserCart() {
+            const authStore = useAuthStore();
+            authStore.getUseriD().then(userId => {
+              if (userId) {
+                axios.get(`http://localhost:8000/cart/${userId}`, {
+                  headers: {
+                    Authorization: `Bearer ${this.token}`,
+                  },
+                }).then(response => {
+                  if (response.data && response.data.id) {
+                    this.cartId = response.data.id;
+                    this.items = response.data.Produits.map(item => ({
+                      ...item,
+                    }));
+                    console.log(this.items);
+                    console.log('Cart ID:', this.cartId);
+                    console.log('Cart Items:', response.data.Produits);
+                  }
+                });
+              }
+            });
+          },
+        async addToCart(product, quantity = 1) {
+            const authStore = useAuthStore();
+            this.userId = await authStore.getUseriD();
+
             if (product.stock <= 0) {
                 alert('Ce produit est en rupture de stock');
                 return;
             }
-            
+
+            if (!this.cartId) {
+                // Créer un nouveau panier s'il n'existe pas
+                try {
+                    const response = await axios.post('http://localhost:8000/cart', {
+                        userId: this.userId,
+                        produits: [product.id],
+                    });
+                    this.cartId = response.data.id;
+                    this.items = response.data.produits.map(item => ({
+                        ...item,
+                        quantity: item.Panier_Produits.quantity
+                    }));
+                } catch (error) {
+                    console.error('Error creating cart:', error);
+                    return;
+                }
+            } else {
+                // Mettre à jour le panier existant
+                try {
+                    const response = await axios.put(`http://localhost:8000/cart/${this.cartId}`, {
+                        userId: this.userId,
+                        produits: [product.id],
+                    });
+                    console.log(response.data);
+                } catch (error) {
+                    console.error('Error updating cart:', error);
+                    return;
+                }
+            }
             const existingProduct = this.items.find(item => item.id === product.id);
             if (existingProduct) {
                 existingProduct.quantity += quantity;
             } else {
                 this.items.push({ ...product, quantity });
             }
-            this.updateLastActivity();
-            this.saveCartToLocalStorage();
         },
         updateQuantity(productId, quantity) {
             const product = this.items.find(item => item.id === productId);
@@ -34,44 +88,24 @@ export const useCartStore = defineStore('cart', {
                     this.removeItem(productId);
                 }
             }
-            this.updateLastActivity();
-            this.saveCartToLocalStorage();
         },
-        removeItem(productId) {
-            this.items = this.items.filter(item => item.id !== productId);
-            this.updateLastActivity();
-            this.saveCartToLocalStorage();
+        async removeItem(productId) {
+            const authStore = useAuthStore();
+            this.userId = await authStore.getUseriD();
+            try {
+                await axios.delete(`http://localhost:8000/cart/${this.userId}/product/${productId}`, {
+                    headers: {
+                        Authorization: `Bearer ${useAuthStore().token}`,
+                    },
+                });
+                this.items = this.items.filter(item => item.id !== productId);
+            } catch (error) {
+                console.error('Error removing product from cart:', error);
+            }
         },
         clearCart() {
             this.items = [];
-            this.updateLastActivity();
-            this.saveCartToLocalStorage();
-        },
-        loadCartFromLocalStorage() {
-            const cartData = JSON.parse(localStorage.getItem('cart'));
-            if (cartData) {
-                this.items = cartData.items;
-                this.lastActivity = new Date(cartData.lastActivity);
-                this.checkInactivity();
-            }
-        },
-        saveCartToLocalStorage() {
-            const cartData = {
-                items: this.items,
-                lastActivity: this.lastActivity
-            };
-            localStorage.setItem('cart', JSON.stringify(cartData));
-        },
-        updateLastActivity() {
-            this.lastActivity = new Date();
-        },
-        checkInactivity() {
-            const currentTime = new Date();
-            const timeDifference = (currentTime - new Date(this.lastActivity)) / (1000 * 60);
-            if (timeDifference > 15) {
-                this.clearCart();
-                localStorage.removeItem('cart');
-            }
+            this.cartId = null;
         },
         async subtractStock() {
             try {
