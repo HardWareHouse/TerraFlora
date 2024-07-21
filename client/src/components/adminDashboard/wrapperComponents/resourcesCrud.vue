@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="container mx-auto px-4 py-8">
     <RessourcesTable :availableResources="availableResources" :resourcesData="resourcesData" @edit="editResource" @delete="deleteResource" />
   </div>
 </template>

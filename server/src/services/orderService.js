@@ -56,7 +56,6 @@ export const getAllOrders = async () => {
     dateLivraisonFinale: 1,
     total: 1,
     trackingNumber: 1,
-    panierId: 0,
     user: 1,
     _id: 0
   }); 
