@@ -13,8 +13,17 @@ const addressSchema = z.object({
   isBillingAddress: z.boolean(),
 });
 
+const addressUpdateSchema = addressSchema.extend({
+  user: z.object({
+    nom: z.string(),
+    prenom: z.string(),
+    email: z.string(),
+  })
+});
+
 export const useAddress = () => {
   const address = ref(null);
+  const addresses = ref([]);
   const loading = ref(false);
 
   // Fonction pour récupérer l'adresse par l'ID de l'utilisateur
@@ -34,6 +43,28 @@ export const useAddress = () => {
       loading.value = false;
     }
   };
+
+  // Fonction pour récupérer toutes les adresses
+  const fetchAddresses = async () => {
+    loading.value = true;
+    try {
+      const response = await instance.get('address');
+      if (!response.data) {
+        console.error('Aucune donnée adresse trouvée');
+        return;
+      }
+      
+      if (Array.isArray(response.data)) {
+        addresses.value = response.data.map((address) => addressUpdateSchema.parse(address));
+      } else {
+        console.error('Réponse invalide: les données d\'adresse sont invalides');
+      }
+    } catch (error) {
+      console.error('Erreur lors de la récupération des adresses:', error);
+    } finally {
+      loading.value = false;
+    }
+  }
 
   // Fonction pour créer une adresse
   const createAddress = async (userId, newAddress) => {
@@ -108,8 +139,10 @@ export const useAddress = () => {
 
   return {
     address,
+    addresses,
     loading,
     fetchAddress,
+    fetchAddresses,
     createAddress,
     updateAddress,
     deleteAddress,

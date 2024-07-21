@@ -13,9 +13,12 @@
 
 <script>
 import RessourcesTable from './resourcesComponents/RessourcesTable.vue';
+import { useAddress } from '../../../composables/useAddress.js';
 import { useUser } from '../../../composables/useUser.js';
 import { useInvoice } from '../../../composables/useInvoice.js';
 import { useOrder } from '../../../composables/useOrder.js';
+import { useContact } from '../../../composables/useContact.js';
+import { useCategorie } from '../../../composables/useCategorie.js';
 
 export default {
   components: {
@@ -23,13 +26,15 @@ export default {
   },
   data() {
     return {
-      availableResources: ['Commandes', 'Factures', 'Utilisateurs'],
+      availableResources: ['Adresses', 'Commandes', 'Contacts', 'Categories', 'Factures', 'Utilisateurs'],
       resourcesData: {
         Commandes: [],
+        Contacts: [],
+        Categories: [],
         Utilisateurs: [],
-        Factures: [],
+        Factures: []
       },
-      selectedResource: 'Commandes',
+      selectedResource: 'Adresses',
       loading: false,
     };
   },
@@ -47,11 +52,24 @@ export default {
           const { fetchUsers, users } = useUser();
           await fetchUsers();
           this.resourcesData.Utilisateurs = users.value;
-        } else if (this.selectedResource === 'Commandes') {
+        } else if (this.selectedResource === 'Adresses') {
+          const { fetchAddresses, addresses } = useAddress();
+          await fetchAddresses();
+          this.resourcesData.Adresses = addresses.value;
+        }else if (this.selectedResource === 'Commandes') {
           const { fetchOrders, orders } = useOrder();
           await fetchOrders();
           this.resourcesData.Commandes = orders.value;
-        } else if (this.selectedResource === 'Factures') {
+        } else if (this.selectedResource === 'Contacts') {
+          const { fetchContacts, contacts } = useContact();
+          await fetchContacts();
+          this.resourcesData.Contacts = contacts.value;
+        } else if (this.selectedResource === 'Categories') {
+          const { fetchCategories, categories } = useCategorie();
+          await fetchCategories();
+          this.resourcesData.Categories = categories.value;
+        }
+        else if (this.selectedResource === 'Factures') {
           const { fetchInvoices, invoices } = useInvoice();
           await fetchInvoices();
           this.resourcesData.Factures = invoices.value;

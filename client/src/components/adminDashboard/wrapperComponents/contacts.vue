@@ -31,11 +31,11 @@
 import { ref, onMounted } from 'vue';
 import { useContact } from '../../../composables/useContact';
 
-const { contacts, loading, getAllContacts } = useContact();
+const { contacts, loading, fetchContacts } = useContact();
 const allOrders = ref([]);
 
 onMounted(async () => {
-  getAllContacts().then(() => {
+  fetchContacts().then(() => {
     allOrders.value = contacts.value;
   });
 });

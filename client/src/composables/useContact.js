@@ -48,7 +48,7 @@ export const useContact = () => {
   };
 
   // Fonction pour récuperer tout les contacts
-  const getAllContacts = async () => {
+  const fetchContacts = async () => {
     loading.value = true;
     try {
       const response = await instance.get('contacts');
@@ -79,7 +79,7 @@ export const useContact = () => {
     contact,
     contacts,
     loading,
-    getAllContacts,
+    fetchContacts,
     sendContactMessage,
     isEmailAddressValid,
   };

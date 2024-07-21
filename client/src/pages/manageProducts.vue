@@ -1,7 +1,6 @@
 <template>
   <Breadcrumbs />
   <div class="container mx-auto py-8">
-    <h2 class="text-3xl font-bold text-center mb-4">Gestion des Produits</h2>
     <div class="mb-8 flex justify-between items-center">
       <button
         @click="openCreateProductModal"

@@ -1,5 +1,14 @@
 import Router from 'express';
-import { getProduct, getAllProducts, createProduct, updateProduct, deleteProduct, getFilteredProducts, getProductByName, getStockHistory, subtractStock } from '../controllers/searchController.js';
+import { getProduct, 
+        getAllProducts, 
+        createProduct, 
+        updateProduct, 
+        deleteProduct, 
+        getFilteredProducts, 
+        getProductByName, 
+        getStockHistory, 
+        subtractStock 
+    } from '../controllers/searchController.js';
 import upload from '../middlewares/uploadMiddleware.js';
 
 const router = Router();

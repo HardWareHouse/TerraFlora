@@ -5,7 +5,7 @@
                 <li>
                     <a
                         :class="tabClass(tab.id)"
-                        @click="tab.id === 'logout' ? logout() : selectTab(tab.id)"
+                        @click="handleTabClick(tab.id)"
                     >
                         <i :class="`bi ${tab.icon} mr-2`"></i> {{ tab.label }}
                     </a>
@@ -33,8 +33,19 @@ const selectTab = (tab) => {
     activeTab.value = tab;
 };
 
+const handleTabClick = (tab) => {
+    if (tab === 'logout') {
+        logout();
+    } else if (tab === 'products') {
+        redirectToManageProductsPage();
+    } else {
+        selectTab(tab);
+    }
+};
+
 const tabs = [
     { id: 'resources', icon: 'bi-gear-fill', label: 'Gestion des Ressources' },
+    { id: 'products', icon: 'bi bi-box-seam-fill', label: 'Gestion des Produits' },
     { id: 'statistics', icon: 'bi-bar-chart-line-fill', label: 'Statistiques' },
     { id: 'contacts', icon: 'bi-people-fill', label: 'Contacts' },
     { id: 'others', icon: 'bi-three-dots', label: 'Autres' },
@@ -61,12 +72,17 @@ const activeTabComponent = computed(() => {
 });
 
 const logout = async () => {
-  await authStore.logout();
+    await authStore.logout();
 
-  if (!authStore.token) {
-    router.push('/');
-  }
+    if (!authStore.token) {
+        router.push('/');
+    }
 };
+
+const redirectToManageProductsPage = () => {
+    router.push('/manage-products');
+};
+
 </script>
 
 <style scoped>
@@ -86,16 +102,21 @@ nav ul {
 }
 
 nav a {
-    @apply flex items-center py-2 px-4 rounded transition-colors;
+    display: flex;
+    align-items: center;
+    padding: 0.5rem 1rem;
+    border-radius: 0.25rem;
+    transition: color 0.3s;
     color: #000;
 }
 
 nav a.active {
-    @apply bg-red-600 text-white;
+    background-color: #dc2626;
+    color: #fff;
 }
 
 nav a i {
-    @apply mr-2;
+    margin-right: 0.5rem;
 }
 
 @media (max-width: 768px) {
