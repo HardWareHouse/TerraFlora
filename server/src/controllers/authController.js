@@ -31,7 +31,7 @@ export const login = async (req, res) => {
       return res.status(401).json({ message: 'Your password has expired. A reset link has been sent to your email.' });
     }
 
-    const loginToken = authService.generateToken({ id: user.id, email: user.email, role: user.role }, process.env.LOGIN_JWT_KEY, '1h');
+    const loginToken = authService.generateToken({ id: user.id }, process.env.LOGIN_JWT_KEY, '1h');
     const mailPreferenceToken = authService.generateToken({ id: user.id, email: user.email }, process.env.MAIL_PREFERENCE_JWT_KEY, '1h');
 
     const userWithoutPassword = {

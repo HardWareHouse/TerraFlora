@@ -6,40 +6,49 @@ export const instance = axios.create({
   baseURL: 'http://localhost:8000/',
   headers: {
     'Content-Type': 'application/json',
-    'Authorization': 'Bearer ' + localStorage.getItem('token') || null,
   },
 });
 
+instance.interceptors.request.use(
+  config => {
+    const token = localStorage.getItem('token');
+    if (token) {
+      config.headers['Authorization'] = `Bearer ${token}`;
+    }
+    return config;
+  },
+  error => {
+    return Promise.reject(error);
+  }
+);
+
 instance.interceptors.response.use(
-  function (response) {
+  response => {
     return response;
   },
-  async function (error) {
-    
-    if (error.response && error.response.status === 401 && error.response.data.code === 'token_expired') {
-      const authStore = useAuthStore();
+  async error => {
+    if (error.response) {
+      if (error.response.status === 401 && error.response.data.code === 'token_expired') {
+        const authStore = useAuthStore();
 
-      if (authStore.token) {
-        try {
-          await authStore.logout().then(() => {
+        if (authStore.token) {
+          try {
+            await authStore.logout();
             router.push({ name: 'login' });
-          });
-        } catch (err) {
-          console.error('Error while logging out:', err);
+          } catch (err) {
+            console.error('Error while logging out:', err);
+          }
         }
-      }
-    }
+      } else if (error.response.status === 401) {
+        const authStore = useAuthStore();
 
-    if (error.response && error.response.status === 401) {
-      const authStore = useAuthStore();
-
-      if (authStore.token) {
-        try {
-          await authStore.logout().then(() => {
+        if (authStore.token) {
+          try {
+            await authStore.logout();
             router.push({ name: 'login' });
-          });
-        } catch (err) {
-          console.error('Error while logging out:', err);
+          } catch (err) {
+            console.error('Error while logging out:', err);
+          }
         }
       }
     }

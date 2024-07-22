@@ -19,7 +19,7 @@ export const verifyToken = async (req, res) => {
       return res.status(401).json({ error: "Access denied." });
     }
 
-    res.status(200).json({ userId: user.id });
+    res.status(200).json({ userId: user.id, userRole: user.role });
   } catch (error) {
     console.error(error);
     return res.status(401);
