@@ -4,26 +4,6 @@ import { connection } from "./dataBase.js";
 const DeletedUser = connection.define(
   "DeletedUser",
   {
-    nom: {
-      type: DataTypes.STRING,
-      allowNull: false,
-    },
-    prenom: {
-      type: DataTypes.STRING,
-      allowNull: false,
-    },
-    email: {
-      type: DataTypes.STRING,
-      allowNull: false,
-    },
-    password: {
-      type: DataTypes.STRING,
-      allowNull: false,
-    },
-    telephone: {
-      type: DataTypes.STRING,
-      allowNull: false,
-    },
     role: {
       type: DataTypes.STRING,
       allowNull: false,

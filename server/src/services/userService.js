@@ -1,6 +1,7 @@
 import User from "../modelsSQL/User.js";
-import DeletedUser from "../modelsSQL/DeletedUsers.js";
+import DeletedUser from "../modelsSQL/DeletedUser.js";
 import { comparePasswords } from "../helpers/passwordHelper.js";
+import { Sequelize } from "sequelize";
 
 export const getUser = async (id) => {
   return await User.findByPk(id);
@@ -59,20 +60,32 @@ export const updateUserById = async (id, data) => {
 //   return null;
 // };
 export const deleteUserById = async (id) => {
+  const connection = new Sequelize(process.env.POSTGRES_LINK, {
+    dialect: "postgres",
+  });
+
   try {
     const user = await User.findByPk(id);
-
     if (!user) {
       return null;
     }
 
-    const { id: userId, ...userData } = user.toJSON();
+    const {
+      id: userId,
+      nom: userNom,
+      prenom: userPrenom,
+      email: userEmail,
+      password: userPassword,
+      telephone: userTelephone,
+      ...userData
+    } = user.toJSON();
+
     await DeletedUser.create(userData);
 
     await user.destroy();
-
     return user;
   } catch (error) {
+    console.error("An error occurred:", error);
     throw error;
   }
 };
