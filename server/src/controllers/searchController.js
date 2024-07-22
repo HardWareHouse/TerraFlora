@@ -1,10 +1,11 @@
 import Produit from "../modelsSQL/Produit.js";
 import Image from "../modelsSQL/Image.js";
 import StockHistory from "../modelsSQL/StockHistory.js";
+import Categorie from "../modelsSQL/Categorie.js"; // Import du modèle Categorie
 import { Op } from "sequelize";
 import validator from "validator";
 import path from "path";
-import { sendAlertEmailNoStock, sendAlertEmailLowStock } from '../emailConfig.js';
+import { sendAlertEmailNoStock, sendAlertEmailLowStock, sendAlertEmailNewProduct, sendAlertEmailRestockProduct, sendAlertEmailPriceChange } from '../emailConfig.js';
 import { getAllUsers } from '../services/userService.js';
 
 // Helper pour corriger l'url correcte de l'image
@@ -28,7 +29,7 @@ export const getProduct = async (req, res) => {
     if (!validator.isUUID(id)) {
       return res.status(400).json({ error: "Invalid UUID format" });
     }
-    const product = await Produit.findByPk(id, { include: Image });
+    const product = await Produit.findByPk(id, { include: [Image, Categorie] });
     res.status(200).json(product);
   } catch (error) {
     res.status(500).json({ error: error.message });
@@ -41,7 +42,7 @@ export const getProductByName = async (req, res) => {
     const { name } = req.params;
     const product = await Produit.findOne({
       where: { nom: name.replace(/-/g, " ") },
-      include: Image,
+      include: [Image, Categorie],
     });
     if (product) {
       res.status(200).json(product);
@@ -56,7 +57,7 @@ export const getProductByName = async (req, res) => {
 // Lire tous les produits
 export const getAllProducts = async (req, res) => {
   try {
-    const products = await Produit.findAll({ include: Image });
+    const products = await Produit.findAll({ include: [Image, Categorie] });
 
     // Transform image URLs
     const productsWithImageUrls = products.map((product) => {
@@ -122,17 +123,28 @@ export const createProduct = async (req, res) => {
 
     await transaction.commit();
 
-    const productWithImages = await Produit.findByPk(product.id, {
-      include: Image,
+    // Récupérer le produit avec la catégorie pour envoyer l'alerte
+    const productWithCategory = await Produit.findByPk(product.id, {
+      include: [Image, Categorie],
     });
-    const transformedImages = productWithImages.Images.map((image) => ({
+    const transformedImages = productWithCategory.Images.map((image) => ({
       ...image.toJSON(),
       imageUrl: generateImageUrl(path.basename(image.imageUrl)),
     }));
     const transformedProduct = {
-      ...productWithImages.toJSON(),
+      ...productWithCategory.toJSON(),
       Images: transformedImages,
     };
+
+    const categoryName = productWithCategory.Categorie.nom;
+
+    // Envoyer une alerte pour les nouveaux produits
+    const users = await getAllUsers();
+    for (const user of users) {
+      if (user.wantsMailNewProduct) {
+        await sendAlertEmailNewProduct(user, `Nouveau produit dans la catégorie "${categoryName}": "${product.nom}"`);
+      }
+    }
 
     res.status(201).json(transformedProduct);
   } catch (error) {
@@ -163,11 +175,10 @@ export const updateProduct = async (req, res) => {
 
     const product = await Produit.findByPk(id);
 
-    const priceId = req.body.newPriceId;
+    const oldStock = product.stock; // Permet de garder la trace de l'ancien stock du produit
+    const oldPrice = product.prix; // Permet de garder la trace de l'ancien prix du produit
 
     if (product) {
-      const oldStock = product.stock; // Permet de garder la trace de l'ancien stock du produit
-
       product.nom = nom || product.nom;
       product.description = description || product.description;
       product.prix = prix || product.prix;
@@ -177,10 +188,8 @@ export const updateProduct = async (req, res) => {
       product.couleur = couleur || product.couleur;
       product.taille = taille || product.taille;
       product.isPromotion = isPromotion || product.isPromotion;
-      product.pourcentagePromotion =
-        pourcentagePromotion || product.pourcentagePromotion;
+      product.pourcentagePromotion = pourcentagePromotion || product.pourcentagePromotion;
       product.categorieId = categorieId || product.categorieId;
-      product.priceId = priceId || product.priceId;
 
       await product.save({ transaction });
 
@@ -197,22 +206,30 @@ export const updateProduct = async (req, res) => {
       // Enregistrement de l'historique des stocks après une mise à jour réussie
       if (stock !== oldStock) {
         await saveStockHistory(product.id, product.stock);
+
+        // Envoi d'alerte en cas de restock
+        if (stock > oldStock) {
+          const users = await getAllUsers();
+          for (const user of users) {
+            if (user.wantsMailRestockProduct) {
+              await sendAlertEmailRestockProduct(user, `Le produit "${product.nom}" a été restocké. Nouveau stock: ${product.stock}.`);
+            }
+          }
+        }
       }
 
-      // Vérification des niveaux de stock et envoi des alertes
-      if (product.stock <= product.stockThreshold) {
+      // Envoi d'alerte en cas de changement de prix
+      if (product.prix !== oldPrice) {
         const users = await getAllUsers();
         for (const user of users) {
-          if (product.stock === 0) {
-            await sendAlertEmailNoStock(user, `Critique: le produit "${product.nom}" est en rupture de stock.`);
-          } else {
-            await sendAlertEmailLowStock(user, `Alerte: le produit "${product.nom}" a un stock faible (${product.stock} restants).`);
+          if (user.wantsMailChangingPrice) {
+            await sendAlertEmailPriceChange(user, `Le prix du produit "${product.nom}" a changé. Nouveau prix: ${product.prix} €.`);
           }
         }
       }
 
       const productWithImages = await Produit.findByPk(product.id, {
-        include: Image,
+        include: [Image, Categorie],
       });
       const transformedImages = productWithImages.Images.map((image) => ({
         ...image.toJSON(),
@@ -269,7 +286,7 @@ export const getFilteredProducts = async (req, res) => {
 
     const products = await Produit.findAll({
       where: whereClause,
-      include: Image,
+      include: [Image, Categorie],
     });
 
     // Transform image URLs
@@ -337,17 +354,22 @@ export const subtractStock = async (req, res) => {
           await saveStockHistory(product.id, product.stock);
 
           // Vérification des niveaux de stock et envoi des alertes
-          if (product.stock <= product.stockThreshold) {
-            const users = await getAllUsers();
-            for (const user of users) {
-              if (product.stock === 0) {
-                await sendAlertEmailNoStock(user, `Critique: le produit "${product.nom}" est en rupture de stock.`);
-              } else {
-                await sendAlertEmailLowStock(user, `Alerte: le produit "${product.nom}" a un stock faible (${product.stock} restants).`);
-              }
-            }
-          }
-        } else {
+          // if (product.stock <= product.stockThreshold) {
+          //   const users = await getAllUsers();
+          //   for (const user of users) {
+          //     if (product.stock === 0) {
+          //       if (user.wantsMailRestockProduct) {
+          //         await sendAlertEmailNoStock(user, `Critique: le produit "${product.nom}" est en rupture de stock.`);
+          //       }
+          //     } else {
+          //       if (user.wantsMailRestockProduct) {
+          //         await sendAlertEmailLowStock(user, `Alerte: le produit "${product.nom}" a un stock faible (${product.stock} restants).`);
+          //       }
+          //     }
+          //   }
+          // }
+        } 
+        else {
           return res.status(400).json({ message: `Not enough stock available for ${product.nom}.` });
         }
       } else {
