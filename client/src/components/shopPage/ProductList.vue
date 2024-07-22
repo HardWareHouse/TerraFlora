@@ -163,11 +163,7 @@ function goToProductDetail(product) {
 
 function addToCart(product) {
   const cartItem = cartStore.items.find(item => item.id === product.id);
-  const totalQuantity = cartItem ? cartItem.quantity + 1 : 1;
-
-  console.log(totalQuantity);
-  console.log(product.stock);
-  console.log(product);
+  const totalQuantity = cartItem ? cartItem.Panier_Produits.quantity + 1 : 1;
 
   if (totalQuantity <= product.stock) {
     cartStore.addToCart(product, 1);
@@ -176,6 +172,8 @@ function addToCart(product) {
     alert('La quantité totale demandée dépasse le stock disponible');
   }
 }
+
+
 </script>
 
 <style scoped>

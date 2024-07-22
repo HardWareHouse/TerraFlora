@@ -84,6 +84,7 @@ export const createCart = async (req, res) => {
 };
 
 // Mettre à jour un panier ou ajouter un produit à un panier existant
+// Mettre à jour un panier ou ajouter un produit à un panier existant
 export const updateCart = async (req, res) => {
   const { userId, produits } = req.body;
   const user = req.user;
@@ -120,7 +121,7 @@ export const updateCart = async (req, res) => {
         if (cartProduct.length > 0) {
           // Produit déjà présent, mise à jour de la quantité
           let currentQuantity = cartProduct[0].Panier_Produits.quantity;
-          await cart.addProduit(produitInstance, { through: { quantity: currentQuantity + produit.quantity } });
+          await cart.addProduit(produitInstance, { through: { quantity: produit.quantity } });
         } else {
           // Produit non présent, ajout au panier avec quantité spécifiée
           await cart.addProduit(produitInstance, { through: { quantity: produit.quantity } });

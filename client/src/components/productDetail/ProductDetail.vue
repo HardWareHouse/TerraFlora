@@ -122,7 +122,7 @@ const validateQuantity = () => {
 
 const addToCart = () => {
   const cartItem = cartStore.items.find(item => item.id === product.value.id);
-  const totalQuantity = cartItem ? cartItem.quantity + quantity.value : quantity.value;
+  const totalQuantity = cartItem ? cartItem.Panier_Produits.quantity + quantity.value : quantity.value;
 
   if (totalQuantity <= product.value.stock) {
     cartStore.addToCart(product.value, quantity.value);
