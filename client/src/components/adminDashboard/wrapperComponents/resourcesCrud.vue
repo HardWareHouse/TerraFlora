@@ -93,8 +93,36 @@ export default {
     handleResourceChange(newResource) {
       this.selectedResource = newResource;
     },
-    editResource(resource) {
-      console.log("Modifier la ressource :", resource);
+    async editResource(updatedResource) {
+      this.loading = true;
+      try {
+        if (this.selectedResource === "Utilisateurs") {
+          const { updateUser } = useUser();
+          await updateUser(updatedResource);
+        } else if (this.selectedResource === "Adresses") {
+          const { updateAddress } = useAddress();
+          await updateAddress(updatedResource);
+        } else if (this.selectedResource === "Commandes") {
+          const { updateOrder } = useOrder();
+          await updateOrder(updatedResource);
+        } else if (this.selectedResource === "Contacts") {
+          const { updateContact } = useContact();
+          await updateContact(updatedResource);
+        } else if (this.selectedResource === "Categories") {
+          const { updateCategorie } = useCategorie();
+          await updateCategorie(updatedResource);
+        } else if (this.selectedResource === "Factures") {
+          const { updateInvoice } = useInvoice();
+          await updateInvoice(updatedResource);
+        }
+        this.resourcesData[this.selectedResource] = this.resourcesData[this.selectedResource].map((resource) =>
+          resource.id === updatedResource.id ? updatedResource : resource
+        );
+      } catch (error) {
+        console.error(`Erreur lors de la mise à jour de la ressource:`, error);
+      } finally {
+        this.loading = false;
+      }
     },
     async deleteResource(id) {
       this.loading = true;
@@ -118,9 +146,9 @@ export default {
           const { deleteInvoice } = useInvoice();
           await deleteInvoice(id);
         }
-        this.resourcesData[this.selectedResource] = this.resourcesData[
-          this.selectedResource
-        ].filter((resource) => resource.id !== id);
+        this.resourcesData[this.selectedResource] = this.resourcesData[this.selectedResource].filter(
+          (resource) => resource.id !== id
+        );
       } catch (error) {
         console.error(`Erreur lors de la suppression de la ressource:`, error);
       } finally {

@@ -1,10 +1,10 @@
 <template>
-    <nav class="flex justify-center px-4 py-2 mb-4 cursor-pointer">
-        <ul class="flex space-x-4">
+    <nav class="flex flex-wrap items-center justify-center px-4 py-2 mb-4 cursor-pointer bg-gradient-to-r from-pink-400 to-green-500 text-black">
+        <ul class="flex flex-wrap space-x-4">
             <template v-for="tab in tabs" :key="tab.id">
                 <li>
                     <a
-                        :class="tabClass(tab.id)"
+                        :class="`flex items-center px-4 py-2 text-sm font-semibold transition-transform transform ${activeTab === tab.id ? 'bg-white text-black' : 'hover:bg-white hover:text-black'}`"
                         @click="handleTabClick(tab.id)"
                     >
                         <i :class="`bi ${tab.icon} mr-2`"></i> {{ tab.label }}
@@ -56,14 +56,6 @@ const tabs = [
     { id: 'logout', icon: 'bi-box-arrow-right', label: 'Déconnexion' },
 ];
 
-const tabClass = (tab) => {
-    return {
-        'py-2 px-4 flex items-center rounded hover:bg-red-600 transition-colors': true,
-        'bg-red-600 text-white': activeTab.value === tab,
-        'text-gray-700': activeTab.value !== tab,
-    };
-};
-
 const components = {
     resources: defineAsyncComponent(() => import('./wrapperComponents/resourcesCrud.vue')),
     statistics: defineAsyncComponent(() => import('./wrapperComponents/statistical.vue')),
@@ -97,36 +89,5 @@ const redirectToManageProductsPage = () => {
 .fade-enter,
 .fade-leave-to {
     opacity: 0;
-}
-
-nav ul {
-    display: flex;
-    justify-content: center;
-    gap: 1rem;
-}
-
-nav a {
-    display: flex;
-    align-items: center;
-    padding: 0.5rem 1rem;
-    border-radius: 0.25rem;
-    transition: color 0.3s;
-    color: #000;
-}
-
-nav a.active {
-    background-color: #dc2626;
-    color: #fff;
-}
-
-nav a i {
-    margin-right: 0.5rem;
-}
-
-@media (max-width: 768px) {
-    nav ul {
-        flex-direction: column;
-        gap: 0.5rem;
-    }
 }
 </style>
