@@ -45,7 +45,6 @@
           <button v-if="product.stock > 0" class="px-4 py-2 bg-red-600 text-white rounded" @click="addToCart"><i class="bi bi-cart-plus"></i> Ajouter au panier</button>
           <span v-else class="text-red-600">Rupture de stock</span>
         </div>
-        <button class="px-4 py-2 border rounded" @click="addToWishlist">Add to Wishlist</button>
       </div>
     </div>
   </div>
@@ -122,7 +121,7 @@ const validateQuantity = () => {
 
 const addToCart = () => {
   const cartItem = cartStore.items.find(item => item.id === product.value.id);
-  const totalQuantity = cartItem ? cartItem.quantity + quantity.value : quantity.value;
+  const totalQuantity = cartItem ? cartItem.Panier_Produits.quantity + quantity.value : quantity.value;
 
   if (totalQuantity <= product.value.stock) {
     cartStore.addToCart(product.value, quantity.value);
@@ -130,10 +129,6 @@ const addToCart = () => {
   } else {
     alert('La quantité totale demandée dépasse le stock disponible.');
   }
-};
-
-const addToWishlist = () => {
-  console.log(`Added ${product.value.nom} to wishlist`);
 };
 </script>
 

@@ -4,18 +4,12 @@
       <table class="min-w-full bg-white">
         <thead>
           <tr>
-            <th v-for="col in columns" :key="col.key"
-                class="py-2 px-4 bg-red-600 text-white text-left cursor-pointer">
+            <th v-for="col in columns" :key="col.key" class="py-2 px-4 bg-red-600 text-white text-left cursor-pointer">
               {{ col.label }}
-              <span v-if="sortOrder == true" class="ml-4 w-12" @click="sortColumn(col.key)">
-                 ▲
-              </span>
-              <span v-if="sortOrder == false" class="ml-4 w-12" @click="sortColumn(col.key)">
-                 ▼
-              </span>
+              <span v-if="sortOrder" class="ml-4 w-12" @click="sortColumn(col.key)"> ▲ </span>
+              <span v-else class="ml-4 w-12" @click="sortColumn(col.key)"> ▼ </span>
               <div v-if="col.searchable">
-                <input v-model="col.searchQuery" type="text" placeholder="Rechercher..."
-                       class="border rounded px-2 py-1 text-black" />
+                <input v-model="col.searchQuery" type="text" placeholder="Rechercher..." class="border rounded px-2 py-1 text-black" />
               </div>
             </th>
             <th class="py-2 px-4 bg-red-600 text-white text-left"></th>
@@ -27,20 +21,14 @@
               <img :src="getImageUrl(row.Images[0]?.imageUrl)" class="w-24 h-24 object-cover" v-if="row.Images && row.Images.length > 0" />
               <img src="/images/flower.webp" class="w-24 h-24 object-cover" v-else />
             </td>
-            <td class="py-2 px-4 border-x-2">
-              {{ row.nom }}
-            </td>
-            <td class="py-2 px-4 border-x-2">
-              {{ row.prix }}
-            </td>
+            <td class="py-2 px-4 border-x-2">{{ row.nom }}</td>
+            <td class="py-2 px-4 border-x-2">{{ row.prix }}</td>
             <td class="py-2 px-4">
-              <button @click="updateQuantity(row.id, row.quantity - 1, row.stock)" class="px-2 py-1 text-black">-</button>
-              <span class="px-2">{{ row.quantity }}</span>
-              <button @click="updateQuantity(row.id, row.quantity + 1, row.stock)" class="px-2 py-1 text-black">+</button>
+              <button @click="updateQuantity(row.id, row.Panier_Produits.quantity - 1, row.stock)" class="px-2 py-1 text-black">-</button>
+              <span class="px-2">{{ row.Panier_Produits.quantity }}</span>
+              <button @click="updateQuantity(row.id, row.Panier_Produits.quantity + 1, row.stock)" class="px-2 py-1 text-black">+</button>
             </td>
-            <td class="py-2 px-4 border-x-2">
-              {{ (row.prix * row.quantity).toFixed(2) }}
-            </td>
+            <td class="py-2 px-4 border-x-2">{{ (row.prix * row.Panier_Produits.quantity).toFixed(2) }}</td>
             <td class="py-2 px-4">
               <button @click="removeItem(row.id)" class="text-red-600">
                 <i class="bi bi-trash"></i>
@@ -51,13 +39,11 @@
       </table>
     </div>
     <div class="flex justify-between items-center mt-4 w-full">
-      <button @click="prevPage" :disabled="currentPage.value === 1"
-              class="px-2 py-1 border rounded mr-2">
+      <button @click="prevPage" :disabled="currentPage.value === 1" class="px-2 py-1 border rounded mr-2">
         Précédent
       </button>
       <span>Page {{ currentPage.value }} sur {{ totalPages.value }}</span>
-      <button v-if="currentPage.value < totalPages.value" @click="nextPage" 
-              class="px-2 py-1 border rounded ml-2">
+      <button v-if="currentPage.value < totalPages.value" @click="nextPage" class="px-2 py-1 border rounded ml-2">
         Suivant
       </button>
     </div>
@@ -170,7 +156,7 @@ const getImageUrl = (imagePath) => {
   if (!imagePath) {
     return '/images/flower.webp';
   }
-  return `http://localhost:8000/${imagePath}`;
+  return `http://localhost:8000/uploads/${imagePath}`;
 };
 
 watch(() => props.data, () => {

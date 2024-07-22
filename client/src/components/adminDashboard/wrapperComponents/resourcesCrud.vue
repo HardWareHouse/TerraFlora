@@ -35,6 +35,7 @@ export default {
         "Utilisateurs",
       ],
       resourcesData: {
+        Adresses: [],
         Commandes: [],
         Contacts: [],
         Categories: [],
@@ -96,10 +97,35 @@ export default {
       console.log("Modifier la ressource :", resource);
     },
     async deleteResource(id) {
-      console.log("Supprimer la ressource avec ID :", id);
-      this.resourcesData[this.selectedResource] = this.resourcesData[
-        this.selectedResource
-      ].filter((resource) => resource.id !== id);
+      this.loading = true;
+      try {
+        if (this.selectedResource === "Utilisateurs") {
+          const { deleteUser } = useUser();
+          await deleteUser(id);
+        } else if (this.selectedResource === "Adresses") {
+          const { deleteAddress } = useAddress();
+          await deleteAddress(id);
+        } else if (this.selectedResource === "Commandes") {
+          const { deleteOrder } = useOrder();
+          await deleteOrder(id);
+        } else if (this.selectedResource === "Contacts") {
+          const { deleteContact } = useContact();
+          await deleteContact(id);
+        } else if (this.selectedResource === "Categories") {
+          const { deleteCategorie } = useCategorie();
+          await deleteCategorie(id);
+        } else if (this.selectedResource === "Factures") {
+          const { deleteInvoice } = useInvoice();
+          await deleteInvoice(id);
+        }
+        this.resourcesData[this.selectedResource] = this.resourcesData[
+          this.selectedResource
+        ].filter((resource) => resource.id !== id);
+      } catch (error) {
+        console.error(`Erreur lors de la suppression de la ressource:`, error);
+      } finally {
+        this.loading = false;
+      }
     },
   },
   mounted() {
