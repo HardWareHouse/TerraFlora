@@ -59,11 +59,30 @@ export const useCategorie = () => {
         }
     };
 
+    // Doit être modifié pour correspondre à la structure de contact
+    const deleteCategorie = async (id) => {
+        loading.value = true;
+        try {
+            const response = await instance.delete(`categories/${id}`);
+            if (!response.data) {
+                console.error('Catégorie non trouvée');
+                return;
+            }
+
+            categories.value = categories.value.filter((categorie) => categorie.id !== id);
+        } catch (error) {
+            console.error('Erreur lors de la suppression de la catégorie:', error);
+        } finally {
+            loading.value = false;
+        }
+    };
+
     return { 
         categorie, 
         categories, 
         loading, 
         fetchCategorie, 
-        fetchCategories 
+        fetchCategories,
+        deleteCategorie
     };
 }

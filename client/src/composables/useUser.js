@@ -116,6 +116,29 @@ export const useUser = () => {
             loading.value = false;
         }
     };
+
+    // Fonction pour supprimer l'utilisateur par son ID
+    const deleteUser = async (userId) => {
+        loading.value = true;
+        try {
+            console.log('userId:', userId);
+            const response = await instance.delete(`users/${userId}`);
+            if (!response.data) {
+                console.error('Aucune donnée utilisateur trouvée');
+                return;
+            }
+            else if (response.data.error) {
+                console.error('Erreur lors de la suppression de l\'utilisateur:', response.data.error);
+                return;
+            }
+            
+            return true;
+        } catch (error) {
+            console.error('Erreur lors de la suppression de l\'utilisateur:', error);
+        } finally {
+            loading.value = false;
+        }
+    };
     
     const isPasswordValid = (password) => {
         const minLength = 8;
@@ -145,6 +168,7 @@ export const useUser = () => {
         fetchUser,
         fetchUsers,
         updateUser,
+        deleteUser,
         isPasswordValid,
         isEmailAddressValid,
     };
