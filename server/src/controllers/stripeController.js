@@ -7,7 +7,7 @@ export const createSession = async (req, res) => {
   try {
     const { lineItems } = req.body;
 
-    const formattedLineItems = lineItems.map(item => ({
+    const formattedLineItems = lineItems.map((item) => ({
       price: item.price,
       quantity: item.quantity,
     }));
@@ -20,7 +20,7 @@ export const createSession = async (req, res) => {
       },
       shipping_options: [
         {
-          shipping_rate: "shr_1PaL80RvflFVG7kRWebshOPO",
+          shipping_rate: "shr_1PfMM4RvflFVG7kR6kksvnD1",
         },
       ],
       consent_collection: {
@@ -52,7 +52,7 @@ export const createSession = async (req, res) => {
       mode: "payment",
       success_url: `${YOUR_DOMAIN}/success?session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${YOUR_DOMAIN}/cancel`,
-      automatic_tax: { enabled: true },
+      automatic_tax: { enabled: false },
     });
 
     res.json({ id: session.id });
@@ -174,7 +174,7 @@ export const createPaymentLink = async (req, res) => {
       },
       shipping_options: [
         {
-          shipping_rate: "shr_1PaL80RvflFVG7kRWebshOPO",
+          shipping_rate: "shr_1PfMM4RvflFVG7kR6kksvnD1",
         },
       ],
       consent_collection: {
@@ -185,6 +185,7 @@ export const createPaymentLink = async (req, res) => {
           message: `I agree to the [Terms of Service](${YOUR_DOMAIN}/cgu)`,
         },
       },
+
       invoice_creation: {
         enabled: true,
       },
@@ -209,7 +210,7 @@ export const createPaymentLink = async (req, res) => {
           url: "http://localhost:5173/success?session_id={CHECKOUT_SESSION_ID}",
         },
       },
-      automatic_tax: { enabled: true },
+      automatic_tax: { enabled: false },
     });
     res.json({ url: paymentLink.url });
   } catch (error) {
