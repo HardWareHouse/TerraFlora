@@ -1,7 +1,6 @@
 import Panier from '../modelsSQL/Panier.js';
 import Produit from '../modelsSQL/Produit.js';
 import Image from '../modelsSQL/Image.js';
-import User from '../modelsSQL/User.js';
 import { isValidUUID } from "../helpers/validatorHelper.js";
 
 // Lire les informations d'un panier
@@ -21,8 +20,7 @@ export const getCart = async (req, res) => {
           model: Produit,
           through: { attributes: ['quantity'] },
           include: [Image],
-        },
-        { model: User }
+        }
       ]
     });
 

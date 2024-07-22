@@ -15,7 +15,7 @@ export const useCartStore = defineStore('cart', {
     actions: {
         async fetchUserCart() {
             const authStore = useAuthStore();
-            this.userId = await authStore.getUseriD();
+            this.userId = authStore.id;
             if (this.userId) {
                 try {
                     const response = await instance.get(`cart/${this.userId}`);
@@ -32,7 +32,7 @@ export const useCartStore = defineStore('cart', {
         },
         async addToCart(product, quantity = 1) {
             const authStore = useAuthStore();
-            this.userId = await authStore.getUseriD();
+            this.userId = authStore.id;
 
             if (product.stock <= 0) {
                 alert('Ce produit est en rupture de stock');
@@ -95,7 +95,7 @@ export const useCartStore = defineStore('cart', {
         },
         async removeItem(productId) {
             const authStore = useAuthStore();
-            this.userId = await authStore.getUseriD();
+            this.userId = authStore.id;
             try {
                 await instance.delete(`cart/${this.userId}/product/${productId}`);
                 this.items = this.items.filter(item => item.id !== productId);

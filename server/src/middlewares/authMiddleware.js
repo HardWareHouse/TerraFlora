@@ -2,8 +2,6 @@ import User from "../modelsSQL/User.js";
 import jwt from "jsonwebtoken";
 
 export const authenticate = async (req, res, next) => {
-  console.log("Authenticating...");
-
   const header = req.header("Authorization") ?? req.header("authorization");
   if (!header) {
     return res.status(401);
@@ -13,7 +11,7 @@ export const authenticate = async (req, res, next) => {
   if (!token) {
     return res.status(401);
   }
-
+  
   try {
     const decoded = jwt.verify(token, process.env.LOGIN_JWT_KEY);
     if (!decoded) {

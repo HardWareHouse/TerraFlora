@@ -51,10 +51,17 @@ export const useAuthStore = defineStore('auth', {
     logout() {
       this.clearUserData();
     },
-    checkToken() {
+    async checkToken() {
       const token = localStorage.getItem('token');
       if (token) {
         this.token = token;
+        const user = await this.getUseriD();
+        if (user) {
+          this.id = user.userId;
+          this.role = user.userRole;
+        } else {
+          this.clearUserData();
+        }
       }
     },
     setUserData(token, tokenMailPreference, userData) {
@@ -105,13 +112,15 @@ export const useAuthStore = defineStore('auth', {
         }
     
         const response = await instance.get('auth/verify-token');
-    
-        const userId = response.data.userId;
-        if (!userId) {
+        if(!response.data) {
           console.error('No user found');
           return;
         }
-        return userId;
+    
+        const userId = response.data.userId;
+        const userRole = response.data.userRole;
+        
+        return { userId, userRole };
       } catch (err) {
         console.error('Error while fetching user data:', err);
       }

@@ -29,17 +29,11 @@ const routes = [
     name: "Home",
     component: Home,
   },
-  // {
-  //   path: "/admin",
-  //   name: "Admin",
-  //   component: Admin,
-  //   meta: { requiresAuth: true, roles: ["ROLE_ADMIN"] },
-  // },
   {
     path: "/admin",
     name: "Admin",
     component: Admin,
-    meta: { requiresAuth: true },
+    meta: { requiresAuth: true, roles: ["ROLE_ADMIN"] },
   },
   {
     path: "/shop",
@@ -60,7 +54,7 @@ const routes = [
     path: "/manage-products",
     name: "ManageProducts",
     component: ManageProducts,
-    meta: { requiresAuth: false, roles: ["ROLE_ADMIN", "ROLE_STORE_KEEPER"] },
+    meta: { requiresAuth: true, roles: ["ROLE_ADMIN", "ROLE_STORE_KEEPER"] },
   },
   {
     path: "/wishlist",
@@ -149,31 +143,26 @@ const router = createRouter({
 router.beforeEach(async (to, from, next) => {
   const authStore = useAuthStore();
   const cartStore = useCartStore();
-  authStore.checkToken();
 
-  if (authStore.isLoggedIn) {
-    await cartStore.fetchUserCart();
-  }
-
-  if (
-    to.meta.requiresAuth &&
-    localStorage.getItem("token") &&
-    !authStore.isLoggedIn
-  ) {
+  try {
     await authStore.checkToken();
-  }
+    if (authStore.isLoggedIn) {
+      await cartStore.fetchUserCart();
+    }
 
-  if (to.meta.requiresAuth && !authStore.isLoggedIn) {
-    next({ name: "login" });
-  } else if (
-    to.meta.requiresAuth &&
-    to.meta.roles &&
-    !to.meta.roles.includes(authStore.role)
-  ) {
-    next({ name: "Home" });
-  } else {
+    if (to.meta.requiresAuth && !authStore.isLoggedIn) {
+      authStore.clearUserData();
+      return next({ name: "login" });
+    }
     
+    if (to.meta.requiresAuth && to.meta.roles && !to.meta.roles.includes(authStore.role)) {
+      return next({ name: 'Home' });
+    }
+
     next();
+  } catch (error) {
+    console.error('An error occurred during navigation guard:', error);
+    next(false);
   }
 });
 
