@@ -1,5 +1,6 @@
 import Panier from '../modelsSQL/Panier.js';
 import Produit from '../modelsSQL/Produit.js';
+import Image from '../modelsSQL/Image.js';
 import User from '../modelsSQL/User.js';
 import { isValidUUID } from "../helpers/validatorHelper.js";
 
@@ -16,11 +17,15 @@ export const getCart = async (req, res) => {
     const cart = await Panier.findOne({
       where: { userId: id },
       include: [
-        { model: Produit, through: { attributes: [] } },
+        {
+          model: Produit,
+          through: { attributes: ['quantity'] },
+          include: [Image],
+        },
         { model: User }
       ]
     });
-    
+
     if (!cart) {
       return res.status(404).json({ error: "Cart not found" });
     }
@@ -34,6 +39,7 @@ export const getCart = async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 };
+
 
 // Créer un panier
 export const createCart = async (req, res) => {
@@ -60,15 +66,15 @@ export const createCart = async (req, res) => {
 
     const newCart = await Panier.create({ userId });
 
-    for (let produitId of produits) {
-      const produit = await Produit.findByPk(produitId);
-      if (produit) {
-        await newCart.addProduit(produit);
+    for (let produit of produits) {
+      const produitInstance = await Produit.findByPk(produit.id);
+      if (produitInstance) {
+        await newCart.addProduit(produitInstance, { through: { quantity: produit.quantity } });
       }
     }
 
     const cartWithProducts = await Panier.findByPk(newCart.id, {
-      include: [{ model: Produit, through: { attributes: [] } }]
+      include: [{ model: Produit, through: { attributes: ['quantity'] } }]
     });
 
     res.status(201).json(cartWithProducts);
@@ -77,6 +83,7 @@ export const createCart = async (req, res) => {
   }
 };
 
+// Mettre à jour un panier ou ajouter un produit à un panier existant
 // Mettre à jour un panier ou ajouter un produit à un panier existant
 export const updateCart = async (req, res) => {
   const { userId, produits } = req.body;
@@ -107,17 +114,17 @@ export const updateCart = async (req, res) => {
     }
 
     // Ajouter ou mettre à jour les produits au panier
-    for (let produitId of produits) {
-      const produit = await Produit.findByPk(produitId);
-      if (produit) {
-        const cartProduct = await cart.getProduits({ where: { id: produitId } });
+    for (let produit of produits) {
+      const produitInstance = await Produit.findByPk(produit.id);
+      if (produitInstance) {
+        const cartProduct = await cart.getProduits({ where: { id: produit.id } });
         if (cartProduct.length > 0) {
           // Produit déjà présent, mise à jour de la quantité
           let currentQuantity = cartProduct[0].Panier_Produits.quantity;
-          await cart.addProduit(produit, { through: { quantity: currentQuantity + 1 } });
+          await cart.addProduit(produitInstance, { through: { quantity: produit.quantity } });
         } else {
-          // Produit non présent, ajout au panier avec quantité 1
-          await cart.addProduit(produit, { through: { quantity: 1 } });
+          // Produit non présent, ajout au panier avec quantité spécifiée
+          await cart.addProduit(produitInstance, { through: { quantity: produit.quantity } });
         }
       }
     }
@@ -131,7 +138,6 @@ export const updateCart = async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 };
-
 
 // Supprimer un panier
 export const deleteCart = async (req, res) => {
