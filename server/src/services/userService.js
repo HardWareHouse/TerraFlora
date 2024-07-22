@@ -117,21 +117,9 @@ export const updateUserById = async (id, data) => {
   return getUserById(id);
 };
 
-// export const deleteUserById = async (id) => {
-//   const user = await User.findByPk(id);
-//   if (user) {
-//     await user.destroy();
-//     return user;
-//   }
-//   return null;
-// };
 export const deleteUserById = async (id) => {
-  const connection = new Sequelize(process.env.POSTGRES_LINK, {
-    dialect: "postgres",
-  });
-
   try {
-    const user = await User.findByPk(id);
+    const user = await UserSQL.findByPk(id);
     if (!user) {
       return null;
     }
@@ -149,24 +137,10 @@ export const deleteUserById = async (id) => {
     await DeletedUser.create(userData);
 
     await user.destroy();
+    await UserMongo.findByIdAndDelete(id);
     return user;
   } catch (error) {
     console.error("An error occurred:", error);
     throw error;
   }
 };
-
-// export const deleteUserById = async (id) => {
-//   try {
-//     const userSQL = await UserSQL.findByPk(id);
-//     if (userSQL) {
-//       await userSQL.destroy();
-//       await UserMongo.findByIdAndDelete(id);
-//       return true;
-//     }
-//     return null;
-//   } catch (error) {
-//     console.error("Error deleting user:", error);
-//     throw new Error("Failed to delete user");
-//   }
-// };
