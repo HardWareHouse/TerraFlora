@@ -134,13 +134,13 @@ export default {
       }
     };
 
-    const createPaymentLink = async (priceId) => {
+    const createPaymentLink = async (product) => {
       try {
         const link = await stripe.paymentLinks.create({
           line_items: [
             {
-              price: priceId,
-              quantity: 1,
+              price: product.priceId,
+              quantity: product.quantity, // Pass the correct quantity here
             },
           ],
           shipping_options: [
@@ -178,3 +178,4 @@ export default {
   },
 };
 </script>
+

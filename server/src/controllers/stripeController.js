@@ -7,6 +7,11 @@ export const createSession = async (req, res) => {
   try {
     const { lineItems } = req.body;
 
+    const formattedLineItems = lineItems.map(item => ({
+      price: item.price,
+      quantity: item.quantity,
+    }));
+
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ["card"],
       billing_address_collection: "required",
@@ -43,10 +48,10 @@ export const createSession = async (req, res) => {
           optional: true,
         },
       ],
-      line_items: lineItems,
+      line_items: formattedLineItems,
       mode: "payment",
-      success_url: `http://localhost:5173/success?session_id={CHECKOUT_SESSION_ID}`,
-      cancel_url: `http://localhost:5173/cancel`,
+      success_url: `${YOUR_DOMAIN}/success?session_id={CHECKOUT_SESSION_ID}`,
+      cancel_url: `${YOUR_DOMAIN}/cancel`,
       automatic_tax: { enabled: true },
     });
 
