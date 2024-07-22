@@ -2,6 +2,7 @@ import Panier from '../modelsSQL/Panier.js';
 import Produit from '../modelsSQL/Produit.js';
 import Image from '../modelsSQL/Image.js';
 import { isValidUUID } from "../helpers/validatorHelper.js";
+import TempReservation from '../modelsSQL/TempReservation.js';
 
 // Lire les informations d'un panier
 export const getCart = async (req, res) => {
@@ -207,6 +208,63 @@ export const deleteProductFromCart = async (req, res) => {
     });
 
     res.status(200).json(updatedCart);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+
+
+// Réserver le panier
+export const reserveCart = async (req, res) => {
+  const { userId } = req.body;
+  const user = req.user;
+
+  if (!userId || !isValidUUID(userId)) {
+    return res.status(400).json({ error: "Invalid or missing user ID" });
+  }
+
+  if (userId !== user.id) {
+    return res.status(403).json({ error: "Unauthorized" });
+  }
+
+  try {
+    const cart = await Panier.findOne({
+      where: { userId },
+      include: [Produit]
+    });
+
+    if (!cart) {
+      return res.status(404).json({ error: "Cart not found" });
+    }
+
+    for (let produit of cart.Produits) {
+      const productInstance = await Produit.findByPk(produit.id);
+
+      if (productInstance.stock < produit.Panier_Produits.quantity) {
+        return res.status(400).json({ error: `Not enough stock for ${productInstance.nom}` });
+      }
+
+      // Réduire le stock du produit
+      productInstance.stock -= produit.Panier_Produits.quantity;
+      await productInstance.save();
+
+      // Ajouter à la table de réservation temporaire
+      await TempReservation.create({
+        userId,
+        produitId: produit.id,
+        quantity: produit.Panier_Produits.quantity,
+        reservedAt: new Date()
+      });
+    }
+
+    // Vider le panier
+    await cart.setProduits([]);
+
+    console.log(`Cart reserved for user ${userId}`);
+    
+
+    res.status(200).json({ message: "Cart reserved successfully" });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }

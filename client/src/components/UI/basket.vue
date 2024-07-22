@@ -34,6 +34,10 @@
           <span class="font-bold">Total</span>
           <span>{{ total }}€</span>
         </div>
+        
+        <!-- Ajoutez un bouton "Réserver" -->
+        <button @click="reserveCart" class="w-full px-4 py-2 mt-2 font-semibold text-white bg-red-700 rounded-md hover:bg-gray-800">Réserver</button>
+
         <div class="mt-4">
           <button @click="viewCart" class="w-full px-4 py-2 mb-2 font-semibold text-white bg-red-700 rounded-md hover:bg-gray-800">Voir mon panier</button>
         </div>
@@ -46,6 +50,9 @@
 import { ref, computed } from 'vue';
 import { useRouter } from 'vue-router';
 import { useCartStore } from '../../pinia/cart.js';
+import instance from '../../axios.js';
+import axios from 'axios';
+
 const emit = defineEmits(['close']);
 
 const cartStore = useCartStore();
@@ -77,6 +84,20 @@ const getImageUrl = (imagePath) => {
     return '/images/flower.webp';
   }
   return `http://localhost:8000/uploads/${imagePath.split('/').pop()}`;
+};
+
+// Ajoutez la méthode reserveCart
+const reserveCart = async () => {
+  try {
+    const response = await instance.post('cart/reserve', {
+      userId: cartStore.userId
+    });
+    alert('Panier réservé avec succès!');
+    emit('close');
+  } catch (error) {
+    console.error('Error reserving cart:', error);
+    alert('Erreur lors de la réservation du panier.');
+  }
 };
 </script>
 
