@@ -10,7 +10,7 @@
                 <span class="ml-4 w-12">{{ sortIndicator(col.key) }}</span>
               </div>
               <div v-if="col.searchable">
-                <input v-model="col.searchQuery" type="text" placeholder="Rechercher..." class="border rounded px-2 py-1 text-black" @input="currentPage = 1" />
+                <input  type="text" placeholder="Rechercher..." class="border rounded px-2 py-1 text-black" @input="currentPage = 1" />
               </div>
             </th>
             <th class="py-2 px-4 bg-red-600 text-white text-left"></th>
@@ -85,25 +85,8 @@ const sortedData = computed(() => {
   if (!sortKey.value) return props.data;
 
   return [...props.data].sort((a, b) => {
-    let valA, valB;
-    
-    switch(sortKey.value) {
-      case 'nom':
-        valA = a.nom.toLowerCase();
-        valB = b.nom.toLowerCase();
-        break;
-      case 'prix':
-        valA = a.prix;
-        valB = b.prix;
-        break;
-      case 'Panier_Produits.quantity':
-        valA = a.Panier_Produits.quantity;
-        valB = b.Panier_Produits.quantity;
-        break;
-      default:
-        valA = a[sortKey.value];
-        valB = b[sortKey.value];
-    }
+    let valA = a[sortKey.value];
+    let valB = b[sortKey.value];
 
     if (typeof valA === 'string' && typeof valB === 'string') {
       return sortOrder.value ? valA.localeCompare(valB) : valB.localeCompare(valA);
@@ -118,18 +101,8 @@ const filteredData = computed(() => {
     props.columns.every(col => {
       if (!col.searchable || !col.searchQuery.value) return true;
       const searchQuery = col.searchQuery.value.toLowerCase();
-      
-      switch(col.key) {
-        case 'nom':
-          return row.nom.toLowerCase().includes(searchQuery);
-        case 'prix':
-          return row.prix.toString().includes(searchQuery);
-        case 'Panier_Produits.quantity':
-          return row.Panier_Produits.quantity.toString().includes(searchQuery);
-        default:
-          const value = row[col.key];
-          return value && String(value).toLowerCase().includes(searchQuery);
-      }
+      const value = row[col.key];
+      return value && String(value).toLowerCase().includes(searchQuery);
     })
   );
 });
