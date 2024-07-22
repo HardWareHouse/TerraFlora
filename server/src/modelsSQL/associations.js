@@ -11,6 +11,7 @@ import Paiement from './Paiement.js';
 import Adresse from './Adresse.js';
 import MethodePaiement from './MethodePaiement.js';
 import Image from './Image.js';
+import Panier_Produits from './Panier_Produits.js';
 
 // Associations
 
@@ -36,8 +37,8 @@ Contact.belongsTo(User, { foreignKey: 'userId', targetKey: 'id' });
 Panier.hasOne(Commande, { foreignKey: 'panierId', sourceKey: 'id' });
 Commande.belongsTo(Panier, { foreignKey: 'panierId', targetKey: 'id' });
 
-Panier.belongsToMany(Produit, { through: 'Panier_Produits', foreignKey: 'panierId', sourceKey: 'id' });
-Produit.belongsToMany(Panier, { through: 'Panier_Produits', foreignKey: 'produitId', sourceKey: 'id' });
+Panier.belongsToMany(Produit, { through: Panier_Produits, foreignKey: 'panierId', sourceKey: 'id' });
+Produit.belongsToMany(Panier, { through: Panier_Produits, foreignKey: 'produitId', sourceKey: 'id' });
 
 // Produit associations
 Produit.hasMany(Promotion, { foreignKey: 'produitId', sourceKey: 'id' });

@@ -19,7 +19,7 @@ export const useOrder = () => {
     const fetchOrders = async () => {
         loading.value = true;
         try {
-            const response = await instance.get(`orders/`);
+            const response = await instance.get(`orders`);
             if (!response.data) {
                 console.error('Aucune donnée commande trouvée');
                 return;

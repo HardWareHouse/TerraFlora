@@ -1,9 +1,14 @@
 import User from '../modelsSQL/User.js';
 import { sendPreferenceUpdateEmail } from '../emailConfig.js';
+import * as emailPreferenceService from '../services/emailPreferenceService.js'
+
 
 // Update wantsMailNewProduct
 export const updateWantsMailNewProduct = async (req, res) => {
   const { wantsMailNewProduct } = req.body;
+  if (wantsMailNewProduct === undefined) {
+    return res.status(400).json({ message: 'wantsMailNewProduct is required' });
+  }
 
   try {
     const user = await User.findByPk(req.user.id);
@@ -18,6 +23,7 @@ export const updateWantsMailNewProduct = async (req, res) => {
     }
 
     await user.save();
+    await emailPreferenceService.updateUserMongoWantsMailNewProduct(user.id, wantsMailNewProduct);
 
     res.status(200).json({ message: 'Email preference for new product updated successfully' });
   } catch (error) {
@@ -25,9 +31,13 @@ export const updateWantsMailNewProduct = async (req, res) => {
   }
 };
 
+
 // Update wantsMailRestockProduct
 export const updateWantsMailRestockProduct = async (req, res) => {
   const { wantsMailRestockProduct } = req.body;
+  if (wantsMailRestockProduct === undefined) {
+    return res.status(400).json({ message: 'wantsMailRestockProduct is required' });
+  }
 
   try {
     const user = await User.findByPk(req.user.id);
@@ -42,6 +52,7 @@ export const updateWantsMailRestockProduct = async (req, res) => {
     }
 
     await user.save();
+    await emailPreferenceService.updateUserMongoWantsMailRestockProduct(user.id, wantsMailRestockProduct);
 
     res.status(200).json({ message: 'Email preference for restock product updated successfully' });
   } catch (error) {
@@ -52,6 +63,9 @@ export const updateWantsMailRestockProduct = async (req, res) => {
 // Update wantsMailChangingPrice
 export const updateWantsMailChangingPrice = async (req, res) => {
   const { wantsMailChangingPrice } = req.body;
+  if (wantsMailChangingPrice === undefined) {
+    return res.status(400).json({ message: 'wantsMailChangingPrice is required' });
+  }
 
   try {
     const user = await User.findByPk(req.user.id);
@@ -66,6 +80,7 @@ export const updateWantsMailChangingPrice = async (req, res) => {
     }
 
     await user.save();
+    await emailPreferenceService.updateUserMongoWantsMailChangingPrice(user.id, wantsMailChangingPrice);
 
     res.status(200).json({ message: 'Email preference for changing price updated successfully' });
   } catch (error) {
@@ -76,6 +91,9 @@ export const updateWantsMailChangingPrice = async (req, res) => {
 // Update wantsMailNewsletter
 export const updateWantsMailNewsletter = async (req, res) => {
   const { wantsMailNewsletter } = req.body;
+  if (wantsMailNewsletter === undefined) {
+    return res.status(400).json({ message: 'wantsMailNewsletter is required' });
+  }
 
   try {
     const user = await User.findByPk(req.user.id);
@@ -90,6 +108,7 @@ export const updateWantsMailNewsletter = async (req, res) => {
     }
 
     await user.save();
+    await emailPreferenceService.updateUserMongoWantsMailNewsletter(user.id, wantsMailNewsletter);
 
     res.status(200).json({ message: 'Email preference for newsletter updated successfully' });
   } catch (error) {

@@ -14,9 +14,10 @@ const contactSchema = z.object({
 const contactUpdateSchema = contactSchema.extend({
   dateContact: z.string(),
   status: z.string(),
-  User: z.object({
+  user: z.object({
     nom: z.string(),
     prenom: z.string(),
+    email: z.string(),
   }),
 }).omit({ userId: true });
 
@@ -47,7 +48,7 @@ export const useContact = () => {
   };
 
   // Fonction pour récuperer tout les contacts
-  const getAllContacts = async () => {
+  const fetchContacts = async () => {
     loading.value = true;
     try {
       const response = await instance.get('contacts');
@@ -78,7 +79,7 @@ export const useContact = () => {
     contact,
     contacts,
     loading,
-    getAllContacts,
+    fetchContacts,
     sendContactMessage,
     isEmailAddressValid,
   };

@@ -1,6 +1,7 @@
 import { defineStore } from 'pinia';
 import instance from '../axios.js';
 import z from 'zod';
+import { useCartStore } from './cart.js';
 
 const userSchema = z.object({
   id: z.string(),
@@ -29,6 +30,7 @@ export const useAuthStore = defineStore('auth', {
     wantsMailNewProduct: null,
     wantsMailNewsletter: null,
     wantsMailRestockProduct: null,
+    cartId: null,
     error: "",
     success: null,
   }),
@@ -37,7 +39,6 @@ export const useAuthStore = defineStore('auth', {
       try {
         const response = await instance.post('auth/login', { email, password });
         const { loginToken, mailPreferenceToken, user } = response.data;
-
         this.setUserData(loginToken, mailPreferenceToken, user);
         this.success = 'Login successful!';
         this.error = '';
@@ -46,6 +47,7 @@ export const useAuthStore = defineStore('auth', {
         this.success = null;
       }
     },
+  
     logout() {
       this.clearUserData();
     },
@@ -73,6 +75,7 @@ export const useAuthStore = defineStore('auth', {
       localStorage.setItem('tokenMailPreference', tokenMailPreference);
     },
     clearUserData() {
+      const cartStore = useCartStore();
       this.token = null;
       this.tokenMailPreference = null;
       this.nom = '';
@@ -85,8 +88,10 @@ export const useAuthStore = defineStore('auth', {
       this.wantsMailNewProduct = null;
       this.wantsMailNewsletter = null;
       this.wantsMailRestockProduct = null;
+      this.cartId = null; 
       this.success = null ;
       this.error = '';
+      cartStore.clearCart();
 
       localStorage.removeItem('token');
       localStorage.removeItem('tokenMailPreference');

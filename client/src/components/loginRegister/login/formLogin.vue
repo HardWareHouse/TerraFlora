@@ -59,7 +59,12 @@ const password = ref('');
 const handleSubmit = () => {
     authStore.login(email.value, password.value).then(() => {
         if (authStore.success) {
-            router.push('/dashboard');
+            authStore.checkToken();
+            if (authStore.role === 'ROLE_ADMIN') {
+                router.push('/admin');
+            } else {
+                router.push('/dashboard');
+            }
         }
     });
 };

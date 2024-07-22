@@ -1,17 +1,24 @@
 <template>
-  <div>
+  <div class="container mx-auto px-4 py-8">
     <RessourcesTable
       :availableResources="availableResources"
       :resourcesData="resourcesData"
+      :selectedResource="selectedResource"
       @edit="editResource"
       @delete="deleteResource"
+      @resourceChange="handleResourceChange"
     />
   </div>
 </template>
 
 <script>
 import RessourcesTable from "./resourcesComponents/RessourcesTable.vue";
-import axios from "axios"; // Import axios for API calls
+import { useAddress } from "../../../composables/useAddress.js";
+import { useUser } from "../../../composables/useUser.js";
+import { useInvoice } from "../../../composables/useInvoice.js";
+import { useOrder } from "../../../composables/useOrder.js";
+import { useContact } from "../../../composables/useContact.js";
+import { useCategorie } from "../../../composables/useCategorie.js";
 
 export default {
   components: {
@@ -19,55 +26,84 @@ export default {
   },
   data() {
     return {
-      availableResources: ["Produits", "Categories", "Utilisateurs"],
+      availableResources: [
+        "Adresses",
+        "Commandes",
+        "Contacts",
+        "Categories",
+        "Factures",
+        "Utilisateurs",
+      ],
       resourcesData: {
-        Produits: [],
+        Commandes: [],
+        Contacts: [],
         Categories: [],
         Utilisateurs: [],
+        Factures: [],
       },
+      selectedResource: "Adresses",
+      loading: false,
     };
   },
-  mounted() {
-    this.fetchData();
+  watch: {
+    selectedResource: {
+      handler: "fetchResources",
+      immediate: true,
+    },
   },
   methods: {
-    async fetchData() {
+    async fetchResources() {
+      this.loading = true;
       try {
-        // Fetch data from the API for each resource
-        const [produits, categories, utilisateurs] = await Promise.all([
-          axios.get("http://localhost:8000/product"), // Endpoint for products
-          axios.get("http://localhost:8000/categories"), // Endpoint for categories
-          axios.get("http://localhost:8000/users"), // Endpoint for users
-        ]);
-
-        // Update resourcesData with the fetched data
-        this.resourcesData.Produits = produits.data;
-        this.resourcesData.Categories = categories.data;
-        this.resourcesData.Utilisateurs = utilisateurs.data;
-        console.log(utilisateurs.data);
+        if (this.selectedResource === "Utilisateurs") {
+          const { fetchUsers, users } = useUser();
+          await fetchUsers();
+          this.resourcesData.Utilisateurs = users.value;
+        } else if (this.selectedResource === "Adresses") {
+          const { fetchAddresses, addresses } = useAddress();
+          await fetchAddresses();
+          this.resourcesData.Adresses = addresses.value;
+        } else if (this.selectedResource === "Commandes") {
+          const { fetchOrders, orders } = useOrder();
+          await fetchOrders();
+          this.resourcesData.Commandes = orders.value;
+        } else if (this.selectedResource === "Contacts") {
+          const { fetchContacts, contacts } = useContact();
+          await fetchContacts();
+          this.resourcesData.Contacts = contacts.value;
+        } else if (this.selectedResource === "Categories") {
+          const { fetchCategories, categories } = useCategorie();
+          await fetchCategories();
+          this.resourcesData.Categories = categories.value;
+        } else if (this.selectedResource === "Factures") {
+          const { fetchInvoices, invoices } = useInvoice();
+          await fetchInvoices();
+          this.resourcesData.Factures = invoices.value;
+        }
       } catch (error) {
-        console.error("Error fetching data:", error);
+        console.error(
+          `Erreur lors de la récupération des données pour ${this.selectedResource}:`,
+          error
+        );
+      } finally {
+        this.loading = false;
       }
+    },
+    handleResourceChange(newResource) {
+      this.selectedResource = newResource;
     },
     editResource(resource) {
       console.log("Modifier la ressource :", resource);
-      // Implement the logic to edit the resource via API
     },
     async deleteResource(id) {
       console.log("Supprimer la ressource avec ID :", id);
-      try {
-        console.log("Try");
-        // Make an API call to delete the resource
-        await axios.delete(`http://localhost:8000/users/${id}`); // Adjust the endpoint for the appropriate resource
-
-        // Update local resourcesData after deletion
-        this.resourcesData[this.selectedResource] = this.resourcesData[
-          this.selectedResource
-        ].filter((resource) => resource.id !== id);
-      } catch (error) {
-        console.error("Error deleting resource:", error);
-      }
+      this.resourcesData[this.selectedResource] = this.resourcesData[
+        this.selectedResource
+      ].filter((resource) => resource.id !== id);
     },
+  },
+  mounted() {
+    this.fetchResources();
   },
 };
 </script>

@@ -1,29 +1,6 @@
 import { isValidUUID } from "../helpers/validatorHelper.js";
 import * as addressService from "../services/addressService.js";
 
-// Lire les informations d'une adresse
-export const getAddress = async (req, res) => {
-  const { id } = req.params;
-
-  if (!id || !isValidUUID(id)) {
-    return res.status(400).json({ error: "Invalid or missing address ID" });
-  }
-
-  try {
-    const address = await addressService.getAddressById(id);
-    if (!address) {
-      return res.status(404).json({ error: "Address not found" });
-    }
-
-    const user = req.user;
-    if (address.userId !== user.id && user.role !== "ROLE_ADMIN") return res.status(403).json({ error: "Unauthorized" });
-
-    res.status(200).json(address);
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-};
-
 // Lire toutes les adresses
 export const getAllAddresses = async (req, res) => {
   const user = req.user;
@@ -47,9 +24,32 @@ export const getAllAddresses = async (req, res) => {
   }
 };
 
+// Lire les informations d'une adresse
+export const getAddress = async (req, res) => {
+  const { id } = req.params;
+
+  if (!id || !isValidUUID(id)) {
+    return res.status(400).json({ error: "Invalid or missing address ID" });
+  }
+
+  try {
+    const address = await addressService.getAddressById(id);
+    if (!address) {
+      return res.status(404).json({ error: "Address not found" });
+    }
+
+    const user = req.user;
+    if (address.user._id !== user.id && user.role !== "ROLE_ADMIN") return res.status(403).json({ error: "Unauthorized" });
+
+    res.status(200).json(address);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
 // Créer une adresse
 export const createAddress = async (req, res) => {
-  const { userId, voie, rue, numero, ville, codePostal } = req.body;
+  const { userId, voie, rue, numero, ville, codePostal, isBillingAddress, isDeliveryAddress } = req.body;
   const user = req.user;
 
   if (!userId || !voie || !rue || !numero || !ville || !codePostal) {
@@ -72,8 +72,11 @@ export const createAddress = async (req, res) => {
       numero,
       ville,
       codePostal,
+      isBillingAddress,
+      isDeliveryAddress,
     });
 
+    if (!address) return res.status(404).json({ error: "Addres not created" });
     res.status(201).json(address);
   } catch (error) {
     res.status(500).json({ error: error.message });
@@ -83,14 +86,14 @@ export const createAddress = async (req, res) => {
 // Mettre à jour une adresse
 export const updateAddress = async (req, res) => {
   const { id } = req.params;
-  const { voie, rue, numero, ville, codePostal } = req.body;
+  const { voie, rue, numero, ville, codePostal, isDeliveryAddress, isBillingAddress } = req.body;
   const user = req.user;
 
   if (!id || !isValidUUID(id)) {
     return res.status(400).json({ error: "Invalid or missing address ID" });
   }
 
-  if (!voie && !rue && !numero && !ville && !codePostal) {
+  if (!voie && !rue && !numero && !ville && !codePostal && !isDeliveryAddress && !isBillingAddress) {
     return res.status(400).json({ error: "Missing fields" });
   }
 
@@ -104,7 +107,9 @@ export const updateAddress = async (req, res) => {
       return res.status(403).json({ error: "Unauthorized" });
     }
 
-    const updatedAddress = await addressService.updateAddressById(id, { voie, rue, numero, ville, codePostal });
+    const updatedAddress = await addressService.updateAddressById(id, { voie, rue, numero, ville, codePostal, isDeliveryAddress, isBillingAddress });
+    if (!updatedAddress) return res.status(404).json({ error: "Address not updated" });
+
     res.status(200).json(updatedAddress);
   } catch (error) {
     res.status(500).json({ error: error.message });
@@ -126,11 +131,11 @@ export const deleteAddress = async (req, res) => {
       return res.status(404).json({ error: "Address not found" });
     }
 
-    if (address.userId !== user.id) return res.status(403).json({ error: "Unauthorized" });
+    if (address.user._id !== user.id) return res.status(403).json({ error: "Unauthorized" });
     
     const deleteAddress = await addressService.deleteAddressById(id);
     if (!deleteAddress) {
-      return res.status(404).json({ error: "Address not found" });
+      return res.status(404).json({ error: "Address not deleted" });
     }
     
     res.status(204).json({ message: "Address deleted" });

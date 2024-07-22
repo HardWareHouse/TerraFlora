@@ -30,22 +30,6 @@ function toggleBasket() {
   showBasket.value = !showBasket.value;
 }
 
-function updateActivity() {
-  cartStore.updateLastActivity();
-  cartStore.saveCartToLocalStorage();
-}
-
-
-onMounted(() => {
-  document.addEventListener('mousemove', updateActivity);
-  document.addEventListener('keydown', updateActivity);
-  authStore.checkToken();
-});
-
-onUnmounted(() => {
-  document.removeEventListener('mousemove', updateActivity);
-  document.removeEventListener('keydown', updateActivity);
-});
 </script>
 
 <style>

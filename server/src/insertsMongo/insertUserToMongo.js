@@ -15,6 +15,10 @@ async function insertOrUpdateUserInMongo(userSQL) {
         role: userSQL.role,
         isVerified: userSQL.isVerified,
         isBlocked: userSQL.isBlocked,
+        wantsMailNewProduct: userSQL.wantsMailNewProduct,
+        wantsMailRestockProduct: userSQL.wantsMailRestockProduct,
+        wantsMailChangingPrice: userSQL.wantsMailChangingPrice,
+        wantsMailNewsletter: userSQL.wantsMailNewsletter,
     };
 
     if (userMongo) {

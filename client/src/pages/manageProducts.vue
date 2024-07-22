@@ -1,7 +1,6 @@
 <template>
   <Breadcrumbs />
   <div class="container mx-auto py-8">
-    <h2 class="text-3xl font-bold text-center mb-4">Gestion des Produits</h2>
     <div class="mb-8 flex justify-between items-center">
       <button
         @click="openCreateProductModal"
@@ -31,18 +30,21 @@
           <td class="py-2 px-4 border">{{ product.prix }}</td>
           <td class="py-2 px-4 border">{{ product.stock }}</td>
           <td class="py-2 px-4 border">
-            <button
-              @click="openEditProductModal(product)"
-              class="bg-yellow-500 text-white px-4 py-2 rounded mr-2"
-            >
-              <i class="bi bi-pencil"></i>
-            </button>
-            <button
-              @click="deleteProduct(product.id)"
-              class="bg-red-500 text-white px-4 py-2 rounded"
-            >
-              <i class="bi bi-trash"></i>
-            </button>
+            <div class="flex space-x-2 justify-center">
+              <button
+                @click="openEditProductModal(product)"
+                class="bg-yellow-500 text-white px-4 py-2 rounded"
+              >
+                <i class="bi bi-pencil"></i>
+              </button>
+              <delete-button
+                :on-confirm="() => deleteProduct(product.id)"
+                button-class="bg-red-500 text-white px-4 py-2 rounded"
+                confirmation-message="Êtes-vous sûr de vouloir supprimer ce produit ?"
+              >
+                <i class="bi bi-trash"></i>
+              </delete-button>
+            </div>
           </td>
         </tr>
       </tbody>
@@ -63,6 +65,7 @@ import axios from "axios";
 import ProductModal from "../components/manageProducts/ProductModal.vue";
 import Breadcrumbs from "../components/manageProducts/Breadcrumbs.vue";
 import StockChart from "../components/manageProducts/StockChart.vue";
+import DeleteButton from "../components/challengesRequirement/deleteButton.vue";
 
 const products = ref([]);
 const showModal = ref(false);
@@ -119,5 +122,11 @@ onMounted(() => {
   padding: 0.5rem;
   border-radius: 0.25rem;
   border: 1px solid #ccc;
+}
+
+.actions {
+  display: flex;
+  justify-content: center;
+  gap: 0.5rem;
 }
 </style>

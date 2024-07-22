@@ -131,6 +131,7 @@ export const confirmEmail = async (req, res) => {
     }
 
     user.isVerified = true;
+    authService.verifiedMongoUser(user.id);
     await user.save();
 
     res.status(200).json({ msg: "Email confirmé avec succès." });

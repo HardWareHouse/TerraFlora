@@ -8,9 +8,22 @@ const userSchema = z.object({
     prenom: z.string(),
     email: z.string(),
     telephone: z.string(),
+    wantsMailNewProduct: z.boolean(),
+    wantsMailRestockProduct: z.boolean(),
+    wantsMailChangingPrice: z.boolean(),
+    wantsMailNewsletter: z.boolean(),
 });
 
-const updateUserSchema = userSchema.extend({
+const adminUserSchema = userSchema.extend({
+    role: z.string(),
+});
+
+const updateUserSchema = userSchema.omit({
+    wantsMailNewProduct: true,
+    wantsMailRestockProduct: true,
+    wantsMailChangingPrice: true,
+    wantsMailNewsletter: true,
+}).extend({
     currentPassword: z.string().min(1, "Mot de passe actuel est requis"),
     newPassword: z.string().optional(),
     confirmPassword: z.string().optional(),
@@ -19,8 +32,10 @@ const updateUserSchema = userSchema.extend({
     path: ["confirmPassword"],
 });
 
+
 export const useUser = () => {
     const user = ref(null);
+    const users = ref([]);
     const loading = ref(false);
 
     // Fonction pour récupérer l'utilisateur par son ID
@@ -33,8 +48,31 @@ export const useUser = () => {
                 return;
             }
             user.value = userSchema.parse(response.data);
+            
         } catch (error) {
             console.error('Erreur lors de la récupération de l\'utilisateur:', error);
+        } finally {
+            loading.value = false;
+        }
+    };
+
+    // Fonction pour récupérer tous les utilisateurs
+    const fetchUsers = async () => {
+        loading.value = true;
+        try {
+            const response = await instance.get(`users`);
+            if (!response.data) {
+                console.error('Aucune donnée utilisateur trouvée');
+                return;
+            }
+
+            if (Array.isArray(response.data)) {
+                users.value = response.data.map((user) => adminUserSchema.parse(user));
+            } else {
+                console.error('Réponse invalide: les données de user sont invalides');
+            }
+        } catch (error) {
+            console.error('Erreur lors de la récupération des utilisateurs:', error);
         } finally {
             loading.value = false;
         }
@@ -102,8 +140,10 @@ export const useUser = () => {
 
     return {
         user,
+        users,
         loading,
         fetchUser,
+        fetchUsers,
         updateUser,
         isPasswordValid,
         isEmailAddressValid,

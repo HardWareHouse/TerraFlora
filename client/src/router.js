@@ -1,5 +1,6 @@
 import { createRouter, createWebHistory } from "vue-router";
 import { useAuthStore } from "./pinia/auth.js";
+import { useCartStore } from "./pinia/cart.js";
 import Admin from "./pages/adminDashboardPage.vue";
 import Home from "./pages/homePage.vue";
 import Shop from "./pages/shopPage.vue";
@@ -147,6 +148,12 @@ const router = createRouter({
 
 router.beforeEach(async (to, from, next) => {
   const authStore = useAuthStore();
+  const cartStore = useCartStore();
+  authStore.checkToken();
+
+  if (authStore.isLoggedIn) {
+    await cartStore.fetchUserCart();
+  }
 
   if (
     to.meta.requiresAuth &&
@@ -165,6 +172,7 @@ router.beforeEach(async (to, from, next) => {
   ) {
     next({ name: "Home" });
   } else {
+    
     next();
   }
 });

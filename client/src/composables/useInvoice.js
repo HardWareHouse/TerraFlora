@@ -19,7 +19,7 @@ export const useInvoice = () => {
     const fetchInvoices = async () => {
         loading.value = true;
         try {
-            const response = await instance.get(`invoices/`);
+            const response = await instance.get(`invoices`);
     
             if (!response.data) {
                 console.error('Aucune donnée facture trouvée');

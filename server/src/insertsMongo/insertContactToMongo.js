@@ -17,6 +17,7 @@ async function insertOrUpdateContactInMongo(contactSQL) {
         dateResponse: contactSQL.dateResponse,
         isResponded: contactSQL.isResponded,
         user: {
+            _id: contactSQL.User.id,
             nom: contactSQL.User.nom,
             prenom: contactSQL.User.prenom,
             email: contactSQL.User.email,
@@ -40,7 +41,7 @@ async function insertContactToMongo() {
     let contacts = await ContactSQL.findAll({
         include: {
             model: User,
-            attributes: ['nom', 'prenom', 'email']
+            attributes: ['id', 'nom', 'prenom', 'email']
         }
     });
 

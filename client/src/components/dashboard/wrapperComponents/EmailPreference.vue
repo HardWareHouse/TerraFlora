@@ -37,20 +37,36 @@
 </template>
 
 <script setup>
-import { ref, watch } from 'vue';
-import axios from 'axios';
+import { ref, watch, onMounted, inject } from 'vue';
+import instance from '../../../axios.js';
 import { useAuthStore } from '../../../pinia/auth.js'; 
+import { useUser } from '../../../composables/useUser.js';
+
+const { user, loading, fetchUser } = useUser();
 
 const authStore = useAuthStore();
+const userId = inject('userId');
 
-const userId = ref(authStore.id);
 const email = ref(authStore.email);
 const tokenMailPreference = ref(authStore.tokenMailPreference);
 
-const wantsMailNewProduct = ref(authStore.wantsMailNewProduct);
-const wantsMailRestockProduct = ref(authStore.wantsMailRestockProduct);
-const wantsMailChangingPrice = ref(authStore.wantsMailChangingPrice);
-const wantsMailNewsletter = ref(authStore.wantsMailNewsletter);
+const wantsMailNewProduct = ref();
+const wantsMailRestockProduct = ref();
+const wantsMailChangingPrice = ref();
+const wantsMailNewsletter = ref();
+
+onMounted(() => {
+  if (userId && userId.value) {
+    fetchUser(userId.value).then(() => {
+      if (user.value) {
+        wantsMailChangingPrice.value = user.value.wantsMailChangingPrice;
+        wantsMailNewProduct.value = user.value.wantsMailNewProduct;
+        wantsMailRestockProduct.value = user.value.wantsMailRestockProduct;
+        wantsMailNewsletter.value = user.value.wantsMailNewsletter;
+      }
+    });
+  }
+});
 
 watch(() => authStore.wantsMailNewProduct, (newValue) => {
   wantsMailNewProduct.value = newValue;
@@ -91,20 +107,20 @@ const updatePreference = async (preference, value) => {
     let url = '';
     switch (preference) {
       case 'wantsMailNewProduct':
-        url = 'http://localhost:8000/emailPreferences/updateWantsMailNewProduct';
+        url = 'emailPreferences/updateWantsMailNewProduct';
         break;
       case 'wantsMailRestockProduct':
-        url = 'http://localhost:8000/emailPreferences/updateWantsMailRestockProduct';
+        url = 'emailPreferences/updateWantsMailRestockProduct';
         break;
       case 'wantsMailChangingPrice':
-        url = 'http://localhost:8000/emailPreferences/updateWantsMailChangingPrice';
+        url = 'emailPreferences/updateWantsMailChangingPrice';
         break;
       case 'wantsMailNewsletter':
-        url = 'http://localhost:8000/emailPreferences/updateWantsMailNewsletter';
+        url = 'emailPreferences/updateWantsMailNewsletter';
         break;
     }
 
-    const response = await axios.put(url, {
+    const response = await instance.put(url, {
       [preference]: value
     }, {
       headers: {

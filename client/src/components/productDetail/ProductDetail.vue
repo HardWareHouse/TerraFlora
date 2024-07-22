@@ -10,6 +10,7 @@
       </div>
       <div class="product-info lg:w-1/2 p-4">
         <h1 class="text-3xl font-bold mb-4">{{ product.nom }}</h1>
+        <p class="mb-4 text-gray-600">Marque: {{ product.marque }}</p>
         <div class="flex items-center mb-4">
           <div class="text-yellow-500 mr-2">
             <i class="bi bi-star text-gray-300" v-for="n in 5" :key="n"></i>
@@ -17,8 +18,8 @@
           <span class="text-gray-500">0 Reviews</span>
         </div>
         <div class="flex items-center mb-4">
-          <span class="text-2xl font-bold text-red-600 mr-2">${{ product.prix }}</span>
-          <span v-if="product.isPromotion" class="line-through text-gray-500">${{ (product.prix / ((100 - product.pourcentagePromotion) / 100)).toFixed(2) }}</span>
+          <span class="text-2xl font-bold text-red-600 mr-2">{{ product.prix }} €</span>
+          <span v-if="product.isPromotion" class="line-through text-gray-500">{{ (product.prix / ((100 - product.pourcentagePromotion) / 100)).toFixed(2) }} €</span>
         </div>
         <div :class="{'text-red-600': product.stock === 0, 'text-yellow-500': product.stock <= product.stockThreshold && product.stock > 0, 'text-green-600': product.stock > product.stockThreshold}" class="mb-4 font-semibold">
           {{ product.stock }} EN STOCK

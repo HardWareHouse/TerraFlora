@@ -5,16 +5,25 @@ import z from 'zod';
 const addressSchema = z.object({
   id: z.string().optional(),
   voie: z.enum(['allée', 'avenue', 'boulevard', 'chemin', 'cours', 'impasse', 'passage', 'place', 'quai', 'route', 'rue', 'square', 'voie']),
-  rue: z.string(),
-  numero: z.string(),
-  ville: z.string(),
-  codePostal: z.string(),
-  // isDeliveryAddress: z.boolean(),
-  // isBillingAddress: z.boolean(),
+  rue: z.string().min(1).max(50),
+  numero: z.string().min(1).max(4),
+  ville: z.string().min(1).max(50),
+  codePostal: z.string().min(5).max(5),
+  isDeliveryAddress: z.boolean(),
+  isBillingAddress: z.boolean(),
+});
+
+const addressUpdateSchema = addressSchema.extend({
+  user: z.object({
+    nom: z.string(),
+    prenom: z.string(),
+    email: z.string(),
+  })
 });
 
 export const useAddress = () => {
   const address = ref(null);
+  const addresses = ref([]);
   const loading = ref(false);
 
   // Fonction pour récupérer l'adresse par l'ID de l'utilisateur
@@ -34,6 +43,28 @@ export const useAddress = () => {
       loading.value = false;
     }
   };
+
+  // Fonction pour récupérer toutes les adresses
+  const fetchAddresses = async () => {
+    loading.value = true;
+    try {
+      const response = await instance.get('address');
+      if (!response.data) {
+        console.error('Aucune donnée adresse trouvée');
+        return;
+      }
+      
+      if (Array.isArray(response.data)) {
+        addresses.value = response.data.map((address) => addressUpdateSchema.parse(address));
+      } else {
+        console.error('Réponse invalide: les données d\'adresse sont invalides');
+      }
+    } catch (error) {
+      console.error('Erreur lors de la récupération des adresses:', error);
+    } finally {
+      loading.value = false;
+    }
+  }
 
   // Fonction pour créer une adresse
   const createAddress = async (userId, newAddress) => {
@@ -85,11 +116,35 @@ export const useAddress = () => {
     }
   };
 
+  //Fonction pour supprimer l'adresse par son ID
+  const deleteAddress = async (addressId) => {
+    loading.value = true;
+    try {
+      const response = await instance.delete(`address/${addressId}`);
+      if (!response.data) {
+        console.error('Aucune donnée adresse trouvée');
+        return;
+      }
+      
+      addressDeleted = addressSchema.parse(response.data);
+      if (addressDeleted) {
+        address.value = null;
+      }
+    } catch (error) {
+      console.error('Erreur lors de la suppression de l\'adresse:', error);
+    } finally {
+      loading.value = false;
+    }
+  };
+
   return {
     address,
+    addresses,
     loading,
     fetchAddress,
+    fetchAddresses,
     createAddress,
     updateAddress,
+    deleteAddress,
   };
 };
