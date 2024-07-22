@@ -38,7 +38,7 @@
 
 <script setup>
 import { ref, watch, onMounted, inject } from 'vue';
-import instance from '../../../axios.js';
+import axios from 'axios';
 import { useAuthStore } from '../../../pinia/auth.js'; 
 import { useUser } from '../../../composables/useUser.js';
 
@@ -104,23 +104,7 @@ const togglePreference = (preference) => {
 
 const updatePreference = async (preference, value) => {
   try {
-    let url = '';
-    switch (preference) {
-      case 'wantsMailNewProduct':
-        url = 'emailPreferences/updateWantsMailNewProduct';
-        break;
-      case 'wantsMailRestockProduct':
-        url = 'emailPreferences/updateWantsMailRestockProduct';
-        break;
-      case 'wantsMailChangingPrice':
-        url = 'emailPreferences/updateWantsMailChangingPrice';
-        break;
-      case 'wantsMailNewsletter':
-        url = 'emailPreferences/updateWantsMailNewsletter';
-        break;
-    }
-
-    const response = await instance.put(url, {
+    const response = await axios.put(`http://localhost:8000/emailPreferences/${userId.value}`, {
       [preference]: value
     }, {
       headers: {
