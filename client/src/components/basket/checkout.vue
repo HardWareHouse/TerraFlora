@@ -109,3 +109,10 @@ export default {
   },
 };
 </script>
+
+<style scoped>
+.container {
+  max-width: 1400px;
+  margin: 10px auto;
+}
+</style>
