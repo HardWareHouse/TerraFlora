@@ -7,7 +7,7 @@ export const createSession = async (req, res) => {
   try {
     const { lineItems } = req.body;
 
-    const formattedLineItems = lineItems.map(item => ({
+    const formattedLineItems = lineItems.map((item) => ({
       price: item.price,
       quantity: item.quantity,
     }));
@@ -23,7 +23,6 @@ export const createSession = async (req, res) => {
           shipping_rate: "shr_1PfMM4RvflFVG7kR6kksvnD1",
         },
       ],
-      tax_rates: ["txr_1PfM4MRvflFVG7kR5IOHbayX"],
       consent_collection: {
         terms_of_service: "required",
       },
@@ -53,7 +52,7 @@ export const createSession = async (req, res) => {
       mode: "payment",
       success_url: `${YOUR_DOMAIN}/success?session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${YOUR_DOMAIN}/cancel`,
-      automatic_tax: { enabled: true },
+      automatic_tax: { enabled: false },
     });
 
     res.json({ id: session.id });
@@ -211,7 +210,7 @@ export const createPaymentLink = async (req, res) => {
           url: "http://localhost:5173/success?session_id={CHECKOUT_SESSION_ID}",
         },
       },
-      automatic_tax: { enabled: true },
+      automatic_tax: { enabled: false },
     });
     res.json({ url: paymentLink.url });
   } catch (error) {
