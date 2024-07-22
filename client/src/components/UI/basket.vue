@@ -23,11 +23,7 @@
           <span>{{ subTotal }}€</span>
         </div>
         <div class="flex items-center justify-between mb-2">
-          <span class="font-semibold">Écotaxe</span>
-          <span>10.00€</span>
-        </div>
-        <div class="flex items-center justify-between mb-2">
-          <span class="font-semibold">TVA (20%)</span>
+          <span class="font-semibold">TVA (10%)</span>
           <span>{{ vat }}€</span>
         </div>
         <div class="flex items-center justify-between pt-2 border-t">
@@ -61,10 +57,10 @@ const subTotal = computed(() => {
   return cartStore.cartTotal || 0;
 });
 const vat = computed(() => {
-  return (subTotal.value * 0.20).toFixed(2);
+  return (subTotal.value * 0.10).toFixed(2);
 });
 const total = computed(() => {
-  return (parseFloat(subTotal.value) + 10 + parseFloat(vat.value)).toFixed(2);
+  return (parseFloat(subTotal.value)  + parseFloat(vat.value)).toFixed(2);
 });
 
 const viewCart = () => {
