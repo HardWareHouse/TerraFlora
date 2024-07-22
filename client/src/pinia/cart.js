@@ -9,28 +9,27 @@ export const useCartStore = defineStore('cart', {
         userId: null,
     }),
     getters: {
-        cartTotal: (state) => state.items.reduce((acc, item) => acc + parseFloat(item.prix) * item.quantity, 0),
-                cartItemCount: (state) => state.items.length,
+        cartTotal: (state) => state.items.reduce((acc, item) => acc + parseFloat(item.prix) * item.Panier_Produits.quantity, 0),
+        cartItemCount: (state) => state.items.length,
     },
     actions: {
         async fetchUserCart() {
             const authStore = useAuthStore();
-            authStore.getUseriD().then(userId => {
-              if (userId) {
-                instance.get(`cart/${userId}`).then(response => {
-                  if (response.data && response.data.id) {
-                    this.cartId = response.data.id;
-                    this.items = response.data.Produits.map(item => ({
-                      ...item,
-                    }));
-                    console.log(this.items);
-                    console.log('Cart ID:', this.cartId);
-                    console.log('Cart Items:', response.data.Produits);
-                  }
-                });
-              }
-            });
-          },
+            this.userId = await authStore.getUseriD();
+            if (this.userId) {
+                try {
+                    const response = await instance.get(`cart/${this.userId}`);
+                    if (response.data && response.data.id) {
+                        this.cartId = response.data.id;
+                        this.items = response.data.Produits.map(item => ({
+                            ...item,
+                        }));
+                    }
+                } catch (error) {
+                    console.error('Error fetching cart:', error);
+                }
+            }
+        },
         async addToCart(product, quantity = 1) {
             const authStore = useAuthStore();
             this.userId = await authStore.getUseriD();
@@ -45,12 +44,12 @@ export const useCartStore = defineStore('cart', {
                 try {
                     const response = await instance.post('cart', {
                         userId: this.userId,
-                        produits: [product.id],
+                        produits: [{ id: product.id, quantity }],
                     });
                     this.cartId = response.data.id;
                     this.items = response.data.produits.map(item => ({
                         ...item,
-                        quantity: item.Panier_Produits.quantity
+                        Panier_Produits: { quantity: item.Panier_Produits.quantity }
                     }));
                 } catch (error) {
                     console.error('Error creating cart:', error);
@@ -59,29 +58,38 @@ export const useCartStore = defineStore('cart', {
             } else {
                 // Mettre à jour le panier existant
                 try {
+                    const existingProduct = this.items.find(item => item.id === product.id);
+                    const newQuantity = existingProduct ? existingProduct.Panier_Produits.quantity + quantity : quantity;
                     const response = await instance.put(`cart/${this.cartId}`, {
                         userId: this.userId,
-                        produits: [product.id],
+                        produits: [{ id: product.id, quantity: newQuantity }],
                     });
-                    console.log(response.data);
+                    if (existingProduct) {
+                        existingProduct.Panier_Produits.quantity = newQuantity;
+                    } else {
+                        this.items.push({ ...product, Panier_Produits: { quantity } });
+                    }
                 } catch (error) {
                     console.error('Error updating cart:', error);
                     return;
                 }
             }
-            const existingProduct = this.items.find(item => item.id === product.id);
-            if (existingProduct) {
-                existingProduct.quantity += quantity;
-            } else {
-                this.items.push({ ...product, quantity });
-            }
         },
-        updateQuantity(productId, quantity) {
+        async updateQuantity(productId, quantity) {
             const product = this.items.find(item => item.id === productId);
             if (product) {
-                product.quantity = quantity;
-                if (product.quantity <= 0) {
+                product.Panier_Produits.quantity = quantity;
+                if (product.Panier_Produits.quantity <= 0) {
                     this.removeItem(productId);
+                } else {
+                    try {
+                        await instance.put(`cart/${this.cartId}`, {
+                            userId: this.userId,
+                            produits: [{ id: productId, quantity }],
+                        });
+                    } catch (error) {
+                        console.error('Error updating product quantity in cart:', error);
+                    }
                 }
             }
         },
@@ -89,11 +97,7 @@ export const useCartStore = defineStore('cart', {
             const authStore = useAuthStore();
             this.userId = await authStore.getUseriD();
             try {
-                await instance.delete(`cart/${this.userId}/product/${productId}`, {
-                    headers: {
-                        Authorization: `Bearer ${useAuthStore().token}`,
-                    },
-                });
+                await instance.delete(`cart/${this.userId}/product/${productId}`);
                 this.items = this.items.filter(item => item.id !== productId);
             } catch (error) {
                 console.error('Error removing product from cart:', error);
