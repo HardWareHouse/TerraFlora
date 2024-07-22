@@ -121,6 +121,7 @@ const routes = [
     path: "/stripe",
     name: "Stripe",
     component: AllPayments,
+    meta: { requiresAuth: true, roles: ["ROLE_ADMIN"] },
   },
   {
     path: "/success",
