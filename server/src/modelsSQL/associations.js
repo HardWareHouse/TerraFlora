@@ -12,6 +12,7 @@ import Adresse from './Adresse.js';
 import MethodePaiement from './MethodePaiement.js';
 import Image from './Image.js';
 import Panier_Produits from './Panier_Produits.js';
+import DeletedUser from './DeletedUser.js';
 
 // Associations
 
@@ -33,6 +34,9 @@ Adresse.belongsTo(User, { foreignKey: 'userId', targetKey: 'id' });
 
 User.hasMany(Contact, { foreignKey: 'userId', sourceKey: 'id' });
 Contact.belongsTo(User, { foreignKey: 'userId', targetKey: 'id' });
+
+User.hasOne(DeletedUser, { foreignKey: 'userId', sourceKey: 'id' });
+DeletedUser.belongsTo(User, { foreignKey: 'userId', targetKey: 'id' });
 // Panier associations
 Panier.hasOne(Commande, { foreignKey: 'panierId', sourceKey: 'id' });
 Commande.belongsTo(Panier, { foreignKey: 'panierId', targetKey: 'id' });

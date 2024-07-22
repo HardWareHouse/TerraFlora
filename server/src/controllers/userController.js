@@ -154,26 +154,23 @@ export const updateUser = async (req, res) => {
 
 // Supprimer un utilisateur
 export const deleteUser = async (req, res) => {
-  console.log("delete user");
   const { id } = req.params;
   const user = await userService.getUserById(id);
-  console.log("user", user);
-  console.log("check uuid");
+
   if (!id || !isValidUUID(id)) {
-    return res.status(400).json({ error: "Invalid or missing user ID" });
+    return res.status(400).json({ error: "Invalid or missing user dsdsID" });
   }
-  console.log("check admin");
+
   if (user.id !== id && user.role !== "ROLE_ADMIN") {
     return res.status(403).json({ error: "Unauthorized" });
   }
 
   try {
-    console.log("try get user");
     const userToDelete = await userService.getUserById(id);
     if (!userToDelete) {
       return res.status(404).json({ error: "User not found" });
     }
-    console.log("try delete user", id);
+
     const deletedUser = await userService.deleteUserById(id);
     if (!deletedUser) {
       return res.status(404).json({ error: "User not found" });

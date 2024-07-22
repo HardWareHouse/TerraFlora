@@ -22,10 +22,13 @@
                 <i class="bi bi-pencil-square mr-2"></i>
                 <span class="hidden md:inline">Modifier</span>
               </button>
-              <button @click="deleteResource(resource.id)" class="inline-flex items-center justify-center px-4 py-2 bg-red-500 text-white rounded hover:text-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-opacity-50">
-                <i class="bi bi-trash3 mr-2"></i>
-                <span class="hidden md:inline">Supprimer</span>
-              </button>
+              <DeleteButton 
+                :onConfirm="() => deleteResource(resource.id)" 
+                buttonClass="inline-flex items-center justify-center px-4 py-2 bg-red-500 text-white rounded hover:text-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-opacity-50"
+                confirmationMessage="Êtes-vous sûr de vouloir supprimer cette ressource ?"
+              >
+                Supprimer
+              </DeleteButton>
             </td>
           </tr>
         </tbody>
@@ -40,7 +43,12 @@
 </template>
 
 <script>
+import DeleteButton from '../../../challengesRequirement/deleteButton.vue';
+
 export default {
+  components: {
+    DeleteButton,
+  },
   props: {
     availableResources: {
       type: Array,

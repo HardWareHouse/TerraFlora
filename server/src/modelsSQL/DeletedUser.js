@@ -4,6 +4,11 @@ import { connection } from "./dataBase.js";
 const DeletedUser = connection.define(
   "DeletedUser",
   {
+    id: {
+      type: DataTypes.UUID,
+      defaultValue: DataTypes.UUIDV4,
+      primaryKey: true
+    },
     role: {
       type: DataTypes.STRING,
       allowNull: false,

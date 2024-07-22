@@ -1,7 +1,13 @@
 import mongoose from "mongoose";
+import { v4 as uuidv4 } from "uuid";
 
 const deletedUserSchema = new mongoose.Schema(
   {
+    _id: {
+      type: String,
+      default: uuidv4,
+      required: true,
+    },
     role: {
       type: String,
       default: "ROLE_USER",
@@ -17,6 +23,11 @@ const deletedUserSchema = new mongoose.Schema(
       default: false,
       required: true,
     },
+    userId: {
+      type: String,
+      default: uuidv4,
+      required: true,
+    },
   },
   {
     collection: "DeletedUser",
@@ -24,7 +35,7 @@ const deletedUserSchema = new mongoose.Schema(
 );
 
 deletedUserSchema.index(
-  { nom: "text", prenom: "text" },
+  { role: "text", 'user._id': "text" },
   { email: "searchIndex" }
 );
 

@@ -1,6 +1,7 @@
 import UserSQL from "../modelsSQL/User.js";
 import UserMongo from "../modelsMongo/User.mongo.js";
-import DeletedUser from "../modelsSQL/DeletedUser.js";
+import DeletedUserSQL from "../modelsSQL/DeletedUser.js";
+import DeletedUserMongo from "../modelsMongo/DeletedUser.mongo.js";
 import { comparePasswords } from "../helpers/passwordHelper.js";
 import { get } from "mongoose";
 
@@ -40,7 +41,7 @@ export const getAllUsers = async () => {
     _id: 0,
   });
 };
-import { Sequelize } from "sequelize";
+
 
 export const getUser = async (id) => {
   return await UserSQL.findByPk(id);
@@ -124,21 +125,41 @@ export const deleteUserById = async (id) => {
       return null;
     }
 
-    const {
-      id: userId,
-      nom: userNom,
-      prenom: userPrenom,
-      email: userEmail,
-      password: userPassword,
-      telephone: userTelephone,
-      ...userData
-    } = user.toJSON();
+    const deletedUserData = {
+      role: user.role,
+      isVerified: user.isVerified,
+      isBlocked: user.isBlocked,
+      userId: user.id,
+    };
 
-    await DeletedUser.create(userData);
+    const deletedUserSQL = await DeletedUserSQL.create(deletedUserData);
+    if (!deletedUserSQL) {
+      return null;
+    }
 
-    await user.destroy();
-    await UserMongo.findByIdAndDelete(id);
-    return user;
+    const deletedUserMongo = await DeletedUserMongo.create({
+      _id: deletedUserSQL.id,
+      role: deletedUserSQL.role,
+      isVerified: deletedUserSQL.isVerified,
+      isBlocked: deletedUserSQL.isBlocked,
+      userId: deletedUserSQL.userId,
+    });
+    if (!deletedUserMongo) {
+      return null;
+    }
+
+    const userSQLDeleted = await user.destroy();
+    if (!userSQLDeleted) {
+      return null;
+    }
+
+    const userMongoDeleted = await UserMongo.findByIdAndDelete(id);
+    if (!userMongoDeleted) {
+      return null;
+    }
+
+    return true;
+    
   } catch (error) {
     console.error("An error occurred:", error);
     throw error;

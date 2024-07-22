@@ -69,6 +69,24 @@ export const useContact = () => {
     }
   };
 
+  // Doit être modifié pour correspondre à la structure de contact
+  const deleteContact = async (contactId) => {
+    loading.value = true;
+    try {
+      const response = await instance.delete(`contacts/${contactId}`);
+      if (!response.data) {
+        throw new Error('Contact non trouvé');
+      }
+
+      contacts.value = contacts.value.filter((contact) => contact.id !== contactId);
+    } catch (error) {
+      console.error('Erreur lors de la suppression du contact:', error);
+      throw error;
+    } finally {
+      loading.value = false
+    }
+  }
+
   // Fonction pour vérifier si une adresse email est valide
   const isEmailAddressValid = (email) => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -80,6 +98,7 @@ export const useContact = () => {
     contacts,
     loading,
     fetchContacts,
+    deleteContact,
     sendContactMessage,
     isEmailAddressValid,
   };
