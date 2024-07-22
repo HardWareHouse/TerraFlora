@@ -1,6 +1,6 @@
 <template>
-  <div class="mx-5 mt-2">
-    <h1 class="text-4xl font-bold my-4 text-center">
+  <div class="w-3/4 mx-auto mt-2">
+    <h1 class="text-4xl font-bold my-10 text-center">
       CONDITIONS D'UTILISATION
     </h1>
 
@@ -155,8 +155,7 @@
     <p class="mb-4">
       Il est possible que certains produits ou services ne soient disponibles
       qu'en ligne à travers le site web. Il se peut que les quantités de ces
-      produits ou services soient limitées et que leur retour ou leur échange
-      soit strictement assujetti à notre Politique de retour.
+      produits ou services soient limitées.
     </p>
 
     <p class="mb-4">
@@ -220,9 +219,6 @@
       transactions et vous contacter en cas de besoin.
     </p>
 
-    <p class="mb-4">
-      Pour plus d'informations, veuillez consulter notre Politique de retour.
-    </p>
     <h2 class="text-xl font-semibold mb-4">SECTION 8 – OUTILS FACULTATIFS</h2>
 
     <p class="mb-4">
