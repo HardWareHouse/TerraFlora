@@ -160,6 +160,10 @@ router.beforeEach(async (to, from, next) => {
       return next({ name: 'Home' });
     }
 
+    if (to.name === "Dashboard" && authStore.role === "ROLE_ADMIN") {
+      return next({ name: "Admin" });
+    }
+
     next();
   } catch (error) {
     console.error('An error occurred during navigation guard:', error);

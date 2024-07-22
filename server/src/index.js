@@ -12,7 +12,6 @@ import orderRouter from "./routes/order.js";
 import cartRouter from "./routes/cart.js";
 import invoiceRouter from "./routes/invoice.js";
 import authRouter from "./routes/auth.js";
-import adminRouter from "./routes/admin.js";
 import produitRouter from "./routes/produit.js";
 import emailPreferenceRoutes from "./routes/emailPreference.js";
 import categorieRoutes from "./routes/categorie.js";
@@ -39,7 +38,6 @@ server.use(cors());
 // routes
 server.use("/users", userRouter);
 server.use("/auth", authRouter);
-server.use("/admin", adminRouter);
 server.use("/orders", orderRouter);
 server.use("/cart", cartRouter);
 server.use("/contacts", contactRouter);
