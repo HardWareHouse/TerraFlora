@@ -121,6 +121,7 @@ const routes = [
     path: "/stripe",
     name: "Stripe",
     component: AllPayments,
+    meta: { requiresAuth: true, roles: ["ROLE_ADMIN"] },
   },
   {
     path: "/success",
@@ -157,6 +158,10 @@ router.beforeEach(async (to, from, next) => {
     
     if (to.meta.requiresAuth && to.meta.roles && !to.meta.roles.includes(authStore.role)) {
       return next({ name: 'Home' });
+    }
+
+    if (to.name === "Dashboard" && authStore.role === "ROLE_ADMIN") {
+      return next({ name: "Admin" });
     }
 
     next();

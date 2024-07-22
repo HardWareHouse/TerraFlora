@@ -38,7 +38,10 @@ const handleTabClick = (tab) => {
         logout();
     } else if (tab === 'products') {
         redirectToManageProductsPage();
-    } else {
+    } else if (tab === 'refund') {
+        router.push('/stripe');
+    } 
+    else {
         selectTab(tab);
     }
 };
@@ -46,6 +49,7 @@ const handleTabClick = (tab) => {
 const tabs = [
     { id: 'resources', icon: 'bi-gear-fill', label: 'Gestion des Ressources' },
     { id: 'products', icon: 'bi bi-box-seam-fill', label: 'Gestion des Produits' },
+    { id: 'refund', icon: 'bi-arrow-return-left', label: 'Gestion des Remboursements'},
     { id: 'statistics', icon: 'bi-bar-chart-line-fill', label: 'Statistiques' },
     { id: 'contacts', icon: 'bi-people-fill', label: 'Contacts' },
     { id: 'others', icon: 'bi-three-dots', label: 'Autres' },
