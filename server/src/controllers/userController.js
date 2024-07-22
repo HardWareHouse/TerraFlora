@@ -1,7 +1,10 @@
 import * as userService from "../services/userService.js";
 import { isValidUUID } from "../helpers/validatorHelper.js";
 import { isEmailAddressValid } from "../helpers/emailAddressHelper.js";
-import { isPasswordValid, comparePasswords } from "../helpers/passwordHelper.js";
+import {
+  isPasswordValid,
+  comparePasswords,
+} from "../helpers/passwordHelper.js";
 
 // Lire les informations d'un utilisateur
 export const getUser = async (req, res) => {
@@ -36,9 +39,9 @@ export const getUser = async (req, res) => {
 export const getAllUsers = async (req, res) => {
   const user = req.user;
 
-  if (user.role !== "ROLE_ADMIN") {
-    return res.status(403).json({ error: "Unauthorized" });
-  }
+  // if (user.role !== "ROLE_ADMIN") {
+  //   return res.status(403).json({ error: "Unauthorized" });
+  // }
 
   try {
     const users = await userService.getAllUsers();
@@ -66,12 +69,20 @@ export const updateUser = async (req, res) => {
   }
 
   try {
-    const { nom, prenom, email, password, telephone, newPassword, confirmPassword } = req.body;
+    const {
+      nom,
+      prenom,
+      email,
+      password,
+      telephone,
+      newPassword,
+      confirmPassword,
+    } = req.body;
     if (!nom || !prenom || !email || !password || !telephone) {
       return res.status(400).json({ error: "Missing fields to update" });
     }
 
-    if(req.body.role || req.body.id) {
+    if (req.body.role || req.body.id) {
       return res.status(403).json({ error: "Unauthorized" });
     }
 
@@ -83,7 +94,7 @@ export const updateUser = async (req, res) => {
     if (existingUserWithEmail && existingUserWithEmail.id !== id) {
       return res.status(409).json({ error: "Email already in use" });
     }
-  
+
     if (password && !isPasswordValid(password)) {
       return res.status(400).json({ error: "Password is not strong enough" });
     }
@@ -92,11 +103,14 @@ export const updateUser = async (req, res) => {
     if (!existingUser) {
       return res.status(404).json({ error: "User not found" });
     }
-    if(existingUser.id !== user.id) {
+    if (existingUser.id !== user.id) {
       return res.status(403).json({ error: "Unauthorized" });
     }
 
-    const passwordMatch = await comparePasswords(password, existingUser.password);
+    const passwordMatch = await comparePasswords(
+      password,
+      existingUser.password
+    );
     if (!passwordMatch) {
       return res.status(401).json({ error: "Invalid password" });
     }
@@ -105,22 +119,24 @@ export const updateUser = async (req, res) => {
       nom: nom || existingUser.nom,
       prenom: prenom || existingUser.prenom,
       email: email || existingUser.email,
-      telephone: telephone || existingUser.telephone
+      telephone: telephone || existingUser.telephone,
     };
 
-    if(newPassword){
-      if(!confirmPassword){
+    if (newPassword) {
+      if (!confirmPassword) {
         return res.status(400).json({ error: "Missing confirm password" });
       }
 
-      if(newPassword !== confirmPassword){
+      if (newPassword !== confirmPassword) {
         return res.status(400).json({ error: "Passwords do not match" });
       }
 
-      if(!isPasswordValid(newPassword) || !isPasswordValid(confirmPassword)){
-        return res.status(400).json({ error: "The new password is not strong enough" });
+      if (!isPasswordValid(newPassword) || !isPasswordValid(confirmPassword)) {
+        return res
+          .status(400)
+          .json({ error: "The new password is not strong enough" });
       }
-      
+
       updatedUserData.password = newPassword;
     }
 
@@ -136,26 +152,28 @@ export const updateUser = async (req, res) => {
   }
 };
 
-
 // Supprimer un utilisateur
 export const deleteUser = async (req, res) => {
+  console.log("delete user");
   const { id } = req.params;
-  const user = req.user;
-
+  const user = await userService.getUserById(id);
+  console.log("user", user);
+  console.log("check uuid");
   if (!id || !isValidUUID(id)) {
     return res.status(400).json({ error: "Invalid or missing user ID" });
   }
-
+  console.log("check admin");
   if (user.id !== id && user.role !== "ROLE_ADMIN") {
     return res.status(403).json({ error: "Unauthorized" });
   }
 
   try {
+    console.log("try get user");
     const userToDelete = await userService.getUserById(id);
     if (!userToDelete) {
       return res.status(404).json({ error: "User not found" });
     }
-    
+    console.log("try delete user", id);
     const deletedUser = await userService.deleteUserById(id);
     if (!deletedUser) {
       return res.status(404).json({ error: "User not found" });

@@ -25,19 +25,23 @@ services:
     environment:
       - POSTGRES_LINK=postgres://root:password@postgres:5432/app
       - MONGODB_CONNECTION_STRING=mongodb://mongo:27017/terraflora?authSource=admin
-      - MONGODB_USER=root
-      - MONGODB_PASSWORD=password
+      - POSTGRES_USER=root
+      - POSTGRES_PASSWORD=password
 
   postgres:
-    image: postgres
+    image: registry.gitlab.com/dalibo/postgresql_anonymizer:latest
     ports:
       - "5432:5432"
     volumes:
       - postgres-data:/var/lib/postgresql/data
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+      - ./entrypoint.sh:/docker-entrypoint-initdb.d/entrypoint.sh
     environment:
       POSTGRES_USER: root
       POSTGRES_PASSWORD: password
       POSTGRES_DB: app
+    entrypoint: ["/bin/bash", "/docker-entrypoint-initdb.d/entrypoint.sh"]
+    command: tail -f /dev/null
 
   adminer:
     image: adminer:4.8.1
