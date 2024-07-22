@@ -15,9 +15,10 @@ export const createSession = async (req, res) => {
       },
       shipping_options: [
         {
-          shipping_rate: "shr_1PaL80RvflFVG7kRWebshOPO",
+          shipping_rate: "shr_1PfMM4RvflFVG7kR6kksvnD1",
         },
       ],
+      tax_rates: ["txr_1PfM4MRvflFVG7kR5IOHbayX"],
       consent_collection: {
         terms_of_service: "required",
       },
@@ -170,7 +171,7 @@ export const createPaymentLink = async (req, res) => {
       },
       shipping_options: [
         {
-          shipping_rate: "shr_1PaL80RvflFVG7kRWebshOPO",
+          shipping_rate: "shr_1PfMM4RvflFVG7kR6kksvnD1",
         },
       ],
       consent_collection: {
@@ -181,6 +182,7 @@ export const createPaymentLink = async (req, res) => {
           message: `I agree to the [Terms of Service](${YOUR_DOMAIN}/cgu)`,
         },
       },
+
       invoice_creation: {
         enabled: true,
       },
