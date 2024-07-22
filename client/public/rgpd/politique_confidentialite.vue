@@ -1,6 +1,6 @@
 <template>
-  <div class="mx-5 mt-2">
-    <h1 class="text-4xl font-bold my-5 text-center">
+  <div class="w-3/4 mx-auto mt-2">
+    <h1 class="text-4xl font-bold my-10 text-center">
       POLITIQUE DE CONFIDENTIALITÉ
     </h1>
     <p class="mb-4">
@@ -139,11 +139,16 @@
         Prestataires et sous-traitants : Nous travaillons avec différents
         prestataires tels que fournisseur informatique (<a
           href="https://www.digitalocean.com/legal/privacy-policy"
+          class="underline text-blue-500"
           >DigitalOcean</a
         >), prestataire d’outils de gestion (<a
           href="https://developer.laposte.fr/data-privacy"
+          class="underline text-blue-500"
           >La Poste</a
-        >) et de paiement (<a href="https://stripe.com/en-fr/privacy">Stripe</a
+        >) et de paiement (<a
+          class="underline text-blue-500"
+          href="https://stripe.com/en-fr/privacy"
+          >Stripe</a
         >). Ces différents partenaires auront parfois la qualité de
         sous-traitant au sens du RGPD. Les sous-traitants peuvent traiter vos
         données personnelles pour la prestation de ces services. Nos contrats de
@@ -267,8 +272,15 @@
       </li>
     </ul>
     <p class="mb-4">
-      Pour exercer vos droits, veuillez contacter notre référent à la protection
-      des données personnelles à l'adresse suivante : aria@llamascripters.com
+      Pour exercer vos droits, veuillez remplir le
+      <a
+        href="rgpd/demande_droits.pdf"
+        download="demande_droits.pdf"
+        class="underline text-blue-500"
+        >formulaire de demande</a
+      >
+      et de l'envoyer à notre référent à la protection des données personnelles
+      à l'adresse suivante : aria@llamascripters.com
     </p>
 
     <h2 class="text-xl font-semibold mb-4">

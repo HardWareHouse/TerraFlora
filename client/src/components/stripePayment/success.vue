@@ -46,10 +46,10 @@
           </p>
           <p>
             <strong class="font-semibold">Adresse : </strong>
-            <span> {{ customerDetails.address.line1 }},</span>
-            <span> {{ customerDetails.address.line2 }},</span>
-            <span> {{ customerDetails.address.city }},</span>
-            <span> {{ customerDetails.address.postal_code }},</span>
+            <span> {{ customerDetails.address.line1 }}, </span>
+            <span> {{ customerDetails.address.line2 }}, </span>
+            <span> {{ customerDetails.address.city }}, </span>
+            <span> {{ customerDetails.address.postal_code }}, </span>
             <span> {{ customerDetails.address.country }}</span>
           </p>
         </div>
@@ -66,10 +66,10 @@
           </p>
           <p>
             <strong class="font-semibold">Adresse : </strong>
-            <span> {{ shippingDetails.address.line1 }},</span>
-            <span> {{ shippingDetails.address.line2 }},</span>
-            <span> {{ shippingDetails.address.city }},</span>
-            <span> {{ shippingDetails.address.postal_code }},</span>
+            <span> {{ shippingDetails.address.line1 }}, </span>
+            <span> {{ shippingDetails.address.line2 }}, </span>
+            <span> {{ shippingDetails.address.city }}, </span>
+            <span> {{ shippingDetails.address.postal_code }}, </span>
             <span> {{ shippingDetails.address.country }}</span>
           </p>
         </div>

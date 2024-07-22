@@ -47,10 +47,12 @@ import { ref, onMounted, computed } from 'vue';
 import axios from 'axios';
 import { useRouter } from 'vue-router';
 import { useCartStore } from '../../pinia/cart.js';
+import { useToast } from 'vue-toastification';
 
 const products = ref([]);
 const cartStore = useCartStore();
 const router = useRouter();
+const toast = useToast();
 
 const fetchProducts = async () => {
   try {
@@ -74,13 +76,13 @@ const limitedProducts = computed(() => products.value.slice(0, 8));
 
 function addToCart(product) {
   const cartItem = cartStore.items.find(item => item.id === product.id);
-  const totalQuantity = cartItem ? cartItem.quantity + 1 : 1;
+  const totalQuantity = cartItem ? cartItem.Panier_Produits.quantity + 1 : 1;
 
   if (totalQuantity <= product.stock) {
     cartStore.addToCart(product, 1);
-    console.log(`Added 1 ${product.nom} to cart`);
+    toast.success(`${product.nom} a été ajouté au panier.`);
   } else {
-    alert('La quantité totale demandée dépasse le stock disponible');
+    toast.error('La quantité totale demandée dépasse le stock disponible');
   }
 }
 

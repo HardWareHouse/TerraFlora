@@ -89,9 +89,10 @@
 </template>
 
 <script setup>
-import { ref, computed, watch, onMounted } from 'vue';
+import { ref, computed, watch } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
 import { useCartStore } from '../../pinia/cart.js';
+import { useToast } from 'vue-toastification';
 import Pagination from './Pagination.vue';
 import axios from 'axios';
 
@@ -107,6 +108,7 @@ const products = ref([]);
 const route = useRoute();
 const router = useRouter();
 const cartStore = useCartStore();
+const toast = useToast();
 
 const fetchProducts = async () => {
   try {
@@ -167,13 +169,11 @@ function addToCart(product) {
 
   if (totalQuantity <= product.stock) {
     cartStore.addToCart(product, 1);
-    console.log(`Added 1 ${product.nom} to cart`);
+    toast.success(`${product.nom} a été ajouté au panier.`);
   } else {
-    alert('La quantité totale demandée dépasse le stock disponible');
+    toast.error('La quantité totale demandée dépasse le stock disponible');
   }
 }
-
-
 </script>
 
 <style scoped>

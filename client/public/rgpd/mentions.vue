@@ -1,6 +1,6 @@
 <template>
-  <div class="mx-5 mt-2">
-    <h1 class="text-4xl font-bold my-5 text-center">MENTIONS LÉGALES</h1>
+  <div class="w-3/4 mx-auto mt-2">
+    <h1 class="text-4xl font-bold my-10 text-center">MENTIONS LÉGALES</h1>
     <p class="mb-4">
       Conformément aux dispositions de la loi n° 2004-575 du 21 juin 2004 pour
       la confiance en l'économie numérique, il est précisé aux utilisateurs du
