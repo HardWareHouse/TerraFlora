@@ -8,6 +8,10 @@
           <span>{{ subTotal }}€</span>
         </div>
         <div class="flex justify-between items-center py-2 border-b">
+          <span>TVA (10%)</span>
+          <span>{{ vat }}€</span>
+        </div>
+        <div class="flex justify-between items-center py-2 border-b">
           <span>Livraison</span>
           <span>{{ shipping }}€</span>
         </div>
@@ -41,8 +45,12 @@ const subTotal = computed(() => {
 
 const shipping = ref(10);
 
+const vat = computed(() => {
+  return (subTotal.value * 0.10).toFixed(2);
+});
+
 const total = computed(() => {
-  return (subTotal.value + shipping.value).toFixed(2);
+  return (parseFloat(subTotal.value) + 10 + parseFloat(vat.value)).toFixed(2);
 });
 </script>
 
