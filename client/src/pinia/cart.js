@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia';
-import axios from 'axios';
+import instance from '../axios.js';
 import { useAuthStore } from './../pinia/auth.js'; 
 
 export const useCartStore = defineStore('cart', {
@@ -17,11 +17,7 @@ export const useCartStore = defineStore('cart', {
             const authStore = useAuthStore();
             authStore.getUseriD().then(userId => {
               if (userId) {
-                axios.get(`http://localhost:8000/cart/${userId}`, {
-                  headers: {
-                    Authorization: `Bearer ${this.token}`,
-                  },
-                }).then(response => {
+                instance.get(`cart/${userId}`).then(response => {
                   if (response.data && response.data.id) {
                     this.cartId = response.data.id;
                     this.items = response.data.Produits.map(item => ({
@@ -47,7 +43,7 @@ export const useCartStore = defineStore('cart', {
             if (!this.cartId) {
                 // Créer un nouveau panier s'il n'existe pas
                 try {
-                    const response = await axios.post('http://localhost:8000/cart', {
+                    const response = await instance.post('cart', {
                         userId: this.userId,
                         produits: [product.id],
                     });
@@ -63,7 +59,7 @@ export const useCartStore = defineStore('cart', {
             } else {
                 // Mettre à jour le panier existant
                 try {
-                    const response = await axios.put(`http://localhost:8000/cart/${this.cartId}`, {
+                    const response = await instance.put(`cart/${this.cartId}`, {
                         userId: this.userId,
                         produits: [product.id],
                     });
@@ -93,7 +89,7 @@ export const useCartStore = defineStore('cart', {
             const authStore = useAuthStore();
             this.userId = await authStore.getUseriD();
             try {
-                await axios.delete(`http://localhost:8000/cart/${this.userId}/product/${productId}`, {
+                await instance.delete(`cart/${this.userId}/product/${productId}`, {
                     headers: {
                         Authorization: `Bearer ${useAuthStore().token}`,
                     },
@@ -109,7 +105,7 @@ export const useCartStore = defineStore('cart', {
         },
         async subtractStock() {
             try {
-                const response = await axios.post('http://localhost:8000/product/subtract-stock', {
+                const response = await instance.post('product/subtract-stock', {
                     items: this.items
                 });
                 console.log('Stock updated successfully:', response.data);

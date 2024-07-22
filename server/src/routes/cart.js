@@ -1,7 +1,6 @@
 import Router from 'express';
 import {
   getCart,
-  getAllCartsByUser,
   createCart,
   updateCart,
   deleteCart,
@@ -11,11 +10,10 @@ import { authenticate, authorizeAdmin } from '../middlewares/authMiddleware.js';
 
 const router = Router();
 
-router.get('/',authorizeAdmin, getAllCartsByUser);
-router.get('/:id', getCart);
-router.post('/',createCart);
-router.put('/:id', updateCart);
-router.delete('/:id', deleteCart);
-router.delete('/:userId/product/:productId', deleteProductFromCart);
+router.get('/:id',authenticate, getCart);
+router.post('/', authenticate,createCart);
+router.put('/:id',authenticate, updateCart);
+router.delete('/:id',authenticate, deleteCart);
+router.delete('/:userId/product/:productId',authenticate, deleteProductFromCart);
 
 export default router;

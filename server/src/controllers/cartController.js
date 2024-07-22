@@ -6,6 +6,11 @@ import { isValidUUID } from "../helpers/validatorHelper.js";
 // Lire les informations d'un panier
 export const getCart = async (req, res) => {
   const { id } = req.params;
+  const user = req.user;
+
+  if (!id || !isValidUUID(id)) {
+    return res.status(400).json({ error: "Invalid or missing cart ID" });
+  }
 
   try {
     const cart = await Panier.findOne({
@@ -15,32 +20,16 @@ export const getCart = async (req, res) => {
         { model: User }
       ]
     });
-
+    
     if (!cart) {
       return res.status(404).json({ error: "Cart not found" });
     }
 
-    res.status(200).json(cart);
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-};
-
-// Lire tous les paniers d'un utilisateur
-export const getAllCartsByUser = async (req, res) => {
-  const user = req.user;
-
-  try {
-    const carts = await Panier.findAll({
-      where: { userId: user.id },
-      include: [{ model: Produit, through: { attributes: [] } }]
-    });
-
-    if (!carts) {
-      return res.status(404).json({ error: "Carts not found" });
+    if (cart.userId !== user.id) {
+      return res.status(403).json({ error: "Unauthorized" });
     }
 
-    res.status(200).json(carts);
+    res.status(200).json(cart);
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
@@ -59,9 +48,9 @@ export const createCart = async (req, res) => {
     return res.status(400).json({ error: "Invalid UUID format" });
   }
 
-  // if (userId !== user.id && user.role !== "ROLE_ADMIN") {
-  //   return res.status(403).json({ error: "Unauthorized" });
-  // }
+  if (userId !== user.id) {
+    return res.status(403).json({ error: "Unauthorized" });
+  }
 
   try {
     const existingCart = await Panier.findOne({ where: { userId } });
@@ -91,6 +80,7 @@ export const createCart = async (req, res) => {
 // Mettre à jour un panier ou ajouter un produit à un panier existant
 export const updateCart = async (req, res) => {
   const { userId, produits } = req.body;
+  const user = req.user;
 
   if (!userId || !isValidUUID(userId)) {
     return res.status(400).json({ error: "Invalid or missing user ID" });
@@ -100,12 +90,20 @@ export const updateCart = async (req, res) => {
     return res.status(400).json({ error: "Products are required" });
   }
 
+  if (userId !== user.id) {
+    return res.status(403).json({ error: "Unauthorized" });
+  }
+
   try {
     let cart = await Panier.findOne({ where: { userId }, include: [Produit] });
 
     if (!cart) {
       // Créer un nouveau panier si l'utilisateur n'en a pas
       cart = await Panier.create({ userId });
+    }
+
+    if (cart.userId !== user.id) {
+      return res.status(403).json({ error: "Unauthorized" });
     }
 
     // Ajouter ou mettre à jour les produits au panier
@@ -150,9 +148,9 @@ export const deleteCart = async (req, res) => {
       return res.status(404).json({ error: "Cart not found" });
     }
 
-    // if (cart.userId !== user.id && user.role !== "ROLE_ADMIN") {
-    //   return res.status(403).json({ error: "Unauthorized" });
-    // }
+    if (cart.userId !== user.id) {
+      return res.status(403).json({ error: "Unauthorized" });
+    }
 
     await cart.destroy();
     res.status(204).json({ error: "Panier supprimé avec succès" });
@@ -164,9 +162,14 @@ export const deleteCart = async (req, res) => {
 // Supprimer un produit d'un panier
 export const deleteProductFromCart = async (req, res) => {
   const { userId, productId } = req.params;
+  const user = req.user;
 
   if (!userId || !isValidUUID(userId)) {
     return res.status(400).json({ error: "Invalid or missing user ID" });
+  }
+
+  if (userId !== user.id) {
+    return res.status(403).json({ error: "Unauthorized" });
   }
 
   if (!productId || !isValidUUID(productId)) {
@@ -181,6 +184,10 @@ export const deleteProductFromCart = async (req, res) => {
 
     if (!cart) {
       return res.status(404).json({ error: "Cart not found" });
+    }
+
+    if (cart.userId !== user.id) {
+      return res.status(403).json({ error: "Unauthorized" });
     }
 
     const product = await Produit.findByPk(productId);

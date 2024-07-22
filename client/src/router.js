@@ -149,6 +149,7 @@ const router = createRouter({
 router.beforeEach(async (to, from, next) => {
   const authStore = useAuthStore();
   const cartStore = useCartStore();
+  authStore.checkToken();
 
   if (authStore.isLoggedIn) {
     await cartStore.fetchUserCart();
