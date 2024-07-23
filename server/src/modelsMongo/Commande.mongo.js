@@ -35,6 +35,30 @@ const commandeSchema = new mongoose.Schema(
             type: String,
             required: false,
         },
+        productArray: {
+            type: [
+                {
+                    _id: {
+                        type: String,
+                        default: uuidv4,
+                        required: true,
+                    },
+                    nom: {
+                        type: String,
+                        required: true,
+                    },
+                    prix: {
+                        type: Number,
+                        required: true,
+                    },
+                    quantite: {
+                        type: Number,
+                        required: true,
+                    }
+                },
+            ],
+            required: true,
+        },
         user: {
             type: {
                 _id: {

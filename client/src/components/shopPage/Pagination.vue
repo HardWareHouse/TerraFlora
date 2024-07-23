@@ -4,7 +4,7 @@
       :disabled="currentPage === 1" 
       @click="goToPage(currentPage - 1)"
       class="px-4 py-2 mx-1 border rounded disabled:opacity-50">
-      Previous
+      Précédent
     </button>
     <button 
       v-for="page in totalPages" 
@@ -18,7 +18,7 @@
       :disabled="currentPage === totalPages" 
       @click="goToPage(currentPage + 1)"
       class="px-4 py-2 mx-1 border rounded disabled:opacity-50">
-      Next
+      Suivant
     </button>
   </div>
 </template>

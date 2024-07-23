@@ -1,9 +1,19 @@
 <template>
   <div id="orders" class="p-6 bg-white rounded-lg shadow-md">
     <h3 class="text-2xl font-medium mb-4">Commandes</h3>
+    
+    <div class="mb-4">
+      <input 
+        type="text" 
+        v-model="searchQuery" 
+        placeholder="Rechercher par numéro de commande" 
+        class="w-full p-2 border rounded" 
+      />
+    </div>
+
     <div v-if="loading" class="text-center">Chargement...</div>
     <div v-else>
-      <div v-if="myOrders.length > 0" class="overflow-x-auto">
+      <div v-if="filteredOrders.length > 0" class="overflow-x-auto">
         <table class="min-w-full border border-gray-200 text-center">
           <thead>
             <tr class="bg-gray-100">
@@ -15,8 +25,8 @@
             </tr>
           </thead>
           <tbody>
-            <tr v-for="order in myOrders" :key="order.id">
-              <td class="p-3 border border-gray-200 lg:p-4">C#{{ order.numero }}</td>
+            <tr v-for="order in filteredOrders" :key="order.id">
+              <td class="p-3 border border-gray-200 lg:p-4">{{ order.numero }}</td>
               <td class="p-3 border border-gray-200 lg:p-4">{{ formatDate(order.dateCommande) }}</td>
               <td class="p-3 border border-gray-200 lg:p-4">{{ order.statut }}</td>
               <td class="p-3 border border-gray-200 lg:p-4">{{ order.total }} €</td>
@@ -37,7 +47,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted, inject } from 'vue';
+import { ref, onMounted, inject, computed } from 'vue';
 import { useAuthStore } from '../../../pinia/auth.js';
 import { useOrder } from '../../../composables/useOrder.js';
 
@@ -47,6 +57,7 @@ const { orders, loading, fetchOrders } = useOrder();
 const userId = inject('userId');
 const myUserId = ref(null);
 const myOrders = ref([]);
+const searchQuery = ref('');
 
 const formatDate = (dateString) => {
   const date = new Date(dateString);
@@ -56,6 +67,14 @@ const formatDate = (dateString) => {
   return `${day}/${month}/${year}`;
 };
 
+const filteredOrders = computed(() => {
+  if (!searchQuery.value) {
+    return myOrders.value;
+  }
+  return myOrders.value.filter(order => 
+    order.numero.toLowerCase().includes(searchQuery.value.toLowerCase())
+  );
+});
 
 onMounted(() => {
   if (userId && userId.value) {

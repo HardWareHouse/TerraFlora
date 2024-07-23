@@ -8,10 +8,6 @@
       >
         Ajouter un Produit
       </button>
-      <select v-model="selectedProductId" @change="updateSelectedProduct" class="form-select">
-        <option value="" disabled>Choisissez un produit</option>
-        <option v-for="product in products" :key="product.id" :value="product.id">{{ product.nom }}</option>
-      </select>
     </div>
     <table class="min-w-full bg-white">
       <thead>
@@ -55,7 +51,16 @@
       @close="closeModal"
       @save="fetchProducts"
     />
-    <StockChart v-if="selectedProductId" :produitId="selectedProductId" />
+
+    <div class="mt-8 flex items-center">
+      <label for="product-select" class="mr-4 font-semibold">Afficher le graphique d'évolution des stocks pour le produit :</label>
+      <select id="product-select" v-model="selectedProductId" @change="updateSelectedProduct" class="form-select">
+        <option value="" disabled>Choisissez un produit</option>
+        <option v-for="product in products" :key="product.id" :value="product.id">{{ product.nom }}</option>
+      </select>
+    </div>
+
+    <StockChart v-if="selectedProductId" :produitId="selectedProductId" class="mt-8" />
   </div>
 </template>
 

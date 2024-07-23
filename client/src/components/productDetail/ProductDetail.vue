@@ -48,8 +48,14 @@
       </div>
     </div>
   </div>
-  <div v-else>
-    <p>Chargement des détails du produit...</p>
+  <div v-else class="flex flex-col items-center justify-center min-h-screen text-center">
+    <div class="bg-red-100 text-red-600 p-6 rounded-full mb-4">
+      <i class="bi bi-exclamation-triangle-fill" style="font-size: 3rem;"></i>
+    </div>
+    <h1 class="text-3xl font-bold mb-4">Erreur : le produit est introuvable</h1>
+    <p class="text-gray-600 mb-4">Nous sommes désolés, mais le produit que vous recherchez n'existe pas ou a été supprimé.</p>
+    <router-link to="/shop" class="px-4 py-2 bg-red-600 text-white rounded">Retour aux produits</router-link>
+    <router-link to="/" class="px-4 py-2 bg-gray-600 text-white rounded mt-2">Retour à l'accueil</router-link>
   </div>
 </template>
 
