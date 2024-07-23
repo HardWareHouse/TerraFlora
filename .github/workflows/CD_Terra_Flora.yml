@@ -50,4 +50,4 @@ jobs:
             source /home/aria/.nvm/nvm.sh
             nvm use 20.15.1
             npm install
-            pm2 start --node-args="--env-file=.env" src/index.js
+            pm2 restart --node-args="--env-file=.env" src/index.js

@@ -141,10 +141,18 @@
           href="https://www.digitalocean.com/legal/privacy-policy"
           class="underline text-blue-500"
           >DigitalOcean</a
+        >), prestataire d'envoie de courriel (<a
+          href="https://www.brevo.com/fr/legal/privacypolicy/"
+          class="underline text-blue-500"
+          >Brevo</a
         >), prestataire d’outils de gestion (<a
           href="https://developer.laposte.fr/data-privacy"
           class="underline text-blue-500"
           >La Poste</a
+        >), prestataire de livraison (<a
+          href="https://www.chronopost.fr/fr/politique-informatique-et-libertes#:~:text=Chronopost%20s'engage%20%C3%A0%20prendre%20toutes%20mesures%20n%C3%A9cessaires%20afin%20d,non%20autoris%C3%A9s%20y%20aient%20acc%C3%A8s."
+          class="underline text-blue-500"
+          >Chronopost</a
         >) et de paiement (<a
           class="underline text-blue-500"
           href="https://stripe.com/en-fr/privacy"
@@ -188,7 +196,9 @@
         archivées pour une durée de 5 ans après l’exécution du contrat, à des
         fins de protection de nos intérêts légitimes.
       </li>
-      <li class="mb-2">Gestion des cookies : 13 mois</li>
+      <li class="mb-2">
+        Gestion des cookies : 13 mois à partir de la création d'un compte
+      </li>
       <li class="mb-2">
         Candidats : En tant que candidat, vos données sont conservées pour une
         durée de 6 mois à compter de la fin du processus de recrutement, sauf
