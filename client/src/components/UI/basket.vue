@@ -36,7 +36,7 @@
         </div>
         
         <!-- Ajoutez un bouton "Réserver" -->
-        <button @click="reserveCart" class="w-full px-4 py-2 mt-2 font-semibold text-white bg-red-700 rounded-md hover:bg-gray-800">Réserver</button>
+        <button @click="reserveCart" class="w-full px-4 py-2 mt-2 font-semibold text-white bg-red-700 rounded-md hover:bg-gray-800">Réserver le panier pour 15 min </button>
 
         <div class="mt-4">
           <button @click="viewCart" class="w-full px-4 py-2 mb-2 font-semibold text-white bg-red-700 rounded-md hover:bg-gray-800">Voir mon panier</button>
@@ -86,7 +86,6 @@ const getImageUrl = (imagePath) => {
   return `http://localhost:8000/uploads/${imagePath.split('/').pop()}`;
 };
 
-// Ajoutez la méthode reserveCart
 const reserveCart = async () => {
   try {
     const response = await instance.post('cart/reserve', {

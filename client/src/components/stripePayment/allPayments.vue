@@ -8,7 +8,6 @@
           <tr class="bg-gray-100 text-left border-b">
             <th class="p-4">Montant</th>
             <th class="p-4">Client</th>
-            <th class="p-4">Description</th>
             <th class="p-4">Statut</th>
             <th class="p-4">Date</th>
             <th class="p-4">Action</th>
@@ -22,7 +21,6 @@
           >
             <td class="p-4">{{ (transaction.amount / 100).toFixed(2) }} €</td>
             <td class="p-4">{{ transaction.billing_details.name }}</td>
-            <td class="p-4">{{ transaction.description }}</td>
             <td class="p-4">
               <span v-if="!transaction.refunded" class="text-green-500">
                 Réussi
@@ -39,13 +37,13 @@
             </td>
             <td class="p-4">{{ formatTimestamp(transaction.created) }}</td>
             <td class="p-4 flex items-center">
-              <a :href="transaction.receipt_url" download>
+              <a :href="transaction.receipt_url" target="_blank">
                 <i class="bi bi-eye"></i>
               </a>
               <ConfirmationModal
                 v-if="!transaction.refunded"
                 :onConfirm="() => issueRefund(transaction.id)"
-                buttonClass="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded ml-5"
+                buttonClass="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded ml-4"
                 confirmationMessage="Êtes-vous sûr de vouloir rembourser cette transaction ?"
               >
                 Rembourser

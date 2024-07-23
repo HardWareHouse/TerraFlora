@@ -354,22 +354,21 @@ export const subtractStock = async (req, res) => {
           await saveStockHistory(product.id, product.stock);
 
           // Vérification des niveaux de stock et envoi des alertes
-          // if (product.stock <= product.stockThreshold) {
-          //   const users = await getAllUsers();
-          //   for (const user of users) {
-          //     if (product.stock === 0) {
-          //       if (user.wantsMailRestockProduct) {
-          //         await sendAlertEmailNoStock(user, `Critique: le produit "${product.nom}" est en rupture de stock.`);
-          //       }
-          //     } else {
-          //       if (user.wantsMailRestockProduct) {
-          //         await sendAlertEmailLowStock(user, `Alerte: le produit "${product.nom}" a un stock faible (${product.stock} restants).`);
-          //       }
-          //     }
-          //   }
-          // }
-        } 
-        else {
+          if (product.stock <= product.stockThreshold) {
+            const users = await getAllUsers();
+            for (const user of users) {
+              if (product.stock === 0) {
+                if (user.wantsMailRestockProduct) {
+                  // await sendAlertEmailNoStock(user, `Critique: le produit "${product.nom}" est en rupture de stock.`);
+                }
+              } else {
+                if (user.wantsMailRestockProduct) {
+                  // await sendAlertEmailLowStock(user, `Alerte: le produit "${product.nom}" a un stock faible (${product.stock} restants).`);
+                }
+              }
+            }
+          }
+        } else {
           return res.status(400).json({ message: `Not enough stock available for ${product.nom}.` });
         }
       } else {

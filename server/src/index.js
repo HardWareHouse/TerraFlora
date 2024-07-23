@@ -18,6 +18,7 @@ import categorieRoutes from "./routes/categorie.js";
 import adresseRoutes from "./routes/adresse.js";
 import stripeRouter from "./routes/stripe.js";
 import webhookRouter from "./routes/webhook.js";
+import helmet from "helmet";
 import path from "path";
 import "./cron/stockAlertCron.js";
 import "./cron/reservationCron.js";
@@ -32,10 +33,27 @@ server.use(
   webhookRouter
 );
 
+const corsOptions = {
+  origin: process.env.FRONT_URL,
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
+  credentials: true
+};
+
 server.use(bodyParser.json());
 server.use(express.urlencoded({ extended: true }));
-server.use(cors());
-
+server.use(cors(corsOptions));
+server.use(
+  helmet({
+    contentSecurityPolicy: {
+      directives: {
+        ...helmet.contentSecurityPolicy.getDefaultDirectives()
+      },
+    },
+    xssFilter: true
+  })
+);
+console.log(process.env.FRONT_URL);
 // routes
 server.use("/users", userRouter);
 server.use("/auth", authRouter);
