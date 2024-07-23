@@ -1,7 +1,7 @@
 <template>
   <div>
     <button @click="openModal" :class="buttonClass">
-      <slot>Supprimer</slot>
+      <slot>Rembourser</slot>
     </button>
     <div
       v-if="isModalOpen"
@@ -11,7 +11,7 @@
         <p class="mb-4 text-lg">{{ confirmationMessage }}</p>
         <div class="flex justify-center space-x-4">
           <button
-            @click="confirmDelete"
+            @click="confirmAction"
             :disabled="isLoading"
             class="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700 disabled:opacity-50"
           >
@@ -48,7 +48,7 @@ const props = defineProps({
   },
   confirmationMessage: {
     type: String,
-    default: "Êtes-vous sûr de vouloir supprimer cette donnée ?",
+    default: "Êtes-vous sûr de vouloir effectuer cette action ?",
   },
 });
 
@@ -64,13 +64,13 @@ const closeModal = () => {
   isModalOpen.value = false;
 };
 
-const confirmDelete = async () => {
+const confirmAction = async () => {
   isLoading.value = true;
   try {
     await props.onConfirm();
     isModalOpen.value = false;
   } catch (error) {
-    errorMessage.value = "Erreur lors de la suppression. Veuillez réessayer.";
+    errorMessage.value = "Erreur lors de l'action. Veuillez réessayer.";
   } finally {
     isLoading.value = false;
   }
