@@ -126,7 +126,7 @@ export const updateUser = async (req, res) => {
         return res.status(400).json({ error: "Missing fields to update" });
       }
 
-      if (req.body.role || req.body.id) {
+      if (role) {
         return res.status(403).json({ error: "Unauthorized" });
       }
 
