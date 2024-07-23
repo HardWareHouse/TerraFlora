@@ -189,7 +189,7 @@
       Terra Flora offre un service de livraison. Lors de l’achat en ligne,
       diverses informations sur le client et le destinataire de la commande sont
       demandées telles que le nom et le numéro de téléphone pour les joindre.
-      Ces données sont partagée avec notre prestataire (La Poste) afin
+      Ces données sont partagée avec notre prestataire (Chronopost) afin
       d'effectuer la livrasion de votre commande. Lors des fêtes annuelles
       telles que la St-Valentin, la fête des mères et Noël (liste non
       exhaustive), Terra Flora ne peut pas garantir la plage horaire de

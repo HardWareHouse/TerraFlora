@@ -29,7 +29,8 @@
     <h2 class="text-xl font-semibold mb-4">Hébergement</h2>
     <p class="mb-4">
       Le Site est hébergé par la société Digital Ocean, situé 101 6th Ave New
-      York, NY 10013, (contact téléphonique : +1 888 890 6714).
+      York, NY 10013, (contact téléphonique : +1 888 890 6714). Le serveur qui
+      héberge le Site est situé à Francfort, en Allemagne.
     </p>
 
     <h2 class="text-xl font-semibold mb-4">Directeur de publication</h2>
