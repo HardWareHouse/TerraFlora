@@ -79,7 +79,7 @@ const selectedProductId = ref("");
 
 const fetchProducts = async () => {
   try {
-    const response = await axios.get("http://localhost:8000/product");
+    const response = await axios.get(import.meta.env.VITE_API_URL + "product");
     products.value = response.data;
   } catch (error) {
     console.error("Error fetching products:", error);
@@ -102,7 +102,7 @@ const closeModal = () => {
 
 const deleteProduct = async (id) => {
   try {
-    await axios.delete(`http://localhost:8000/product/${id}`);
+    await axios.delete(import.meta.env.VITE_API_URL + `product/${id}`);
     fetchProducts();
   } catch (error) {
     console.error("Error deleting product:", error);

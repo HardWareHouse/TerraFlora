@@ -122,7 +122,7 @@ const toast = useToast();
 const fetchProducts = async () => {
   try {
     const searchQuery = route.query.search || '';
-    const response = await axios.get('http://localhost:8000/product/filter', {
+    const response = await axios.get(import.meta.env.VITE_API_URL + 'product/filter', {
       params: { ...props.filters, search: searchQuery }
     });
     products.value = response.data;
@@ -135,7 +135,7 @@ function getImageUrl(imagePath) {
   if (!imagePath) {
     return '/images/flower.webp';
   }
-  return `http://localhost:8000/${imagePath}`;
+  return `${import.meta.env.VITE_API_URL}${imagePath}`;
 }
 
 watch(() => props.filters, fetchProducts, { immediate: true });

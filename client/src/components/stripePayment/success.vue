@@ -115,13 +115,13 @@ export default {
         try {
           // Fetch session details
           const sessionResponse = await axios.get(
-            `http://localhost:8000/stripe/session/${sessionId}`
+           import.meta.env.VITE_API_URL + `stripe/session/${sessionId}`
           );
           const session = sessionResponse.data;
 
           // Fetch line items associated with the session
           const lineItemsResponse = await axios.get(
-            `http://localhost:8000/stripe/session/${sessionId}/items`
+            import.meta.env.VITE_API_URL + `stripe/session/${sessionId}/items`
           );
           const lineItems = lineItemsResponse.data;
           cartItems.value = lineItems.map((item) => ({
@@ -151,7 +151,7 @@ export default {
           // Extract and set invoice URL
           if (session.invoice) {
             const response = await axios.get(
-              `http://localhost:8000/stripe/invoice/${session.invoice}`
+              import.meta.env.VITE_API_URL + `stripe/invoice/${session.invoice}`
             );
             invoiceUrl.value = response.data.hosted_invoice_url;
           }

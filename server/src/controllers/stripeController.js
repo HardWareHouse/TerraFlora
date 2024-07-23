@@ -1,7 +1,7 @@
 import Stripe from "stripe";
 const stripe = Stripe(process.env.VITE_STRIPE_SECRET_KEY);
 
-const YOUR_DOMAIN = "http://localhost:5173";
+const YOUR_DOMAIN = process.env.FRONT_URL;
 
 export const createSession = async (req, res) => {
   try {
@@ -213,7 +213,7 @@ export const createPaymentLink = async (req, res) => {
       after_completion: {
         type: "redirect",
         redirect: {
-          url: "http://localhost:5173/success?session_id={CHECKOUT_SESSION_ID}",
+          url: process.env.FRONT_URL + "/success?session_id={CHECKOUT_SESSION_ID}",
         },
       },
       automatic_tax: { enabled: false },

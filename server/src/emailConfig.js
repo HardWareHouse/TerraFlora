@@ -36,7 +36,7 @@ const templateIds = {
 export async function sendConfirmationEmail(user, token) {
   const sendSmtpEmail = new brevo.SendSmtpEmail();
 
-  const url = `http://localhost:8000/auth/confirm/${token}`;
+  const url = process.env.API_URL +`auth/confirm/${token}`;
   sendSmtpEmail.to = [{ email: user.email, name: user.nom }];
   sendSmtpEmail.templateId = templateIds.confirmation;
   sendSmtpEmail.params = {
@@ -58,7 +58,7 @@ export async function sendConfirmationEmail(user, token) {
 export async function sendResetPasswordEmail(user, token) {
   const sendSmtpEmail = new brevo.SendSmtpEmail();
 
-  const url = `http://localhost:8000/auth/reset-password/${token}`;
+  const url = process.env.API_URL +`auth/reset-password/${token}`;
   sendSmtpEmail.to = [{ email: user.email, name: user.nom }];
   sendSmtpEmail.templateId = templateIds.forgotPassword;
   sendSmtpEmail.params = {

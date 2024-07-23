@@ -192,7 +192,7 @@ const getImageUrl = (imagePath) => {
   if (!imagePath) {
     return '/images/flower.webp';
   }
-  return `http://localhost:8000/uploads/${imagePath}`;
+  return import.meta.env.VITE_API_URL + `uploads/${imagePath}`;
 };
 
 watch(() => props.data, () => {

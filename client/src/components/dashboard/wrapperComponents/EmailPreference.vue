@@ -104,7 +104,7 @@ const togglePreference = (preference) => {
 
 const updatePreference = async (preference, value) => {
   try {
-    const response = await axios.put(`http://localhost:8000/emailPreferences/${userId.value}`, {
+    const response = await axios.put(import.meta.env.VITE_API_URL + `emailPreferences/${userId.value}`, {
       [preference]: value
     }, {
       headers: {

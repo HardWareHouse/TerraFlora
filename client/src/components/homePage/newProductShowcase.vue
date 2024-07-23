@@ -56,11 +56,11 @@ const toast = useToast();
 
 const fetchProducts = async () => {
   try {
-    const response = await axios.get('http://localhost:8000/product');
+    const response = await axios.get(import.meta.env.VITE_API_URL + 'product');
     products.value = response.data.map((product) => {
       return {
         ...product,
-        imageUrl: product.Images && product.Images.length > 0 ? `http://localhost:8000/${product.Images[0].imageUrl}` : '/images/flower.webp'
+        imageUrl: product.Images && product.Images.length > 0 ? `${import.meta.env.VITE_API_URL}${product.Images[0].imageUrl}` : '/images/flower.webp'
       };
     });
   } catch (error) {
@@ -99,7 +99,7 @@ const getImageUrl = (imagePath) => {
   if (!imagePath) {
     return '/images/flower.webp';
   }
-  return `http://localhost:8000/${imagePath}`;
+  return `${import.meta.env.VITE_API_URL}${imagePath}`;
 };
 </script>
 

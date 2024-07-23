@@ -50,7 +50,7 @@ export default {
           params.endDate = this.endDate;
         }
 
-        const response = await axios.get(`http://localhost:8000/product/${this.produitId}/history`, { params });
+        const response = await axios.get(import.meta.env.VITE_API_URL + `product/${this.produitId}/history`, { params });
         const history = response.data;
 
         const dates = history.map(entry => new Date(entry.date).toLocaleString());

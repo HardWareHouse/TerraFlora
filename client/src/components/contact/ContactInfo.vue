@@ -77,7 +77,6 @@ const form = ref({
 
 const submitForm = () => {
   // Handle form submission logic here
-  console.log("Form submitted:", form.value);
   // You can add your form submission logic here
   // Reset form fields after submission
   form.value.name = "";
