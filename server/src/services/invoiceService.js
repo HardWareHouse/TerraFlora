@@ -14,6 +14,7 @@ const getFactureWithAlias = async (id) => {
         dateFacturation: 1,
         datePaiementDue: 1,
         total: 1,
+        invoiceUrl: 1,
         user: 1,
         _id: 0
       }
@@ -22,13 +23,13 @@ const getFactureWithAlias = async (id) => {
 };
 
 export const createInvoice = async (data) => {
-  const {numero, total, userId, commandeId, incoiceUrl} = data;
+  const {numero, total, userId, commandeId, invoiceUrl} = data;
   const statutPaiement = 'Payée';
   const dateFacturation = new Date();
   const datePaiementDue = null;
 
   const invoiceSQL = await FactureSQL.create({numero, statutPaiement, dateFacturation, 
-    datePaiementDue, total, userId, commandeId, incoiceUrl});
+    datePaiementDue, total, userId, commandeId, invoiceUrl});
 
   if (!invoiceSQL) throw new Error('Invoice not created');
 
@@ -45,7 +46,7 @@ export const createInvoice = async (data) => {
     dateFacturation,
     datePaiementDue,
     total,
-    incoiceUrl,
+    invoiceUrl,
     user: {
       _id: user.id,
       nom: user.nom,
@@ -75,6 +76,7 @@ export const getInvoicesByUserId = async (userId) => {
         statutPaiement: 1,
         dateFacturation: 1,
         datePaiementDue: 1,
+        invoiceUrl: 1,
         total: 1,
         user: 1,
         _id: 0,

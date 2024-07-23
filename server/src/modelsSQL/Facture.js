@@ -33,7 +33,7 @@ const Facture = connection.define('Facture', {
         type: DataTypes.FLOAT,
         allowNull: false
     },
-    incoiceUrl: {
+    invoiceUrl: {
         type: DataTypes.STRING,
         allowNull: false
     }

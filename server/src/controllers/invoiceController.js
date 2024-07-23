@@ -49,10 +49,10 @@ export const getAllInvoices = async (req, res) => {
 
 // Doit être mis à jour 
 export const createInvoice = async (req, res) => {
-  const { numero, userId, commandeId, total, incoiceUrl } = req.body;
+  const { numero, userId, commandeId, total, invoiceUrl } = req.body;
   const user = req.user;
 
-  if (!numero || !userId || !commandeId || !total || !incoiceUrl) {
+  if (!numero || !userId || !commandeId || !total || !invoiceUrl) {
     return res.status(400).json({ error: "User ID, Cart ID and Total are required" });
   }
 
@@ -61,7 +61,7 @@ export const createInvoice = async (req, res) => {
   }
 
   try {
-    const invoice = await invoiceService.createInvoice({ numero, userId, commandeId, total, incoiceUrl });
+    const invoice = await invoiceService.createInvoice({ numero, userId, commandeId, total, invoiceUrl });
     if (!invoice) {
       return res.status(404).json({ error: "Invoice not found" });
     }
@@ -75,7 +75,7 @@ export const createInvoice = async (req, res) => {
 // Doit être mis à jour 
 export const updateInvoice = async (req, res) => {
   const { id } = req.params;
-  const { numero, statutPaiement, dateFacturation, datePaiementDue, total, incoiceUrl } = req.body;
+  const { numero, statutPaiement, dateFacturation, datePaiementDue, total, invoiceUrl } = req.body;
   const user = req.user;
 
   if (!id || !isValidUUID(id)) {
@@ -90,7 +90,7 @@ export const updateInvoice = async (req, res) => {
 
     if (invoice.user._id !== user.id && user.role !== "ROLE_ADMIN") return res.status(403).json({ error: "Unauthorized" });
 
-    const updatedInvoice = await invoiceService.updateInvoiceById(id, { numero, statutPaiement, dateFacturation, datePaiementDue, total, incoiceUrl });
+    const updatedInvoice = await invoiceService.updateInvoiceById(id, { numero, statutPaiement, dateFacturation, datePaiementDue, total, invoiceUrl });
     if (!updatedInvoice) {
       return res.status(404).json({ error: "Invoice not found" });
     }

@@ -31,7 +31,7 @@ const factureSchema = new mongoose.Schema(
             type: Number,
             required: true,
         },
-        incoiceUrl: {
+        invoiceUrl: {
             type: String,
             required: true,
         },

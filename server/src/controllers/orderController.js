@@ -53,10 +53,10 @@ export const getAllOrders = async (req, res) => {
 
 // Créer une commande
 export const createOrder = async (req, res) => {
-  const { total, userId, productArray, incoiceUrl } = req.body;
+  const { total, userId, productArray, invoiceUrl } = req.body;
   const user = req.user;
 
-  if (!userId || !productArray || !total || !incoiceUrl) {
+  if (!userId || !productArray || !total || !invoiceUrl) {
     return res.status(400).json({ error: "All fields are required" });
   }
 
@@ -79,7 +79,7 @@ export const createOrder = async (req, res) => {
           total: order.total, 
           userId, 
           commandeId: order.id,
-          incoiceUrl
+          invoiceUrl
     });
 
     if (!invoice) {
