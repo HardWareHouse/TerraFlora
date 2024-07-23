@@ -83,7 +83,6 @@ export const createCart = async (req, res) => {
 };
 
 // Mettre à jour un panier ou ajouter un produit à un panier existant
-// Mettre à jour un panier ou ajouter un produit à un panier existant
 export const updateCart = async (req, res) => {
   const { userId, produits } = req.body;
   const user = req.user;
