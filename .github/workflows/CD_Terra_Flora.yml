@@ -24,8 +24,8 @@ jobs:
           script: |
                   cd /home/aria/TerraFlora/client
                   git pull
-                  npm install
-                  VITE_API_URL=${{ secrets.VITE_API_URL }} VITE_STRIPE_PUBLISHABLE_KEY=${{ secrets.VITE_STRIPE_PUBLISHABLE_KEY }} VITE_LA_POSTE_API_KEY=${{ secrets.VITE_LA_POSTE_API_KEY }} npm run build
+                  /home/aria/.nvm/versions/node/v20.15.1/bin/npm install
+                  VITE_API_URL=${{ secrets.VITE_API_URL }} VITE_STRIPE_PUBLISHABLE_KEY=${{ secrets.VITE_STRIPE_PUBLISHABLE_KEY }} VITE_LA_POSTE_API_KEY=${{ secrets.VITE_LA_POSTE_API_KEY }} /home/aria/.nvm/versions/node/v20.15.1/bin/npm run build
           
 
   deployBackend:
@@ -46,6 +46,6 @@ jobs:
           script: |
                   cd /home/aria/TerraFlora/server
                   git pull
-                  npm install 
+                  /home/aria/.nvm/versions/node/v20.15.1/bin/npm install 
                   pm2 start --node-args="--env-file=.env" src/index.js
             
