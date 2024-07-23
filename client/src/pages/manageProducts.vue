@@ -1,7 +1,6 @@
 <template>
   <Breadcrumbs />
   <div class="container mx-auto py-8">
-    <h2 class="text-3xl font-bold text-center mb-4">Gestion des Produits</h2>
     <div class="mb-8 flex justify-between items-center">
       <button
         @click="openCreateProductModal"
@@ -9,10 +8,6 @@
       >
         Ajouter un Produit
       </button>
-      <select v-model="selectedProductId" @change="updateSelectedProduct" class="form-select">
-        <option value="" disabled>Choisissez un produit</option>
-        <option v-for="product in products" :key="product.id" :value="product.id">{{ product.nom }}</option>
-      </select>
     </div>
     <table class="min-w-full bg-white">
       <thead>
@@ -31,18 +26,21 @@
           <td class="py-2 px-4 border">{{ product.prix }}</td>
           <td class="py-2 px-4 border">{{ product.stock }}</td>
           <td class="py-2 px-4 border">
-            <button
-              @click="openEditProductModal(product)"
-              class="bg-yellow-500 text-white px-4 py-2 rounded mr-2"
-            >
-              <i class="bi bi-pencil"></i>
-            </button>
-            <button
-              @click="deleteProduct(product.id)"
-              class="bg-red-500 text-white px-4 py-2 rounded"
-            >
-              <i class="bi bi-trash"></i>
-            </button>
+            <div class="flex space-x-2 justify-center">
+              <button
+                @click="openEditProductModal(product)"
+                class="bg-yellow-500 text-white px-4 py-2 rounded"
+              >
+                <i class="bi bi-pencil"></i>
+              </button>
+              <delete-button
+                :on-confirm="() => deleteProduct(product.id)"
+                button-class="bg-red-500 text-white px-4 py-2 rounded"
+                confirmation-message="Êtes-vous sûr de vouloir supprimer ce produit ?"
+              >
+                <i class="bi bi-trash"></i>
+              </delete-button>
+            </div>
           </td>
         </tr>
       </tbody>
@@ -53,7 +51,16 @@
       @close="closeModal"
       @save="fetchProducts"
     />
-    <StockChart v-if="selectedProductId" :produitId="selectedProductId" />
+
+    <div class="mt-8 flex items-center">
+      <label for="product-select" class="mr-4 font-semibold">Afficher le graphique d'évolution des stocks pour le produit :</label>
+      <select id="product-select" v-model="selectedProductId" @change="updateSelectedProduct" class="form-select">
+        <option value="" disabled>Choisissez un produit</option>
+        <option v-for="product in products" :key="product.id" :value="product.id">{{ product.nom }}</option>
+      </select>
+    </div>
+
+    <StockChart v-if="selectedProductId" :produitId="selectedProductId" class="mt-8" />
   </div>
 </template>
 
@@ -63,6 +70,7 @@ import axios from "axios";
 import ProductModal from "../components/manageProducts/ProductModal.vue";
 import Breadcrumbs from "../components/manageProducts/Breadcrumbs.vue";
 import StockChart from "../components/manageProducts/StockChart.vue";
+import DeleteButton from "../components/challengesRequirement/deleteButton.vue";
 
 const products = ref([]);
 const showModal = ref(false);
@@ -71,7 +79,7 @@ const selectedProductId = ref("");
 
 const fetchProducts = async () => {
   try {
-    const response = await axios.get("http://localhost:8000/product");
+    const response = await axios.get(import.meta.env.VITE_API_URL + "product");
     products.value = response.data;
   } catch (error) {
     console.error("Error fetching products:", error);
@@ -94,7 +102,7 @@ const closeModal = () => {
 
 const deleteProduct = async (id) => {
   try {
-    await axios.delete(`http://localhost:8000/product/${id}`);
+    await axios.delete(import.meta.env.VITE_API_URL + `product/${id}`);
     fetchProducts();
   } catch (error) {
     console.error("Error deleting product:", error);
@@ -119,5 +127,11 @@ onMounted(() => {
   padding: 0.5rem;
   border-radius: 0.25rem;
   border: 1px solid #ccc;
+}
+
+.actions {
+  display: flex;
+  justify-content: center;
+  gap: 0.5rem;
 }
 </style>

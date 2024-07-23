@@ -5,16 +5,16 @@
             <form class="mt-8 space-y-6" @submit.prevent="handleSubmit">
                 <div class="space-y-4">
                     <div>
-                        <label for="email" class="sr-only">Email or Username</label>
+                        <label for="email" class="sr-only">Adresse email</label>
                         <input v-model="email" id="email" name="email" type="email" required
                             class="relative block w-full px-3 py-3 text-[14px] bg-gray-100 text-gray-900 placeholder-gray-500 border border-gray-300  focus:outline-none sm:text-sm"
-                            placeholder="Email or Username" />
+                            placeholder="Adresse email" />
                     </div>
                     <div>
-                        <label for="password" class="sr-only">Enter your Password</label>
+                        <label for="password" class="sr-only">Votre mot de passe</label>
                         <input v-model="password" id="password" name="password" type="password" required
                             class="relative block w-full px-3 py-3 text-[14px] bg-gray-100 text-gray-900 placeholder-gray-500 border border-gray-300  focus:outline-none sm:text-sm"
-                            placeholder="Enter your Password" />
+                            placeholder="Votre mot de passe" />
                     </div>
                 </div>
                 <div class="flex items-center justify-between">
@@ -59,7 +59,11 @@ const password = ref('');
 const handleSubmit = () => {
     authStore.login(email.value, password.value).then(() => {
         if (authStore.success) {
-            router.push('/dashboard');
+            if (authStore.role === 'ROLE_ADMIN') {
+                router.push('/admin');
+            } else {
+                router.push('/dashboard');
+            }
         }
     });
 };
@@ -67,6 +71,6 @@ const handleSubmit = () => {
 
 <style scoped>
 .container {
-    max-width: 900px;
+    max-width: 500px;
 }
 </style>

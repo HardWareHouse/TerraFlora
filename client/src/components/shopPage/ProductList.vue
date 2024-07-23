@@ -1,5 +1,5 @@
 <template>
-  <div class="product-list-container p-4 flex-1">
+  <div class="w-full lg:product-list-container p-4 flex-1">
     <div class="flex justify-between items-center mb-4">
       <div class="flex space-x-2">
         <button
@@ -26,7 +26,15 @@
       </div>
     </div>
 
-    <div v-if="viewMode === 'grid'" class="product-list grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+    <!-- Aucun produit disponible -->
+    <div v-if="filteredProducts.length === 0" class="flex flex-col items-center justify-center h-96 bg-gray-100 border-2 border-dashed border-gray-300 rounded-lg p-6">
+      <i class="bi bi-emoji-frown text-6xl text-gray-400 mb-4"></i>
+      <h2 class="text-2xl font-bold text-gray-700 mb-2">Aucun produit trouvé</h2>
+      <p class="text-gray-500">Pas de produits disponibles, veuillez changer vos filtres.</p>
+    </div>
+
+    <!-- Vue en grille -->
+    <div v-if="viewMode === 'grid' && filteredProducts.length > 0" class="product-list grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
       <div v-for="product in paginatedProducts" :key="product.id"
         class="product border p-4 rounded hover:shadow-lg transition-shadow relative" @click="goToProductDetail(product)">
         <div class="product-image relative">
@@ -48,14 +56,15 @@
         </div>
         <div class="product-info mt-4 text-center">
           <h3 class="text-lg font-semibold">{{ product.nom }}</h3>
-          <p class="text-gray-500">${{ product.prix }}</p>
+          <p class="text-gray-500">{{ product.prix }} €</p>
           <p v-if="product.stock <= product.stockThreshold && product.stock > 0" class="text-yellow-500 text-sm">Il reste très peu de produits en stock</p>
           <p v-if="product.stock === 0" class="text-red-600 text-sm">En rupture de stock</p>
         </div>
       </div>
     </div>
 
-    <div v-else class="product-list space-y-6">
+    <!-- Vue en liste -->
+    <div v-if="viewMode === 'list' && filteredProducts.length > 0" class="product-list space-y-6">
       <div v-for="product in paginatedProducts" :key="product.id"
         class="product flex border p-4 rounded hover:shadow-lg transition-shadow" @click="goToProductDetail(product)">
         <div class="product-image relative w-1/3">
@@ -68,6 +77,7 @@
         <div class="product-info ml-4 w-2/3">
           <h3 class="text-lg font-semibold">{{ product.nom }}</h3>
           <p class="text-gray-500">{{ product.prix }} €</p>
+          <p v-if="viewMode === 'list'" class="text-gray-600">Marque: {{ product.marque }}</p>
           <p class="mt-2 text-gray-700">{{ product.description }}</p>
           <div class="flex space-x-2 mt-4">
             <button v-if="product.stock > 0" class="px-4 py-2 bg-red-600 text-white rounded shadow hover:bg-red-700 transition duration-300" @click.stop="addToCart(product)">
@@ -83,14 +93,15 @@
       </div>
     </div>
 
-    <Pagination :totalItems="filteredProducts.length" v-model:modelValue="currentPage" :itemsPerPage="itemsPerPage" />
+    <Pagination v-if="filteredProducts.length > 0" :totalItems="filteredProducts.length" v-model:modelValue="currentPage" :itemsPerPage="itemsPerPage" />
   </div>
 </template>
 
 <script setup>
-import { ref, computed, watch, onMounted } from 'vue';
+import { ref, computed, watch } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
 import { useCartStore } from '../../pinia/cart.js';
+import { useToast } from 'vue-toastification';
 import Pagination from './Pagination.vue';
 import axios from 'axios';
 
@@ -106,11 +117,12 @@ const products = ref([]);
 const route = useRoute();
 const router = useRouter();
 const cartStore = useCartStore();
+const toast = useToast();
 
 const fetchProducts = async () => {
   try {
     const searchQuery = route.query.search || '';
-    const response = await axios.get('http://localhost:8000/product/filter', {
+    const response = await axios.get(import.meta.env.VITE_API_URL + 'product/filter', {
       params: { ...props.filters, search: searchQuery }
     });
     products.value = response.data;
@@ -123,7 +135,7 @@ function getImageUrl(imagePath) {
   if (!imagePath) {
     return '/images/flower.webp';
   }
-  return `http://localhost:8000/${imagePath}`;
+  return `${import.meta.env.VITE_API_URL}${imagePath}`;
 }
 
 watch(() => props.filters, fetchProducts, { immediate: true });
@@ -162,13 +174,13 @@ function goToProductDetail(product) {
 
 function addToCart(product) {
   const cartItem = cartStore.items.find(item => item.id === product.id);
-  const totalQuantity = cartItem ? cartItem.quantity + 1 : 1;
+  const totalQuantity = cartItem ? cartItem.Panier_Produits.quantity + 1 : 1;
 
   if (totalQuantity <= product.stock) {
     cartStore.addToCart(product, 1);
-    console.log(`Added 1 ${product.nom} to cart`);
+    toast.success(`${product.nom} a été ajouté au panier.`);
   } else {
-    alert('La quantité totale demandée dépasse le stock disponible');
+    toast.error('La quantité totale demandée dépasse le stock disponible');
   }
 }
 </script>

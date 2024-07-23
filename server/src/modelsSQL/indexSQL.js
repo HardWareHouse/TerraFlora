@@ -12,12 +12,15 @@ import Produit from './Produit.js';
 import Promotion from './Promotion.js';
 import User from './User.js';
 import Commande from './Commande.js';
+import Panier_Produits from "./Panier_Produits.js";
+import DeletedUser from "./DeletedUser.js";
 
 const db = {
   connection,
   Adresse,
   Categorie,
   Contact,
+  DeletedUser,
   Facture,
   DemandeRGPD,
   MethodePaiement,
@@ -28,6 +31,7 @@ const db = {
   Promotion,
   User,
   Commande,
+  Panier_Produits
 };
 
 import './associations.js';

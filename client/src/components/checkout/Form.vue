@@ -342,7 +342,6 @@ function placeOrder() {
     shipping: shipping.value,
     payment: payment.value,
   };
-  console.log("Order details:", orderDetails);
 }
 </script>
 <script>

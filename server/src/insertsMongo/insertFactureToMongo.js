@@ -10,10 +10,13 @@ async function insertOrUpdateFactureInMongo(factureSQL) {
     const newFacture = {
         _id: factureSQL.id,
         numero: factureSQL.numero,
-        dateFacture: factureSQL.dateFacturation,
+        statutPaiement: factureSQL.statutPaiement,
+        dateFacturation: factureSQL.dateFacturation,
         datePaiementDue: factureSQL.datePaiementDue,
         total: factureSQL.total,
+        invoiceUrl: factureSQL.invoiceUrl,
         user: {
+            _id: factureSQL.userId,
             nom: factureSQL.User.nom,
             prenom: factureSQL.User.prenom,
             email: factureSQL.User.email,

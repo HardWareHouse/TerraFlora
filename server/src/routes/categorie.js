@@ -1,5 +1,10 @@
 import Router from 'express';
-import { getCategory, getAllCategories, createCategory, updateCategory, deleteCategory } from '../controllers/categorieController.js';
+import { getCategory, 
+        getAllCategories, 
+        createCategory, 
+        updateCategory, 
+        deleteCategory 
+    } from '../controllers/categorieController.js';
 import { authenticate, authorizeAdmin } from '../middlewares/authMiddleware.js';
 const router = Router();
 

@@ -10,7 +10,6 @@ const activeTab = ref('dashboard');
 
 const selectTab = (tab) => {
   activeTab.value = tab;
-  router.push({ hash: `#${tab}` });
 };
 
 const tabs = [

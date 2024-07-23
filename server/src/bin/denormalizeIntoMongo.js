@@ -30,5 +30,5 @@ export const denormalizeData = async (isMongoConnected = true) => {
     }
   }
 
-  await disconnectMongo();
+  //await disconnectMongo();
 };

@@ -11,6 +11,9 @@ import Paiement from './Paiement.js';
 import Adresse from './Adresse.js';
 import MethodePaiement from './MethodePaiement.js';
 import Image from './Image.js';
+import Panier_Produits from './Panier_Produits.js';
+import DeletedUser from './DeletedUser.js';
+import TempReservation from './TempReservation.js';
 
 // Associations
 
@@ -32,12 +35,15 @@ Adresse.belongsTo(User, { foreignKey: 'userId', targetKey: 'id' });
 
 User.hasMany(Contact, { foreignKey: 'userId', sourceKey: 'id' });
 Contact.belongsTo(User, { foreignKey: 'userId', targetKey: 'id' });
+
+User.hasOne(DeletedUser, { foreignKey: 'userId', sourceKey: 'id' });
+DeletedUser.belongsTo(User, { foreignKey: 'userId', targetKey: 'id' });
 // Panier associations
 Panier.hasOne(Commande, { foreignKey: 'panierId', sourceKey: 'id' });
 Commande.belongsTo(Panier, { foreignKey: 'panierId', targetKey: 'id' });
 
-Panier.belongsToMany(Produit, { through: 'Panier_Produits', foreignKey: 'panierId', sourceKey: 'id' });
-Produit.belongsToMany(Panier, { through: 'Panier_Produits', foreignKey: 'produitId', sourceKey: 'id' });
+Panier.belongsToMany(Produit, { through: Panier_Produits, foreignKey: 'panierId', sourceKey: 'id' });
+Produit.belongsToMany(Panier, { through: Panier_Produits, foreignKey: 'produitId', sourceKey: 'id' });
 
 // Produit associations
 Produit.hasMany(Promotion, { foreignKey: 'produitId', sourceKey: 'id' });
@@ -62,3 +68,9 @@ Paiement.belongsTo(Facture, { foreignKey: 'factureId', targetKey: 'id' });
 // Paiement associations
 MethodePaiement.hasMany(Paiement, { foreignKey: 'methodePaiementId', sourceKey: 'id' });
 Paiement.belongsTo(MethodePaiement, { foreignKey: 'methodePaiementId', targetKey: 'id' });
+
+User.hasMany(TempReservation, { foreignKey: 'userId', sourceKey: 'id' });
+TempReservation.belongsTo(User, { foreignKey: 'userId', targetKey: 'id' });
+
+Produit.hasMany(TempReservation, { foreignKey: 'produitId', sourceKey: 'id' });
+TempReservation.belongsTo(Produit, { foreignKey: 'produitId', targetKey: 'id' });

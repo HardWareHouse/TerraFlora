@@ -8,9 +8,22 @@ const userSchema = z.object({
     prenom: z.string(),
     email: z.string(),
     telephone: z.string(),
+    wantsMailNewProduct: z.boolean(),
+    wantsMailRestockProduct: z.boolean(),
+    wantsMailChangingPrice: z.boolean(),
+    wantsMailNewsletter: z.boolean(),
 });
 
-const updateUserSchema = userSchema.extend({
+const adminUserSchema = userSchema.extend({
+    role: z.string(),
+});
+
+const updateUserSchema = userSchema.omit({
+    wantsMailNewProduct: true,
+    wantsMailRestockProduct: true,
+    wantsMailChangingPrice: true,
+    wantsMailNewsletter: true,
+}).extend({
     currentPassword: z.string().min(1, "Mot de passe actuel est requis"),
     newPassword: z.string().optional(),
     confirmPassword: z.string().optional(),
@@ -19,8 +32,23 @@ const updateUserSchema = userSchema.extend({
     path: ["confirmPassword"],
 });
 
+const updateUserByAdminSchema = z.object({
+    nom: z.string()
+      .min(2, { message: "Le nom doit contenir au moins 2 caractères." })
+      .max(50, { message: "Le nom ne doit pas dépasser 50 caractères." }),
+    prenom: z.string()
+      .min(2, { message: "Le prénom doit contenir au moins 2 caractères." })
+      .max(50, { message: "Le prénom ne doit pas dépasser 50 caractères." }),
+    email: z.string()
+      .email({ message: "Adresse email invalide." }),
+    telephone: z.string()
+      .regex(/^\+?[0-9\s-]{7,15}$/, { message: "Numéro de téléphone invalide." }),
+    role: z.enum(['ROLE_USER', 'ROLE_STORE_KEEPER'], { message: "Rôle invalide." })
+  });
+
 export const useUser = () => {
     const user = ref(null);
+    const users = ref([]);
     const loading = ref(false);
 
     // Fonction pour récupérer l'utilisateur par son ID
@@ -33,8 +61,31 @@ export const useUser = () => {
                 return;
             }
             user.value = userSchema.parse(response.data);
+            
         } catch (error) {
             console.error('Erreur lors de la récupération de l\'utilisateur:', error);
+        } finally {
+            loading.value = false;
+        }
+    };
+
+    // Fonction pour récupérer tous les utilisateurs
+    const fetchUsers = async () => {
+        loading.value = true;
+        try {
+            const response = await instance.get(`users`);
+            if (!response.data) {
+                console.error('Aucune donnée utilisateur trouvée');
+                return;
+            }
+
+            if (Array.isArray(response.data)) {
+                users.value = response.data.map((user) => adminUserSchema.parse(user));
+            } else {
+                console.error('Réponse invalide: les données de user sont invalides');
+            }
+        } catch (error) {
+            console.error('Erreur lors de la récupération des utilisateurs:', error);
         } finally {
             loading.value = false;
         }
@@ -78,6 +129,65 @@ export const useUser = () => {
             loading.value = false;
         }
     };
+
+    const updateUserByAdmin = async (userId, updatedUser) => {
+        loading.value = true;
+        try {
+          const validatedData = updateUserByAdminSchema.parse(updatedUser);
+          
+          const dataToUpdate = {
+            nom: validatedData.nom,
+            prenom: validatedData.prenom,
+            email: validatedData.email,
+            telephone: validatedData.telephone,
+            role: validatedData.role,
+          };
+      
+          const response = await instance.put(`users/${userId}`, dataToUpdate);
+          if (!response.data) {
+            console.error('Aucune donnée utilisateur trouvée');
+            return;
+          } else if (response.data.error) {
+            console.error('Erreur lors de la mise à jour de l\'utilisateur:', response.data.error);
+            return;
+          }
+          
+          return true;
+        } catch (error) {
+
+          if (error instanceof z.ZodError) {
+            console.error('Erreurs de validation:', error.errors);
+          } else {
+            console.error('Erreur lors de la mise à jour de l\'utilisateur:', error);
+          }
+        } finally {
+          loading.value = false;
+        }
+      };
+      
+
+    // Fonction pour supprimer l'utilisateur par son ID
+    const deleteUser = async (userId) => {
+        loading.value = true;
+        try {
+            console.log('userId:', userId);
+            const response = await instance.delete(`users/${userId}`);
+            if (!response.data) {
+                console.error('Aucune donnée utilisateur trouvée');
+                return;
+            }
+            else if (response.data.error) {
+                console.error('Erreur lors de la suppression de l\'utilisateur:', response.data.error);
+                return;
+            }
+            
+            return true;
+        } catch (error) {
+            console.error('Erreur lors de la suppression de l\'utilisateur:', error);
+        } finally {
+            loading.value = false;
+        }
+    };
     
     const isPasswordValid = (password) => {
         const minLength = 8;
@@ -102,9 +212,13 @@ export const useUser = () => {
 
     return {
         user,
+        users,
         loading,
         fetchUser,
+        fetchUsers,
         updateUser,
+        updateUserByAdmin,
+        deleteUser,
         isPasswordValid,
         isEmailAddressValid,
     };

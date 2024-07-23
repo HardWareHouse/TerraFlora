@@ -1,21 +1,16 @@
 <template>
-  <div class="container">
-    <div class="overflow-x-auto">
+  <div class="w-full">
+    <div class="container overflow-x-auto">
       <table class="min-w-full bg-white">
         <thead>
           <tr>
-            <th v-for="col in columns" :key="col.key"
-                class="py-2 px-4 bg-red-600 text-white text-left cursor-pointer">
-              {{ col.label }}
-              <span v-if="sortOrder == true" class="ml-4 w-12" @click="sortColumn(col.key)">
-                 ▲
-              </span>
-              <span v-if="sortOrder == false" class="ml-4 w-12" @click="sortColumn(col.key)">
-                 ▼
-              </span>
+            <th v-for="col in columns" :key="col.key" class="py-2 px-4 bg-red-600 text-white text-left cursor-pointer">
+              <div @click="sortColumn(col.key)">
+                {{ col.label }}
+                <span class="ml-4 w-12">{{ sortIndicator(col.key) }}</span>
+              </div>
               <div v-if="col.searchable">
-                <input v-model="col.searchQuery" type="text" placeholder="Rechercher..."
-                       class="border rounded px-2 py-1 text-black" />
+                <input  type="text" placeholder="Rechercher..." class="border rounded px-2 py-1 text-black" @input="currentPage = 1" />
               </div>
             </th>
             <th class="py-2 px-4 bg-red-600 text-white text-left"></th>
@@ -27,20 +22,14 @@
               <img :src="getImageUrl(row.Images[0]?.imageUrl)" class="w-24 h-24 object-cover" v-if="row.Images && row.Images.length > 0" />
               <img src="/images/flower.webp" class="w-24 h-24 object-cover" v-else />
             </td>
-            <td class="py-2 px-4 border-x-2">
-              {{ row.nom }}
-            </td>
-            <td class="py-2 px-4 border-x-2">
-              {{ row.prix }}
-            </td>
+            <td class="py-2 px-4 border-x-2">{{ row.nom }}</td>
+            <td class="py-2 px-4 border-x-2">{{ row.prix }}</td>
             <td class="py-2 px-4">
-              <button @click="updateQuantity(row.id, row.quantity - 1, row.stock)" class="px-2 py-1 text-black">-</button>
-              <span class="px-2">{{ row.quantity }}</span>
-              <button @click="updateQuantity(row.id, row.quantity + 1, row.stock)" class="px-2 py-1 text-black">+</button>
+              <button @click="updateQuantity(row.id, row.Panier_Produits.quantity - 1, row.stock)" class="px-2 py-1 text-black">-</button>
+              <span class="px-2">{{ row.Panier_Produits.quantity }}</span>
+              <button @click="updateQuantity(row.id, row.Panier_Produits.quantity + 1, row.stock)" class="px-2 py-1 text-black">+</button>
             </td>
-            <td class="py-2 px-4 border-x-2">
-              {{ (row.prix * row.quantity).toFixed(2) }}
-            </td>
+            <td class="py-2 px-4 border-x-2">{{ (row.prix * row.Panier_Produits.quantity).toFixed(2) }}</td>
             <td class="py-2 px-4">
               <button @click="removeItem(row.id)" class="text-red-600">
                 <i class="bi bi-trash"></i>
@@ -50,19 +39,19 @@
         </tbody>
       </table>
     </div>
-    <div class="flex justify-between items-center mt-4 w-full">
-      <button @click="prevPage" :disabled="currentPage.value === 1"
-              class="px-2 py-1 border rounded mr-2">
+    <div class="container flex justify-between items-center mt-6">
+      <button @click="prevPage" v-if="totalPages > 0 && currentPage < totalPages" :disabled="currentPage === 1" class="px-2 py-1 border rounded mr-2">
         Précédent
       </button>
-      <span>Page {{ currentPage.value }} sur {{ totalPages.value }}</span>
-      <button v-if="currentPage.value < totalPages.value" @click="nextPage" 
-              class="px-2 py-1 border rounded ml-2">
+      <span class="flex items-center w-full justify-center">Page {{ currentPage }} sur {{ totalPages }}</span>
+      <button v-if="totalPages > 1 && currentPage < totalPages" @click="nextPage" class="px-2 py-1 border rounded ml-2">
         Suivant
       </button>
     </div>
-    <div class="mt-4" v-if="showCSVButton">
+    <div class="mt-4 container w-full flex justify-between" v-if="showCSVButton">
       <button @click="exportToCSV" class="px-4 py-2 bg-green-500 text-white rounded">Exporter en CSV</button>
+      <button @click="reserveCart" class="px-4 py-2 bg-blue-500 text-white rounded">Réserver le panier pour 15 min </button>
+      
     </div>
   </div>
 </template>
@@ -70,6 +59,7 @@
 <script setup>
 import { ref, computed, watch } from 'vue';
 import { useCartStore } from '../../pinia/cart.js';
+import instance from '../../axios.js';
 
 const props = defineProps({
   data: Array,
@@ -85,27 +75,50 @@ const cartStore = useCartStore();
 const sortKey = ref('');
 const sortOrder = ref(false);
 const currentPage = ref(1);
-const itemsPerPage = ref(4);
+const itemsPerPage = ref(5);
+
+const reserveCart = async () => {
+  try {
+    const response = await instance.post('cart/reserve', {
+      userId: cartStore.userId
+    });
+    alert('Panier réservé avec succès!');
+  } catch (error) {
+    console.error('Error reserving cart:', error);
+    alert('Erreur lors de la réservation du panier.');
+  }
+};
+
+// Initialiser searchQuery pour chaque colonne
+props.columns.forEach(col => {
+  if (col.searchable) {
+    col.searchQuery = ref('');
+  }
+});
 
 const sortedData = computed(() => {
   if (!sortKey.value) return props.data;
 
   return [...props.data].sort((a, b) => {
-    const valA = a[sortKey.value];
-    const valB = b[sortKey.value];
+    let valA = a[sortKey.value];
+    let valB = b[sortKey.value];
 
-    if (typeof valA === 'string') {
-      return (sortOrder.value === 'asc' ? valA.localeCompare(valB) : valB.localeCompare(valA));
+    if (typeof valA === 'string' && typeof valB === 'string') {
+      return sortOrder.value ? valA.localeCompare(valB) : valB.localeCompare(valA);
+    } else {
+      return sortOrder.value ? valA - valB : valB - valA;
     }
-    return (sortOrder.value === 'asc' ? valA - valB : valB - valA);
   });
 });
 
 const filteredData = computed(() => {
   return sortedData.value.filter(row =>
-    props.columns.every(col =>
-      col.searchQuery ? String(row[col.key]).toLowerCase().includes(col.searchQuery.toLowerCase()) : true
-    )
+    props.columns.every(col => {
+      if (!col.searchable || !col.searchQuery.value) return true;
+      const searchQuery = col.searchQuery.value.toLowerCase();
+      const value = row[col.key];
+      return value && String(value).toLowerCase().includes(searchQuery);
+    })
   );
 });
 
@@ -119,12 +132,21 @@ const paginatedData = computed(() => {
   return filteredData.value.slice(start, end);
 });
 
+const sortIndicator = computed(() => {
+  return (column) => {
+    if (sortKey.value === column) {
+      return sortOrder.value ? '▲' : '▼';
+    }
+    return '';
+  };
+});
+
 const sortColumn = (key) => {
   if (sortKey.value === key) {
     sortOrder.value = !sortOrder.value;
   } else {
     sortKey.value = key;
-    sortOrder.value = false;
+    sortOrder.value = true;
   }
 };
 
@@ -170,16 +192,28 @@ const getImageUrl = (imagePath) => {
   if (!imagePath) {
     return '/images/flower.webp';
   }
-  return `http://localhost:8000/${imagePath}`;
+  return import.meta.env.VITE_API_URL + `uploads/${imagePath}`;
 };
 
 watch(() => props.data, () => {
   currentPage.value = 1;
 });
+
+watch(
+  () => props.columns.flatMap(col => col.searchQuery),
+  () => {
+    currentPage.value = 1;
+  },
+  { deep: true }
+);
 </script>
 
 <style scoped>
 th {
   cursor: pointer;
+}
+.container {
+  max-width: 1400px;
+  margin: 10px auto;
 }
 </style>

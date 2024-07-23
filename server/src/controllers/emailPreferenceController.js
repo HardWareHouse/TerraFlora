@@ -1,98 +1,75 @@
-import User from '../modelsSQL/User.js';
+import UserSQL from '../modelsSQL/User.js';
+import UserMongo from "../modelsMongo/User.mongo.js";
+import { isValidUUID } from "../helpers/validatorHelper.js";
 import { sendPreferenceUpdateEmail } from '../emailConfig.js';
 
-// Update wantsMailNewProduct
-export const updateWantsMailNewProduct = async (req, res) => {
-  const { wantsMailNewProduct } = req.body;
-
-  try {
-    const user = await User.findByPk(req.user.id);
-    if (!user) {
-      return res.status(404).json({ message: 'User not found' });
-    }
-
-    user.wantsMailNewProduct = wantsMailNewProduct;
-
-    if (user.wantsMailNewProduct) {
-      sendPreferenceUpdateEmail(user, 'nouveaux produits');
-    }
-
-    await user.save();
-
-    res.status(200).json({ message: 'Email preference for new product updated successfully' });
-  } catch (error) {
-    res.status(500).json({ message: error.message });
+const formatPreferenceName = (key) => {
+  switch (key) {
+    case 'wantsMailNewProduct':
+      return 'Nouveaux produits';
+    case 'wantsMailRestockProduct':
+      return 'Restock de produit';
+    case 'wantsMailChangingPrice':
+      return 'Changement de prix';
+    case 'wantsMailNewsletter':
+      return 'Newsletter';
+    default:
+      return 'Préférence';
   }
 };
 
-// Update wantsMailRestockProduct
-export const updateWantsMailRestockProduct = async (req, res) => {
-  const { wantsMailRestockProduct } = req.body;
+export const updateMailPreference = async (req, res) => {
+  const { wantsMailNewProduct, wantsMailRestockProduct, wantsMailChangingPrice, wantsMailNewsletter } = req.body;
+  const { userId } = req.params;
 
-  try {
-    const user = await User.findByPk(req.user.id);
-    if (!user) {
-      return res.status(404).json({ message: 'User not found' });
-    }
-
-    user.wantsMailRestockProduct = wantsMailRestockProduct;
-
-    if (user.wantsMailRestockProduct) {
-      sendPreferenceUpdateEmail(user, 'restock de produit');
-    }
-
-    await user.save();
-
-    res.status(200).json({ message: 'Email preference for restock product updated successfully' });
-  } catch (error) {
-    res.status(500).json({ message: error.message });
+  if (!userId || !isValidUUID(userId)) {
+    return res.status(400).json({ message: 'Invalid or missing User ID' });
   }
-};
 
-// Update wantsMailChangingPrice
-export const updateWantsMailChangingPrice = async (req, res) => {
-  const { wantsMailChangingPrice } = req.body;
-
-  try {
-    const user = await User.findByPk(req.user.id);
-    if (!user) {
-      return res.status(404).json({ message: 'User not found' });
-    }
-
-    user.wantsMailChangingPrice = wantsMailChangingPrice;
-
-    if (user.wantsMailChangingPrice) {
-      sendPreferenceUpdateEmail(user, 'prix');
-    }
-
-    await user.save();
-
-    res.status(200).json({ message: 'Email preference for changing price updated successfully' });
-  } catch (error) {
-    res.status(500).json({ message: error.message });
+  if (wantsMailNewProduct === undefined && wantsMailRestockProduct === undefined &&
+      wantsMailChangingPrice === undefined && wantsMailNewsletter === undefined) {
+    return res.status(400).json({ message: 'At least one preference is required' });
   }
-};
-
-// Update wantsMailNewsletter
-export const updateWantsMailNewsletter = async (req, res) => {
-  const { wantsMailNewsletter } = req.body;
 
   try {
-    const user = await User.findByPk(req.user.id);
+    const user = await UserSQL.findByPk(userId);
     if (!user) {
       return res.status(404).json({ message: 'User not found' });
     }
 
-    user.wantsMailNewsletter = wantsMailNewsletter;
+    const userMongo = await UserMongo.findOne({ _id: userId });
+    if (!userMongo) {
+      return res.status(404).json({ message: 'User not found' });
+    }
 
-    if (user.wantsMailNewsletter) {
-      sendPreferenceUpdateEmail(user, 'newsletter');
+    let preferencesUpdated = false;
+
+    const updatePreferences = [
+      { key: 'wantsMailNewProduct', value: wantsMailNewProduct },
+      { key: 'wantsMailRestockProduct', value: wantsMailRestockProduct },
+      { key: 'wantsMailChangingPrice', value: wantsMailChangingPrice },
+      { key: 'wantsMailNewsletter', value: wantsMailNewsletter }
+    ];
+
+    for (const { key, value } of updatePreferences) {
+      if (value !== undefined && value !== user[key]) {
+        user[key] = value;
+        userMongo[key] = value;
+        preferencesUpdated = true;
+        const formattedPreferenceName = formatPreferenceName(key);
+        sendPreferenceUpdateEmail(user, formattedPreferenceName);
+      }
+    }
+
+    if (!preferencesUpdated) {
+      return res.status(400).json({ message: 'No changes detected' });
     }
 
     await user.save();
-
-    res.status(200).json({ message: 'Email preference for newsletter updated successfully' });
+    await userMongo.save();
+    res.status(200).json({ message: 'Email preferences updated successfully' });
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    console.error('Error updating email preferences:', error);
+    res.status(500).json({ message: 'Internal server error' });
   }
 };

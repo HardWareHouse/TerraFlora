@@ -1,6 +1,8 @@
 import { createRouter, createWebHistory } from "vue-router";
 import { useAuthStore } from "./pinia/auth.js";
+import { useCartStore } from "./pinia/cart.js";
 import Admin from "./pages/adminDashboardPage.vue";
+import Comptable from "./pages/comptablePage.vue";
 import Home from "./pages/homePage.vue";
 import Shop from "./pages/shopPage.vue";
 import Wishlist from "./pages/wishlistPage.vue";
@@ -13,9 +15,9 @@ import ResetPassword from "./pages/resetPassword.vue";
 import ProductDetail from "./pages/productDetail.vue";
 import OrderDetail from "./pages/orderDetail.vue";
 import Checkout from "./pages/checkoutPage.vue";
-import CGU from "../public/rgpd/cgu.vue";
-import Politique from "../public/rgpd/politique_confidentialite.vue";
-import Mentions from "../public/rgpd/mentions.vue";
+import CGU from "./pages/rgpd/cgu.vue";
+import Politique from "./pages/rgpd/politique_confidentialite.vue";
+import Mentions from "./pages/rgpd/mentions.vue";
 import Contact from "./pages/contactPage.vue";
 import ManageProducts from "./pages/manageProducts.vue";
 import success from "./components/stripePayment/success.vue";
@@ -28,17 +30,17 @@ const routes = [
     name: "Home",
     component: Home,
   },
-  // {
-  //   path: "/admin",
-  //   name: "Admin",
-  //   component: Admin,
-  //   meta: { requiresAuth: true, roles: ["ROLE_ADMIN"] },
-  // },
   {
     path: "/admin",
     name: "Admin",
     component: Admin,
-    meta: { requiresAuth: true },
+    meta: { requiresAuth: true, roles: ["ROLE_ADMIN"] },
+  },
+  {
+    path: "/comptable",
+    name: "Comptable",
+    component: Comptable, 
+    meta: { requiresAuth: true, roles: ["ROLE_COMPTABLE"] },
   },
   {
     path: "/shop",
@@ -59,7 +61,7 @@ const routes = [
     path: "/manage-products",
     name: "ManageProducts",
     component: ManageProducts,
-    meta: { requiresAuth: false, roles: ["ROLE_ADMIN", "ROLE_STORE_KEEPER"] },
+    meta: { requiresAuth: true, roles: ["ROLE_ADMIN", "ROLE_STORE_KEEPER"] },
   },
   {
     path: "/wishlist",
@@ -126,6 +128,7 @@ const routes = [
     path: "/stripe",
     name: "Stripe",
     component: AllPayments,
+    meta: { requiresAuth: true, roles: ["ROLE_ADMIN"] },
   },
   {
     path: "/success",
@@ -147,25 +150,31 @@ const router = createRouter({
 
 router.beforeEach(async (to, from, next) => {
   const authStore = useAuthStore();
+  const cartStore = useCartStore();
 
-  if (
-    to.meta.requiresAuth &&
-    localStorage.getItem("token") &&
-    !authStore.isLoggedIn
-  ) {
+  try {
     await authStore.checkToken();
-  }
+    if (authStore.isLoggedIn) {
+      await cartStore.fetchUserCart();
+    }
 
-  if (to.meta.requiresAuth && !authStore.isLoggedIn) {
-    next({ name: "login" });
-  } else if (
-    to.meta.requiresAuth &&
-    to.meta.roles &&
-    !to.meta.roles.includes(authStore.role)
-  ) {
-    next({ name: "Home" });
-  } else {
+    if (to.meta.requiresAuth && !authStore.isLoggedIn) {
+      authStore.clearUserData();
+      return next({ name: "login" });
+    }
+    
+    if (to.meta.requiresAuth && to.meta.roles && !to.meta.roles.includes(authStore.role)) {
+      return next({ name: 'Home' });
+    }
+
+    if (to.name === "Dashboard" && authStore.role === "ROLE_ADMIN") {
+      return next({ name: "Admin" });
+    }
+
     next();
+  } catch (error) {
+    console.error('An error occurred during navigation guard:', error);
+    next(false);
   }
 });
 

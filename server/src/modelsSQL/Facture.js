@@ -32,6 +32,10 @@ const Facture = connection.define('Facture', {
     total: {
         type: DataTypes.FLOAT,
         allowNull: false
+    },
+    invoiceUrl: {
+        type: DataTypes.STRING,
+        allowNull: false
     }
 }, {
     tableName: 'Factures'

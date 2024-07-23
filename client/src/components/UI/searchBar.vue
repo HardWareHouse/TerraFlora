@@ -1,5 +1,5 @@
 <template>
-  <div class="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50">
+  <div data-aos="fade-left" class="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50">
     <button @click.prevent="$emit('close')" class="absolute top-16 right-20 text-gray-600 hover:text-gray-800">
       <i class="bi bi-x-lg" style="font-size: 2rem; color: white;"></i>
     </button>

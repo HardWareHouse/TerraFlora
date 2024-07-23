@@ -1,7 +1,19 @@
-import * as contactService from "../services/contactService";
-import Contact from "../modelsSQL/Contact";
+import * as contactService from "../../services/contactService";
+import Contact from "../../modelsSQL/Contact"; // Adjust the path as necessary
 
-jest.mock("../modelsSQL/Contact");
+jest.mock("../../modelsSQL/Contact.js", () => ({
+  findByPk: jest.fn(),
+  create: jest.fn(),
+  destroy: jest.fn(),
+}));
+jest.mock("../../modelsMongo/Contact.mongo.js", () => ({
+  find: jest.fn().mockReturnValue({
+    select: jest.fn().mockResolvedValue([]),
+  }),
+  aggregate: jest.fn(),
+  findByIdAndUpdate: jest.fn(),
+  findByIdAndDelete: jest.fn(),
+}));
 
 describe("contactService", () => {
   describe("getAllContacts", () => {
@@ -23,7 +35,12 @@ describe("contactService", () => {
       const mockContact = { id: 1, subject: "Test" };
       Contact.create.mockResolvedValue(mockContact);
 
-      const data = { subject: "Test", message: "Message", email: "test@example.com", userId: 1 };
+      const data = {
+        subject: "Test",
+        message: "Message",
+        email: "test@example.com",
+        userId: 1,
+      };
       const result = await contactService.createContact(data);
 
       expect(Contact.create).toHaveBeenCalledWith(data);
@@ -54,7 +71,11 @@ describe("contactService", () => {
 
   describe("updateContact", () => {
     it("should update the contact if found", async () => {
-      const mockContact = { id: 1, subject: "Test", update: jest.fn().mockResolvedValue({ id: 1, subject: "Updated Test" }) };
+      const mockContact = {
+        id: 1,
+        subject: "Test",
+        update: jest.fn().mockResolvedValue({ id: 1, subject: "Updated Test" }),
+      };
       Contact.findByPk.mockResolvedValue(mockContact);
 
       const data = { subject: "Updated Test" };
@@ -68,7 +89,9 @@ describe("contactService", () => {
     it("should throw an error if contact not found", async () => {
       Contact.findByPk.mockResolvedValue(null);
 
-      await expect(contactService.updateContact(1, { subject: "Updated Test" })).rejects.toThrow("Contact not found");
+      await expect(
+        contactService.updateContact(1, { subject: "Updated Test" })
+      ).rejects.toThrow("Contact not found");
     });
   });
 
@@ -86,7 +109,9 @@ describe("contactService", () => {
     it("should throw an error if contact not found", async () => {
       Contact.findByPk.mockResolvedValue(null);
 
-      await expect(contactService.deleteContact(1)).rejects.toThrow("Contact not found");
+      await expect(contactService.deleteContact(1)).rejects.toThrow(
+        "Contact not found"
+      );
     });
   });
 });

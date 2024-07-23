@@ -19,7 +19,7 @@ export const useOrder = () => {
     const fetchOrders = async () => {
         loading.value = true;
         try {
-            const response = await instance.get(`orders/`);
+            const response = await instance.get(`orders`);
             if (!response.data) {
                 console.error('Aucune donnée commande trouvée');
                 return;
@@ -56,54 +56,14 @@ export const useOrder = () => {
         }
     };
     
-    
-    // A modifier pour correspondre à la structure de la commande
-    const createOrder = async (newOrder) => {
-        loading.value = true;
-        try {
-        const validatedData = orderSchema.parse(newOrder);
-        if (!validatedData) {
-            console.error('Invalid order data');
-            return;
-        }
-    
-        const response = await instance.post('order', validatedData);
-        } catch (error) {
-        console.error('Error creating order:', error);
-        } finally {
-        loading.value = false;
-        }
-    };
-    
     // A modifier pour correspondre à la structure de la commande
     const updateOrder = async (orderId, updatedOrder) => {
-        loading.value = true;
-        try {
-        const validatedData = orderSchema.parse(updatedOrder);
-        if (!validatedData) {
-            console.error('Invalid order data');
-            return;
-        }
-    
-        const response = await instance.put(`order/${orderId}`, validatedData);
-
-        } catch (error) {
-        console.error('Error updating order:', error);
-        } finally {
-        loading.value = false;
-        }
+        console.log(orderId);
     };
     
     // A modifier pour correspondre à la structure de la commande
     const deleteOrder = async (orderId) => {
-        loading.value = true;
-        try {
-        const response = await instance.delete(`order/${orderId}`);
-        } catch (error) {
-        console.error('Error deleting order:', error);
-        } finally {
-        loading.value = false;
-        }
+        console.log(orderId);
     };
     
     return {
@@ -112,8 +72,6 @@ export const useOrder = () => {
         loading,
         fetchOrders,
         fetchOrderById,
-        createOrder,
-        updateOrder,
         deleteOrder,
     };
     };

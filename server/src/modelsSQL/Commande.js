@@ -36,6 +36,10 @@ const Commande = connection.define('Commande', {
     trackingNumber: {
         type: DataTypes.STRING,
         allowNull: true
+    },
+    productArray: {
+        type: DataTypes.ARRAY(DataTypes.JSONB),
+        allowNull: false
     }
 }, {
     tableName: 'Commandes'

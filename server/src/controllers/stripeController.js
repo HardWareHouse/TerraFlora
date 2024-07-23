@@ -1,11 +1,16 @@
 import Stripe from "stripe";
 const stripe = Stripe(process.env.VITE_STRIPE_SECRET_KEY);
 
-const YOUR_DOMAIN = "http://localhost:5173";
+const YOUR_DOMAIN = process.env.FRONT_URL;
 
 export const createSession = async (req, res) => {
   try {
     const { lineItems } = req.body;
+
+    const formattedLineItems = lineItems.map((item) => ({
+      price: item.price,
+      quantity: item.quantity,
+    }));
 
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ["card"],
@@ -15,7 +20,7 @@ export const createSession = async (req, res) => {
       },
       shipping_options: [
         {
-          shipping_rate: "shr_1PaL80RvflFVG7kRWebshOPO",
+          shipping_rate: "shr_1PfMM4RvflFVG7kR6kksvnD1",
         },
       ],
       consent_collection: {
@@ -43,11 +48,11 @@ export const createSession = async (req, res) => {
           optional: true,
         },
       ],
-      line_items: lineItems,
+      line_items: formattedLineItems,
       mode: "payment",
-      success_url: `http://localhost:5173/success?session_id={CHECKOUT_SESSION_ID}`,
-      cancel_url: `http://localhost:5173/cancel`,
-      automatic_tax: { enabled: true },
+      success_url: `${YOUR_DOMAIN}/success?session_id={CHECKOUT_SESSION_ID}`,
+      cancel_url: `${YOUR_DOMAIN}/cancel`,
+      automatic_tax: { enabled: false },
     });
 
     res.json({ id: session.id });
@@ -96,17 +101,15 @@ export const createProduct = async (req, res) => {
 export const updatePrice = async (req, res) => {
   const { id, nom, prix, description, priceId } = req.body;
   try {
-    // Update the product details
     const products = await stripe.products.search({
       query: `active:'true' AND name:'${nom}'`,
     });
 
     const productId = products.data[0].id;
-    // Create a new price for the product
 
     const newPrice = await stripe.prices.create({
       unit_amount: prix * 100,
-      currency: "eur", // Specify your currency
+      currency: "eur",
       product: `${productId}`,
     });
 
@@ -115,7 +118,6 @@ export const updatePrice = async (req, res) => {
       description: description || "",
       name: nom,
     });
-    // Optionally, deactivate the old price
     await stripe.prices.update(priceId, {
       active: false,
     });
@@ -134,4 +136,123 @@ export const fulfillCheckout = async (sessionId) => {
     expand: ["line_items"],
   });
   console.log("checkoutSession", checkoutSession.line_items.data);
+};
+
+export const getBalanceTransactions = async (req, res) => {
+  try {
+    const { limit = 10, starting_after, ending_before } = req.query;
+    const params = {
+      limit: parseInt(limit),
+      ...(starting_after && { starting_after }),
+      ...(ending_before && { ending_before }),
+    };
+
+    const transactions = await stripe.charges.list(params);
+    console.log(transactions);
+
+    res.json({
+      data: transactions.data,
+      has_more: transactions.has_more,
+    });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+export const issueRefund = async (req, res) => {
+  const { transactionId } = req.body;
+  try {
+    const refund = await stripe.refunds.create({ charge: transactionId });
+    res.json(refund);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+export const createPaymentLink = async (req, res) => {
+  const { lineItems } = req.body;
+  try {
+    const paymentLink = await stripe.paymentLinks.create({
+      payment_method_types: ["card"],
+      billing_address_collection: "required",
+      shipping_address_collection: {
+        allowed_countries: ["FR"],
+      },
+      shipping_options: [
+        {
+          shipping_rate: "shr_1PfMM4RvflFVG7kR6kksvnD1",
+        },
+      ],
+      consent_collection: {
+        terms_of_service: "required",
+      },
+      custom_text: {
+        terms_of_service_acceptance: {
+          message: `I agree to the [Terms of Service](${YOUR_DOMAIN}/cgu)`,
+        },
+      },
+
+      invoice_creation: {
+        enabled: true,
+      },
+      phone_number_collection: {
+        enabled: true,
+      },
+      custom_fields: [
+        {
+          key: "note",
+          label: {
+            type: "custom",
+            custom: "Notes de commande",
+          },
+          type: "text",
+          optional: true,
+        },
+      ],
+      line_items: lineItems,
+      after_completion: {
+        type: "redirect",
+        redirect: {
+          url: process.env.FRONT_URL + "/success?session_id={CHECKOUT_SESSION_ID}",
+        },
+      },
+      automatic_tax: { enabled: false },
+    });
+    res.json({ url: paymentLink.url });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+export const getSession = async (req, res) => {
+  try {
+    const session = await stripe.checkout.sessions.retrieve(
+      "cs_test_b1ZewZ4hWfLRrUE8vF0GHNznAYGWifGU1kqBxoKc4QYpsyrlo0xz1roMxx"
+    );
+
+    res.json(session);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+export const getSessionLineItems = async (req, res) => {
+  const { sessionId } = req.params;
+  try {
+    const lineItems = await stripe.checkout.sessions.listLineItems(sessionId);
+    res.json(lineItems.data);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+export const getInvoice = async (req, res) => {
+  const { invoiceId } = req.params;
+
+  try {
+    const invoice = await stripe.invoices.retrieve(invoiceId);
+    res.json(invoice);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
 };

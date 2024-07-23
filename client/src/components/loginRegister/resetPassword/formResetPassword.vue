@@ -34,10 +34,10 @@ const success = ref('')
 
 const handleSubmit = async () => {
     try {
-        const response = await axios.post('http://localhost:8000/auth/forgot-password', {
+        const response = await axios.post(import.meta.env.VITE_API_URL + 'auth/forgot-password', {
             email: email.value
         })
-        success.value = 'If an account with that email exists, a password reset link has been sent.'
+        success.value = 'Si un compte avec cette adresse e-mail existe, un lien de réinitialisation du mot de passe a été envoyé.'
         error.value = ''
     } catch (err) {
         error.value = err.response?.data?.error || 'An error occurred.'
@@ -48,6 +48,6 @@ const handleSubmit = async () => {
 
 <style scoped>
 .container {
-    max-width: 900px;
+    max-width: 500px;
 }
 </style>

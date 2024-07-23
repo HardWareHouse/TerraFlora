@@ -14,6 +14,6 @@ router.get('/', authenticate, getAllAddresses);
 router.get('/:id', authenticate, getAddress);
 router.post('/', authenticate, createAddress);
 router.put('/:id', authenticate, updateAddress);
-router.delete('/:id', authenticate, authorizeAdmin, deleteAddress);
+router.delete('/:id', authenticate, deleteAddress);
 
 export default router;

@@ -14,9 +14,10 @@ const contactSchema = z.object({
 const contactUpdateSchema = contactSchema.extend({
   dateContact: z.string(),
   status: z.string(),
-  User: z.object({
+  user: z.object({
     nom: z.string(),
     prenom: z.string(),
+    email: z.string(),
   }),
 }).omit({ userId: true });
 
@@ -47,7 +48,7 @@ export const useContact = () => {
   };
 
   // Fonction pour récuperer tout les contacts
-  const getAllContacts = async () => {
+  const fetchContacts = async () => {
     loading.value = true;
     try {
       const response = await instance.get('contacts');
@@ -68,6 +69,11 @@ export const useContact = () => {
     }
   };
 
+  // Doit être modifié pour correspondre à la structure de contact
+  const deleteContact = async (contactId) => {
+    console.log(contactId);
+  }
+
   // Fonction pour vérifier si une adresse email est valide
   const isEmailAddressValid = (email) => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -78,7 +84,8 @@ export const useContact = () => {
     contact,
     contacts,
     loading,
-    getAllContacts,
+    fetchContacts,
+    deleteContact,
     sendContactMessage,
     isEmailAddressValid,
   };

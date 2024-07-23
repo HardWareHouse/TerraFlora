@@ -1,4 +1,5 @@
 import * as orderService from "../services/orderService.js";
+import { createInvoice } from "../services/invoiceService.js";
 import { isValidUUID } from "../helpers/validatorHelper.js";
 
 // Lire les informations d'une commande
@@ -16,7 +17,7 @@ export const getOrder = async (req, res) => {
       return res.status(404).json({ error: "Order not found" });
     }
 
-    if (order.userId !== user.id && user.role !== "ROLE_ADMIN") {
+    if (order.user._id !== user.id && user.role !== "ROLE_ADMIN") {
       return res.status(403).json({ error: "Unauthorized" });
     }
 
@@ -44,7 +45,7 @@ export const getAllOrders = async (req, res) => {
       }
       return res.status(200).json(orders);
     }
-    res.status(200).json(orders);
+
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
@@ -52,63 +53,66 @@ export const getAllOrders = async (req, res) => {
 
 // Créer une commande
 export const createOrder = async (req, res) => {
-  const { userId, panierId, total } = req.body;
+  const { total, userId, productArray, invoiceUrl } = req.body;
   const user = req.user;
 
-  if (!userId || !panierId || !total) {
-    return res.status(400).json({ error: "User ID, Cart ID and Total are required" });
+  if (!userId || !productArray || !total || !invoiceUrl) {
+    return res.status(400).json({ error: "All fields are required" });
   }
 
   if (!isValidUUID(userId)) {
     return res.status(400).json({ error: "Invalid UUID format" });
   }
 
-  if (userId !== user.id && user.role !== "ROLE_ADMIN") {
+  if (userId !== user.id) {
     return res.status(403).json({ error: "Unauthorized" });
   }
 
   try {
-    const existingOrder = await orderService.getOrderByPanierId(panierId);
-    if (existingOrder) {
-      return res.status(409).json({ error: "Order already exists" });
+    const order = await orderService.createOrder({ total, userId, productArray });
+    if (!order) {
+      return res.status(404).json({ error: "Order not created" });
     }
 
-    const numero = Math.floor(Math.random() * 1000000).toString().padStart(6, "0");
-    const dateCommande = new Date();
-    const dateLivraisonPrevue = new Date(dateCommande);
-    const dateLivraisonFinale = new Date(dateCommande);
-    dateLivraisonPrevue.setDate(dateLivraisonPrevue.getDate() + 7);
-    dateLivraisonFinale.setDate(dateLivraisonFinale.getDate() + 10);
-    const statut = "En attente";
+    const invoice = await createInvoice({ 
+          numero: order.numero, 
+          total: order.total, 
+          userId, 
+          commandeId: order.id,
+          invoiceUrl
+    });
 
-    const newOrder = await orderService.createOrder(
-      userId,
-      panierId,
-      numero,
-      statut,
-      dateCommande,
-      total,
-      dateLivraisonPrevue,
-      dateLivraisonFinale
-    );
-    res.status(201).json(newOrder);
+    if (!invoice) {
+      return res.status(404).json({ error: "Invoice not created" });
+    }
+    
+    return res.status(200);
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
+
 };
 
-// Mettre à jour une commande
+// Doit être mis à jour 
 export const updateOrder = async (req, res) => {
   const { id } = req.params;
-  const { userId, panierId, total } = req.body;
+  const { total, userId, productArray } = req.body;
   const user = req.user;
 
   if (!id || !isValidUUID(id)) {
     return res.status(400).json({ error: "Invalid or missing order ID" });
   }
 
-  if (!userId || !panierId || !total) {
-    return res.status(400).json({ error: "User ID, Cart ID and Total are required" });
+  if (!userId || !total) {
+    return res.status(400).json({ error: "All fields are required" });
+  }
+
+  if (!isValidUUID(userId)) {
+    return res.status(400).json({ error: "Invalid UUID format" });
+  }
+
+  if (userId !== user.id) {
+    return res.status(403).json({ error: "Unauthorized" });
   }
 
   try {
@@ -117,22 +121,18 @@ export const updateOrder = async (req, res) => {
       return res.status(404).json({ error: "Order not found" });
     }
 
-    if (order.userId !== user.id && user.role !== "ROLE_ADMIN") {
-      return res.status(403).json({ error: "Unauthorized" });
-    }
-
-    const updatedOrder = await orderService.updateOrderById(id, { userId, panierId, total });
+    const updatedOrder = await orderService.updateOrderById(id, { total, userId, productArray });
     if (!updatedOrder) {
-      return res.status(404).json({ error: "Order not found" });
+      return res.status(404).json({ error: "Order not updated" });
     }
-
     res.status(200).json(updatedOrder);
-  } catch (error) {
+  }
+  catch (error) {
     res.status(500).json({ error: error.message });
   }
 };
 
-// Supprimer une commande
+// Doit être mis à jour 
 export const deleteOrder = async (req, res) => {
   const { id } = req.params;
   const user = req.user;
@@ -147,14 +147,11 @@ export const deleteOrder = async (req, res) => {
       return res.status(404).json({ error: "Order not found" });
     }
 
-    if (order.userId !== user.id && user.role !== "ROLE_ADMIN") {
+    if (order.user._id !== user.id && user.role !== "ROLE_ADMIN") {
       return res.status(403).json({ error: "Unauthorized" });
     }
 
-    const deletedOrder = await orderService.deleteOrderById(id);
-    if (!deletedOrder) {
-      return res.status(404).json({ error: "Order not found" });
-    }
+    await orderService.deleteOrderById(id);
     res.status(204).end();
   } catch (error) {
     res.status(500).json({ error: error.message });

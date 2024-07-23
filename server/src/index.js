@@ -9,17 +9,19 @@ import dotenv from "dotenv";
 import userRouter from "./routes/user.js";
 import contactRouter from "./routes/contact.js";
 import orderRouter from "./routes/order.js";
+import cartRouter from "./routes/cart.js";
 import invoiceRouter from "./routes/invoice.js";
 import authRouter from "./routes/auth.js";
-import adminRouter from "./routes/admin.js";
 import produitRouter from "./routes/produit.js";
 import emailPreferenceRoutes from "./routes/emailPreference.js";
 import categorieRoutes from "./routes/categorie.js";
 import adresseRoutes from "./routes/adresse.js";
 import stripeRouter from "./routes/stripe.js";
 import webhookRouter from "./routes/webhook.js";
+import helmet from "helmet";
 import path from "path";
 import "./cron/stockAlertCron.js";
+import "./cron/reservationCron.js";
 
 dotenv.config();
 
@@ -31,23 +33,51 @@ server.use(
   webhookRouter
 );
 
+const corsOptions = {
+  origin: process.env.FRONT_URL,
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
+  credentials: true
+};
+
 server.use(bodyParser.json());
 server.use(express.urlencoded({ extended: true }));
-server.use(cors());
+server.use(cors(corsOptions));
+server.use(
+  helmet({
+    contentSecurityPolicy: {
+      directives: {
+        ...helmet.contentSecurityPolicy.getDefaultDirectives()
+      },
+    },
+    crossOriginResourcePolicy: { policy: "cross-origin" },
+    xssFilter: true
+  })
+);
+console.log(process.env.FRONT_URL);
+
 
 // routes
 server.use("/users", userRouter);
 server.use("/auth", authRouter);
-server.use("/admin", adminRouter);
 server.use("/orders", orderRouter);
+server.use("/cart", cartRouter);
 server.use("/contacts", contactRouter);
 server.use("/invoices", invoiceRouter);
 server.use("/address", adresseRoutes);
 server.use("/product", produitRouter);
 server.use("/categories", categorieRoutes);
 server.use("/emailPreferences", emailPreferenceRoutes);
-server.use("/uploads", express.static(path.join("src/uploads")));
 server.use("/stripe", stripeRouter);
+server.use("/hello", (req, res, next) => {
+  res.sendStatus(200);
+});
+
+server.use("/uploads", express.static(path.join("src/uploads"), {
+  setHeaders: (res, path) => {
+    res.set("Cross-Origin-Resource-Policy", "cross-origin");
+  }
+}));
 
 server.use((err, req, res, next) => {
   console.error("Error encountered:", err.stack);

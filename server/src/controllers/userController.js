@@ -1,7 +1,10 @@
 import * as userService from "../services/userService.js";
 import { isValidUUID } from "../helpers/validatorHelper.js";
 import { isEmailAddressValid } from "../helpers/emailAddressHelper.js";
-import { isPasswordValid, comparePasswords } from "../helpers/passwordHelper.js";
+import {
+  isPasswordValid,
+  comparePasswords,
+} from "../helpers/passwordHelper.js";
 
 // Lire les informations d'un utilisateur
 export const getUser = async (req, res) => {
@@ -61,75 +64,120 @@ export const updateUser = async (req, res) => {
     return res.status(400).json({ error: "Invalid user ID format" });
   }
 
-  if (user.id !== id) {
-    return res.status(403).json({ error: "Unauthorize" });
+  if (user.id !== id && user.role !== "ROLE_ADMIN") {
+    return res.status(403).json({ error: "Unauthorized" });
   }
 
   try {
-    const { nom, prenom, email, password, telephone, newPassword, confirmPassword } = req.body;
-    if (!nom || !prenom || !email || !password || !telephone) {
-      return res.status(400).json({ error: "Missing fields to update" });
-    }
-
-    if(req.body.role || req.body.id) {
-      return res.status(403).json({ error: "Unauthorized" });
-    }
-
-    if (email && !isEmailAddressValid(email)) {
-      return res.status(400).json({ error: "Invalid email format" });
-    }
-
-    const existingUserWithEmail = await userService.getUserByEmail(email);
-    if (existingUserWithEmail && existingUserWithEmail.id !== id) {
-      return res.status(409).json({ error: "Email already in use" });
-    }
-  
-    if (password && !isPasswordValid(password)) {
-      return res.status(400).json({ error: "Password is not strong enough" });
-    }
-
     const existingUser = await userService.getUser(id);
     if (!existingUser) {
       return res.status(404).json({ error: "User not found" });
     }
-    if(existingUser.id !== user.id) {
-      return res.status(403).json({ error: "Unauthorized" });
-    }
 
-    const passwordMatch = await comparePasswords(password, existingUser.password);
-    if (!passwordMatch) {
-      return res.status(401).json({ error: "Invalid password" });
-    }
+    const {
+      nom,
+      prenom,
+      email,
+      telephone,
+      role,
+      password,
+      newPassword,
+      confirmPassword,
+    } = req.body;
 
-    const updatedUserData = {
-      nom: nom || existingUser.nom,
-      prenom: prenom || existingUser.prenom,
-      email: email || existingUser.email,
-      telephone: telephone || existingUser.telephone
-    };
-
-    if(newPassword){
-      if(!confirmPassword){
-        return res.status(400).json({ error: "Missing confirm password" });
+    if (user.role === "ROLE_ADMIN") {
+      if (!nom || !prenom || !email || !telephone || !role) {
+        return res.status(400).json({ error: "Missing fields to update" });
       }
 
-      if(newPassword !== confirmPassword){
-        return res.status(400).json({ error: "Passwords do not match" });
+      if (role === "ROLE_ADMIN") {
+        return res.status(403).json({ error: "Unauthorized role update" });
       }
 
-      if(!isPasswordValid(newPassword) || !isPasswordValid(confirmPassword)){
-        return res.status(400).json({ error: "The new password is not strong enough" });
+      if (!["ROLE_USER", "ROLE_STORE_KEEPER"].includes(role)) {
+        return res.status(403).json({ error: "Invalid role" });
       }
-      
-      updatedUserData.password = newPassword;
-    }
 
-    const updatedUser = await userService.updateUserById(id, updatedUserData);
-    if (!updatedUser) {
-      return res.status(400).json({ error: "No data to update" });
-    }
+      if (email && !isEmailAddressValid(email)) {
+        return res.status(400).json({ error: "Invalid email format" });
+      }
 
-    res.status(200).json(updatedUser);
+      const existingUserWithEmail = await userService.getUserByEmail(email);
+      if (existingUserWithEmail && existingUserWithEmail.id !== id) {
+        return res.status(409).json({ error: "Error" });
+      }
+
+      const updatedUserData = {
+        nom: nom || existingUser.nom,
+        prenom: prenom || existingUser.prenom,
+        email: email || existingUser.email,
+        telephone: telephone || existingUser.telephone,
+        role: role || existingUser.role,
+      };
+
+      const updatedUser = await userService.adminUpdateUserById(id, updatedUserData);
+      if (!updatedUser) {
+        return res.status(400).json({ error: "No data to update" });
+      }
+
+      res.status(200).json(updatedUser);
+    } else {
+      if (!nom || !prenom || !email || !password || !telephone) {
+        return res.status(400).json({ error: "Missing fields to update" });
+      }
+
+      if (role) {
+        return res.status(403).json({ error: "Unauthorized" });
+      }
+
+      if (email && !isEmailAddressValid(email)) {
+        return res.status(400).json({ error: "Invalid email format" });
+      }
+
+      const existingUserWithEmail = await userService.getUserByEmail(email);
+      if (existingUserWithEmail && existingUserWithEmail.id !== id) {
+        return res.status(409).json({ error: "Error" });
+      }
+
+      if (password && !isPasswordValid(password)) {
+        return res.status(400).json({ error: "Password is not strong enough" });
+      }
+
+      const passwordMatch = await comparePasswords(password, existingUser.password);
+      if (!passwordMatch) {
+        return res.status(401).json({ error: "Invalid password" });
+      }
+
+      const updatedUserData = {
+        nom: nom || existingUser.nom,
+        prenom: prenom || existingUser.prenom,
+        email: email || existingUser.email,
+        telephone: telephone || existingUser.telephone,
+      };
+
+      if (newPassword) {
+        if (!confirmPassword) {
+          return res.status(400).json({ error: "Missing confirm password" });
+        }
+
+        if (newPassword !== confirmPassword) {
+          return res.status(400).json({ error: "Passwords do not match" });
+        }
+
+        if (!isPasswordValid(newPassword)) {
+          return res.status(400).json({ error: "The new password is not strong enough" });
+        }
+
+        updatedUserData.password = newPassword;
+      }
+
+      const updatedUser = await userService.updateUserById(id, updatedUserData);
+      if (!updatedUser) {
+        return res.status(400).json({ error: "No data to update" });
+      }
+
+      res.status(200).json(updatedUser);
+    }
   } catch (error) {
     console.error("Error updating user:", error);
     res.status(500).json({ error: "Internal Server Error" });
@@ -140,10 +188,10 @@ export const updateUser = async (req, res) => {
 // Supprimer un utilisateur
 export const deleteUser = async (req, res) => {
   const { id } = req.params;
-  const user = req.user;
+  const user = await userService.getUserById(id);
 
   if (!id || !isValidUUID(id)) {
-    return res.status(400).json({ error: "Invalid or missing user ID" });
+    return res.status(400).json({ error: "Invalid or missing user dsdsID" });
   }
 
   if (user.id !== id && user.role !== "ROLE_ADMIN") {
@@ -155,7 +203,7 @@ export const deleteUser = async (req, res) => {
     if (!userToDelete) {
       return res.status(404).json({ error: "User not found" });
     }
-    
+
     const deletedUser = await userService.deleteUserById(id);
     if (!deletedUser) {
       return res.status(404).json({ error: "User not found" });
