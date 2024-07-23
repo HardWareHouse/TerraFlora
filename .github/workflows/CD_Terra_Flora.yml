@@ -14,7 +14,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v2
 
-      - name: executing remote ssh commands 
+      - name: executing remote ssh commands
         uses: appleboy/ssh-action@v1.0.3
         with:
           host: ${{ secrets.HOST }}
@@ -22,16 +22,17 @@ jobs:
           key: ${{ secrets.KEY }}
           port: ${{ secrets.PORT }}
           script: |
-                  cd /home/aria/TerraFlora/client
-                  git pull
-                  /home/aria/.nvm/versions/node/v20.15.1/bin/npm install
-                  VITE_API_URL=${{ secrets.VITE_API_URL }} VITE_STRIPE_PUBLISHABLE_KEY=${{ secrets.VITE_STRIPE_PUBLISHABLE_KEY }} VITE_LA_POSTE_API_KEY=${{ secrets.VITE_LA_POSTE_API_KEY }} /home/aria/.nvm/versions/node/v20.15.1/bin/npm run build
-          
+            cd /home/aria/TerraFlora/client
+            git pull
+            source /home/aria/.nvm/nvm.sh
+            nvm use 20.15.1
+            npm install
+            VITE_API_URL=${{ secrets.VITE_API_URL }} VITE_STRIPE_PUBLISHABLE_KEY=${{ secrets.VITE_STRIPE_PUBLISHABLE_KEY }} VITE_LA_POSTE_API_KEY=${{ secrets.VITE_LA_POSTE_API_KEY }} npm run build
 
   deployBackend:
     name: Deploy Backend
     runs-on: ubuntu-latest
-    
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
@@ -44,8 +45,9 @@ jobs:
           key: ${{ secrets.KEY }}
           port: ${{ secrets.PORT }}
           script: |
-                  cd /home/aria/TerraFlora/server
-                  git pull
-                  /home/aria/.nvm/versions/node/v20.15.1/bin/npm install 
-                  pm2 start --node-args="--env-file=.env" src/index.js
-            
+            cd /home/aria/TerraFlora/server
+            git pull
+            source /home/aria/.nvm/nvm.sh
+            nvm use 20.15.1
+            npm install
+            pm2 start --node-args="--env-file=.env" src/index.js
