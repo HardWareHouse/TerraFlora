@@ -34,29 +34,30 @@ jobs:
                   VITE_API_URL=${{ secrets.VITE_API_URL }} VITE_STRIPE_PUBLISHABLE_KEY=${{ secrets.VITE_STRIPE_PUBLISHABLE_KEY }} VITE_LA_POSTE_API_KEY=${{ secrets.VITE_LA_POSTE_API_KEY }} npm run build
           
 
-    deployBackend:
-      name: Deploy Backend
-      runs-on: ubuntu-latest
-      steps:
-        - name: Checkout repository
-          uses: actions/checkout@v2
+  deployBackend:
+    name: Deploy Backend
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
 
-        - name: Download backend files
-          uses: actions/download-artifact@v2
-          with:
-            name: backend-files
-            path: ./server
+      - name: Download backend files
+        uses: actions/download-artifact@v2
+        with:
+          name: backend-files
+          path: ./server
 
-        - name: executing remote ssh commands using password
-          uses: appleboy/ssh-action@v1.0.3
-          with:
-            host: ${{ secrets.HOST }}
-            username: ${{ secrets.USERNAME }}
-            key: ${{ secrets.KEY }}
-            port: ${{ secrets.PORT }}
-            script: |
-                    cd server
-                    git pull
-                    npm install 
-                    pm2 start --node-args="--env-file=.env" src/index.js
+      - name: executing remote ssh commands using password
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }}
+          key: ${{ secrets.KEY }}
+          port: ${{ secrets.PORT }}
+          script: |
+                  cd server
+                  git pull
+                  npm install 
+                  pm2 start --node-args="--env-file=.env" src/index.js
             
