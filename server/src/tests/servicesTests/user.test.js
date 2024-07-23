@@ -1,114 +1,190 @@
-import { deleteUserById } from "../../services/userService";
-import User from "../../modelsSQL/User";
-import DeletedUser from "../../modelsSQL/DeletedUsers";
+import {
+  getAllUsers,
+  getUser,
+  getUserById,
+  getUserByEmail,
+  updateUserById,
+  deleteUserById,
+} from "../../services/userService";
+import UserSQL from "../../modelsSQL/User.js";
+import UserMongo from "../../modelsMongo/User.mongo.js";
+import DeletedUserSQL from "../../modelsSQL/DeletedUser.js";
+import DeletedUserMongo from "../../modelsMongo/DeletedUser.mongo.js";
+import { comparePasswords } from "../../helpers/passwordHelper.js";
 
-jest.mock("../../modelsSQL/User");
-jest.mock("../../modelsSQL/DeletedUsers");
+jest.mock("../../modelsSQL/User.js", () => {
+  return {
+    findByPk: jest.fn(),
+    create: jest.fn(),
+    destroy: jest.fn(),
+  };
+});
+jest.mock("../../modelsMongo/User.mongo.js", () => ({
+  find: jest.fn().mockReturnValue({
+    select: jest.fn().mockResolvedValue([]),
+  }),
+  aggregate: jest.fn(),
+  findByIdAndUpdate: jest.fn(),
+  findByIdAndDelete: jest.fn(),
+}));
+jest.mock("../../modelsSQL/DeletedUser.js", () => ({
+  create: jest.fn(),
+}));
+jest.mock("../../modelsMongo/DeletedUser.mongo.js", () => ({
+  create: jest.fn(),
+}));
+jest.mock("../../helpers/passwordHelper.js", () => ({
+  comparePasswords: jest.fn(),
+}));
 
-describe("deleteUserById", () => {
-  beforeEach(() => {
+describe("User Service Tests", () => {
+  afterEach(() => {
     jest.clearAllMocks();
   });
 
-  it("should delete a user and move data to DeletedUser", async () => {
-    const mockUser = {
-      id: "123",
-      nom: "John",
-      prenom: "Doe",
-      email: "john.doe@example.com",
-      password: "hashedpassword",
-      telephone: "1234567890",
-      role: "ROLE_USER",
-      toJSON: jest.fn().mockReturnValue({
-        id: "123",
-        nom: "John",
-        prenom: "Doe",
-        email: "john.doe@example.com",
-        password: "hashedpassword",
-        telephone: "1234567890",
-        role: "ROLE_USER",
-      }),
-      destroy: jest.fn().mockResolvedValue(true),
-    };
-
-    // Mock User.findByPk to return the mock user
-    User.findByPk = jest.fn().mockResolvedValue(mockUser);
-
-    // Mock DeletedUser.create
-    DeletedUser.create = jest.fn().mockResolvedValue(mockUser);
-
-    // Call the function
-    const result = await deleteUserById("123");
-
-    // Assertions
-    expect(User.findByPk).toHaveBeenCalledWith("123");
-    expect(DeletedUser.create).toHaveBeenCalledWith({
-      nom: "John",
-      prenom: "Doe",
-      email: "john.doe@example.com",
-      password: "hashedpassword",
-      telephone: "1234567890",
-      role: "ROLE_USER",
+  test("getAllUsers should return all users from MongoDB", async () => {
+    UserMongo.find.mockReturnValue({
+      select: jest.fn().mockResolvedValue([
+        {
+          id: "1",
+          nom: "Doe",
+          prenom: "John",
+          email: "john.doe@example.com",
+          telephone: "1234567890",
+          role: "user",
+          isVerified: true,
+          isBlocked: false,
+          wantsMailNewProduct: false,
+          wantsMailRestockProduct: false,
+          wantsMailChangingPrice: false,
+          wantsMailNewsletter: false,
+        },
+      ]),
     });
-    expect(mockUser.destroy).toHaveBeenCalled();
-    expect(result).toEqual(mockUser);
+
+    const users = await getAllUsers();
+
+    expect(users).toHaveLength(1);
+    expect(users[0]).toHaveProperty("id", "1");
+    expect(users[0]).toHaveProperty("email", "john.doe@example.com");
   });
 
-  it("should return null if the user is not found", async () => {
-    // Mock User.findByPk to return null
-    User.findByPk = jest.fn().mockResolvedValue(null);
+  test("getUser should return user from SQL database", async () => {
+    // Set up mock response for findByPk
+    UserSQL.findByPk.mockResolvedValue({
+      id: "1",
+      nom: "Doe",
+      prenom: "John",
+      email: "john.doe@example.com",
+      telephone: "1234567890",
+      role: "user",
+      isVerified: true,
+      isBlocked: false,
+      wantsMailNewProduct: false,
+      wantsMailRestockProduct: false,
+      wantsMailChangingPrice: false,
+      wantsMailNewsletter: false,
+      hasConsented: true,
+      save: jest.fn().mockResolvedValue(true),
+      destroy: jest.fn().mockResolvedValue(true),
+    });
 
-    // Call the function
-    const result = await deleteUserById("123");
+    const user = await getUser("1");
 
-    // Assertions
-    expect(User.findByPk).toHaveBeenCalledWith("123");
-    expect(DeletedUser.create).not.toHaveBeenCalled();
-    expect(result).toBeNull();
+    expect(user).toHaveProperty("id", "1");
+    expect(user).toHaveProperty("email", "john.doe@example.com");
   });
 
-  it("should handle errors during deletion or creation", async () => {
-    const mockUser = {
-      id: "123",
-      nom: "John",
-      prenom: "Doe",
-      email: "john.doe@example.com",
-      password: "hashedpassword",
-      telephone: "1234567890",
-      role: "ROLE_USER",
-      toJSON: jest.fn().mockReturnValue({
-        id: "123",
-        nom: "John",
-        prenom: "Doe",
+  test("getUserById should return user with alias from MongoDB", async () => {
+    UserMongo.aggregate.mockResolvedValue([
+      {
+        id: "1",
+        nom: "Doe",
+        prenom: "John",
         email: "john.doe@example.com",
-        password: "hashedpassword",
         telephone: "1234567890",
-        role: "ROLE_USER",
-      }),
-      destroy: jest.fn().mockResolvedValue(true),
-    };
+        role: "user",
+        isVerified: true,
+        isBlocked: false,
+        wantsMailNewProduct: false,
+        wantsMailRestockProduct: false,
+        wantsMailChangingPrice: false,
+        wantsMailNewsletter: false,
+      },
+    ]);
 
-    // Mock User.findByPk to return the mock user
-    User.findByPk = jest.fn().mockResolvedValue(mockUser);
+    const user = await getUserById("1");
 
-    // Mock DeletedUser.create to throw an error
-    DeletedUser.create = jest
-      .fn()
-      .mockRejectedValue(new Error("Failed to create"));
+    expect(user).toHaveProperty("id", "1");
+    expect(user).toHaveProperty("email", "john.doe@example.com");
+  });
 
-    // Call the function and expect it to throw an error
-    await expect(deleteUserById("123")).rejects.toThrow("Failed to create");
+  test("getUserByEmail should return user by email from MongoDB", async () => {
+    UserMongo.aggregate.mockResolvedValue([
+      { id: "1", nom: "Doe", prenom: "John", email: "john.doe@example.com" },
+    ]);
 
-    // Assertions
-    expect(User.findByPk).toHaveBeenCalledWith("123");
-    expect(DeletedUser.create).toHaveBeenCalledWith({
-      nom: "John",
-      prenom: "Doe",
+    const user = await getUserByEmail("john.doe@example.com");
+
+    expect(user).toHaveProperty("id", "1");
+    expect(user).toHaveProperty("email", "john.doe@example.com");
+  });
+
+  test("updateUserById should update user and synchronize with MongoDB", async () => {
+    UserSQL.findByPk.mockResolvedValue({
+      id: "1",
+      nom: "Doe",
+      prenom: "John",
       email: "john.doe@example.com",
-      password: "hashedpassword",
       telephone: "1234567890",
-      role: "ROLE_USER",
+      role: "user",
+      isVerified: true,
+      isBlocked: false,
+      wantsMailNewProduct: false,
+      wantsMailRestockProduct: false,
+      wantsMailChangingPrice: false,
+      wantsMailNewsletter: false,
+      hasConsented: true,
+      save: jest.fn().mockResolvedValue(true),
     });
-    expect(mockUser.destroy).not.toHaveBeenCalled();
+
+    comparePasswords.mockResolvedValue(true);
+
+    UserMongo.findByIdAndUpdate.mockResolvedValue(true);
+
+    const updatedUser = await updateUserById("1", {
+      email: "new.email@example.com",
+    });
+
+    expect(updatedUser).toHaveProperty("id", "1");
+    expect(UserSQL.findByPk).toHaveBeenCalledWith("1");
+    expect(UserMongo.findByIdAndUpdate).toHaveBeenCalled();
+  });
+
+  test("deleteUserById should delete user and move to deleted collections", async () => {
+    UserSQL.findByPk.mockResolvedValue({
+      id: "1",
+      role: "user",
+      isVerified: true,
+      isBlocked: false,
+      destroy: jest.fn().mockResolvedValue(true),
+    });
+
+    DeletedUserSQL.create.mockResolvedValue({
+      id: "1",
+      role: "user",
+      isVerified: true,
+      isBlocked: false,
+      userId: "1",
+    });
+    DeletedUserMongo.create.mockResolvedValue(true);
+
+    UserMongo.findByIdAndDelete.mockResolvedValue(true);
+
+    const result = await deleteUserById("1");
+
+    expect(result).toBe(true);
+    expect(UserSQL.findByPk).toHaveBeenCalledWith("1");
+    expect(UserMongo.findByIdAndDelete).toHaveBeenCalledWith("1");
   });
 });
