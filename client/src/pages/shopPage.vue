@@ -1,7 +1,7 @@
 <template>
   <Breadcrumbs />
   <div class="shop-page max-w-7xl mx-auto py-8">
-    <div class="flex">
+    <div class="flex flex-col-reverse  lg:flex-row">
       <Filters @filter="applyFilter" class="w-1/4" />
       <ProductList :filters="filters" class="w-3/4" />
     </div>
