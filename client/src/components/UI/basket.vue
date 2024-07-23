@@ -71,7 +71,7 @@ const vat = computed(() => {
   return (subTotal.value * 0.10).toFixed(2);
 });
 const total = computed(() => {
-  return (parseFloat(subTotal.value) + 10 + parseFloat(vat.value)).toFixed(2);
+  return (parseFloat(subTotal.value) + 10.99 + parseFloat(vat.value)).toFixed(2);
 });
 
 const viewCart = () => {
@@ -83,7 +83,7 @@ const getImageUrl = (imagePath) => {
   if (!imagePath) {
     return '/images/flower.webp';
   }
-  return `http://localhost:8000/uploads/${imagePath.split('/').pop()}`;
+  return import.meta.env.VITE_API_URL + `uploads/${imagePath.split('/').pop()}`;
 };
 
 const reserveCart = async () => {

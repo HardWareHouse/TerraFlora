@@ -238,22 +238,22 @@ const onSubmit = async (values) => {
         ...props.product,
         prix: values.prix,
       };
-      const response = await axios.post('http://localhost:8000/stripe/update-price', updatePayload);
+      const response = await axios.post(import.meta.env.VITE_API_URL + 'stripe/update-price', updatePayload);
       newPriceId = response.data.newPriceId;
     }
 
     formData.append('newPriceId', newPriceId);
-    await axios.put(`http://localhost:8000/product/${props.product.id}`, formData, {
+    await axios.put(import.meta.env.VITE_API_URL + `product/${props.product.id}`, formData, {
       headers: {
         'Content-Type': 'multipart/form-data',
       },
     });
   } else {
-    const response = await axios.post('http://localhost:8000/stripe/create-product', values);
+    const response = await axios.post(import.meta.env.VITE_API_URL + 'stripe/create-product', values);
     const priceId = response.data.priceId;
     formData.append('priceId', priceId);
 
-    await axios.post('http://localhost:8000/product', formData, {
+    await axios.post(import.meta.env.VITE_API_URL + 'product', formData, {
       headers: {
         'Content-Type': 'multipart/form-data',
       },
@@ -294,7 +294,7 @@ watch(
 
 const fetchCategories = async () => {
   try {
-    const response = await axios.get('http://localhost:8000/categories');
+    const response = await axios.get(import.meta.env.VITE_API_URL + 'categories');
     categories.value = response.data;
   } catch (error) {
     console.error('Error fetching categories:', error);

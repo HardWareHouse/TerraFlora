@@ -149,7 +149,7 @@ const handleSubmit = async () => {
   }
 
   try {
-      const response = await axios.post('http://localhost:8000/auth/register', {
+      const response = await axios.post(import.meta.env.VITE_API_URL + 'auth/register', {
           nom: nom.value,
           prenom: prenom.value,
           email: email.value,

@@ -34,7 +34,7 @@ const success = ref('')
 
 const handleSubmit = async () => {
     try {
-        const response = await axios.post('http://localhost:8000/auth/forgot-password', {
+        const response = await axios.post(import.meta.env.VITE_API_URL + 'auth/forgot-password', {
             email: email.value
         })
         success.value = 'Si un compte avec cette adresse e-mail existe, un lien de réinitialisation du mot de passe a été envoyé.'

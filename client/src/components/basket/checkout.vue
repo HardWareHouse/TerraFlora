@@ -50,7 +50,7 @@ const vat = computed(() => {
 });
 
 const total = computed(() => {
-  return (parseFloat(subTotal.value) + 10 + parseFloat(vat.value)).toFixed(2);
+  return (parseFloat(subTotal.value) + 10.99 + parseFloat(vat.value)).toFixed(2);
 });
 
 const createCheckoutSession = async () => {
@@ -63,7 +63,7 @@ const createCheckoutSession = async () => {
     }));
 
     const response = await axios.post(
-      "http://localhost:8000/stripe/create-checkout-session",
+      import.meta.env.VITE_API_URL + "stripe/create-checkout-session",
       {
         lineItems,
       }
@@ -97,7 +97,7 @@ export default {
           quantity: item.Panier_Produits.quantity,
         }));
         const response = await axios.post(
-          "http://localhost:8000/stripe/create-checkout-session",
+          import.meta.env.VITE_API_URL + "stripe/create-checkout-session",
           { lineItems }
         );
 

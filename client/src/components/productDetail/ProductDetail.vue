@@ -90,7 +90,7 @@ onMounted(async () => {
   const productName = decodeURIComponent(route.params.name);
   try {
     const response = await axios.get(
-      `http://localhost:8000/product/name/${productName}`
+      import.meta.env.VITE_API_URL + `product/name/${productName}`
     );
     product.value = response.data;
 
@@ -110,7 +110,7 @@ const getImageUrl = (imagePath) => {
   if (!imagePath) {
     return "/images/flower.webp";
   }
-  return `http://localhost:8000/${imagePath}`;
+  return `${import.meta.env.VITE_API_URL}${imagePath}`;
 };
 
 const decreaseQuantity = () => {

@@ -153,7 +153,7 @@ export default {
     const fetchBalanceTransactions = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:8000/stripe/transactions?limit=${limit.value}&starting_after=${startingAfter.value || ""}&ending_before=${endingBefore.value || ""}`
+          import.meta.env.VITE_API_URL + `stripe/transactions?limit=${limit.value}&starting_after=${startingAfter.value || ""}&ending_before=${endingBefore.value || ""}`
         );
         balanceTransactions.value = response.data.data;
         hasNextPage.value = response.data.has_more;
@@ -185,7 +185,7 @@ export default {
     const issueRefund = async (transactionId) => {
       try {
         const refundResponse = await axios.post(
-          "http://localhost:8000/stripe/refund",
+          import.meta.env.VITE_API_URL + "stripe/refund",
           { transactionId }
         );
         console.log("Refund successful:", refundResponse);
@@ -201,7 +201,7 @@ export default {
 
     const fetchProducts = async () => {
       try {
-        const response = await axios.get("http://localhost:8000/product/");
+        const response = await axios.get(import.meta.env.VITE_API_URL + "product/");
         products.value = response.data;
         products.value.forEach((product) => {
           selectedProducts.value[product.priceId] = 0;
@@ -218,7 +218,7 @@ export default {
 
       try {
         const response = await axios.post(
-          "http://localhost:8000/stripe/payment-link",
+          import.meta.env.VITE_API_URL + "stripe/payment-link",
           { lineItems }
         );
         paymentLink.value = response.data.url;
