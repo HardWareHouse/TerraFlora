@@ -14,6 +14,12 @@ async function insertOrUpdateCommandeInMongo(commandeSQL) {
         dateLivraisonFinale: commandeSQL.dateLivraisonFinale,
         total: commandeSQL.total,
         trackingNumber: commandeSQL.trackingNumber,
+        productArray: commandeSQL.productArray.map(product => ({
+            _id: product.id,
+            nom: product.nom,
+            prix: product.prix,
+            quantite: product.quantite
+        })),
         user: {
             _id: commandeSQL.userId,
             nom: commandeSQL.User.nom,

@@ -93,6 +93,8 @@
 import { useRoute } from "vue-router";
 import { ref, onMounted } from "vue";
 import axios from "axios";
+import instance from "../../axios.js";
+import { useAuthStore } from "../../pinia/auth.js";
 
 export default {
   name: "SuccessPage",
@@ -128,6 +130,17 @@ export default {
           }));
           cartTotal.value = (session.amount_total / 100).toFixed(2);
 
+          const productArray = [];
+          for (let i = 0; i < cartItems.value.length; i++) {
+            productArray.push({
+              id: cartItems.value[i].id,
+              nom: cartItems.value[i].name,
+              quantite: cartItems.value[i].quantity,
+              prix: ((cartItems.value[i].amount_total / 100) / cartItems.value[i].quantity).toFixed(2).toString(),
+            });
+          }
+          const total = cartTotal.value;
+
           // Extract and set customer details
           customerDetails.value = session.customer_details;
 
@@ -141,6 +154,18 @@ export default {
             );
             invoiceUrl.value = response.data.hosted_invoice_url;
           }
+
+          const authStore = useAuthStore();
+          const response =await instance.post("/orders", {
+            userId: authStore.id, 
+            total: cartTotal.value,
+            productArray: productArray,
+          });
+
+          if (response.status === 200) {
+            console.log("Order created successfully");
+          }
+
         } catch (error) {
           console.error("Error fetching session details:", error);
         }
