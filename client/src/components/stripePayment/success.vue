@@ -160,6 +160,7 @@ export default {
             userId: authStore.id, 
             total: cartTotal.value,
             productArray: productArray,
+            incoiceUrl: invoiceUrl.value,
           });
 
           if (response.status === 200) {

@@ -1,4 +1,5 @@
 import * as orderService from "../services/orderService.js";
+import { createInvoice } from "../services/invoiceService.js";
 import { isValidUUID } from "../helpers/validatorHelper.js";
 
 // Lire les informations d'une commande
@@ -52,10 +53,10 @@ export const getAllOrders = async (req, res) => {
 
 // Créer une commande
 export const createOrder = async (req, res) => {
-  const { total, userId, productArray } = req.body;
+  const { total, userId, productArray, incoiceUrl } = req.body;
   const user = req.user;
 
-  if (!userId || !productArray || !total) {
+  if (!userId || !productArray || !total || !incoiceUrl) {
     return res.status(400).json({ error: "All fields are required" });
   }
 
@@ -72,6 +73,19 @@ export const createOrder = async (req, res) => {
     if (!order) {
       return res.status(404).json({ error: "Order not created" });
     }
+
+    const invoice = await createInvoice({ 
+          numero: order.numero, 
+          total: order.total, 
+          userId, 
+          commandeId: order.id,
+          incoiceUrl
+    });
+
+    if (!invoice) {
+      return res.status(404).json({ error: "Invoice not created" });
+    }
+    
     return res.status(200);
   } catch (error) {
     res.status(500).json({ error: error.message });

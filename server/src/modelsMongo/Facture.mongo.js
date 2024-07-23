@@ -31,6 +31,10 @@ const factureSchema = new mongoose.Schema(
             type: Number,
             required: true,
         },
+        incoiceUrl: {
+            type: String,
+            required: true,
+        },
         user: {
             type: {
                 _id: {
