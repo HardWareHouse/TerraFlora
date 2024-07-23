@@ -20,6 +20,7 @@ import stripeRouter from "./routes/stripe.js";
 import webhookRouter from "./routes/webhook.js";
 import path from "path";
 import "./cron/stockAlertCron.js";
+import "./cron/reservationCron.js";
 
 dotenv.config();
 

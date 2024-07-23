@@ -4,7 +4,8 @@ import {
   createCart,
   updateCart,
   deleteCart,
-  deleteProductFromCart
+  deleteProductFromCart,
+  reserveCart
 } from '../controllers/cartController.js';
 import { authenticate, authorizeAdmin } from '../middlewares/authMiddleware.js';
 
@@ -15,5 +16,6 @@ router.post('/', authenticate,createCart);
 router.put('/:id',authenticate, updateCart);
 router.delete('/:id',authenticate, deleteCart);
 router.delete('/:userId/product/:productId',authenticate, deleteProductFromCart);
+router.post('/reserve', authenticate, reserveCart);
 
 export default router;

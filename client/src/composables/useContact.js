@@ -87,6 +87,26 @@ export const useContact = () => {
     }
   }
 
+  // Doit être modifié pour correspondre à la structure de contact
+  const updateContact = async (updatedContact) => {
+    loading.value = true;
+    try {
+      const validatedData = contactUpdateSchema.parse(updatedContact);
+      const response = await instance.put(`contacts/${validatedData.id}`, validatedData);
+      if (!response.data) {
+        throw new Error('Contact non trouvé');
+      }
+
+      const index = contacts.value.findIndex((contact) => contact.id === response.data.id);
+      contacts.value[index] = contactUpdateSchema.parse(response.data);
+    } catch (error) {
+      console.error('Erreur lors de la mise à jour du contact:', error);
+      throw error;
+    } finally {
+      loading.value = false;
+    }
+  };
+
   // Fonction pour vérifier si une adresse email est valide
   const isEmailAddressValid = (email) => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -99,6 +119,7 @@ export const useContact = () => {
     loading,
     fetchContacts,
     deleteContact,
+    updateContact,
     sendContactMessage,
     isEmailAddressValid,
   };

@@ -18,11 +18,14 @@
           <tr v-for="resource in paginatedResources" :key="resource.id" class="border-b border-gray-200">
             <td v-for="key in resourceKeys" :key="key" class="py-2 px-4">{{ transformValue(resource[key], key) }}</td>
             <td class="py-2 px-4 flex items-center space-x-2">
-              <button @click="editResource(resource)" class="inline-flex items-center justify-center px-4 py-2 bg-blue-500 text-white rounded hover:text-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50">
+              <!-- Vérification des conditions d'affichage du bouton d'édition -->
+              <button v-if="canEditResource(resource)" @click="openEditModal(resource)" class="inline-flex items-center justify-center px-4 py-2 bg-blue-500 text-white rounded hover:text-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50">
                 <i class="bi bi-pencil-square mr-2"></i>
                 <span class="hidden md:inline">Modifier</span>
               </button>
+              <!-- Vérification des conditions d'affichage du bouton de suppression -->
               <DeleteButton 
+                v-if="canDeleteResource(resource)"
                 :onConfirm="() => deleteResource(resource.id)" 
                 buttonClass="inline-flex items-center justify-center px-4 py-2 bg-red-500 text-white rounded hover:text-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-opacity-50"
                 confirmationMessage="Êtes-vous sûr de vouloir supprimer cette ressource ?"
@@ -39,15 +42,29 @@
         <button @click="nextPage" :disabled="currentPage === totalPages" class="px-4 py-2 bg-gray-300 text-gray-700 rounded hover:bg-gray-400 cursor-pointer">Suivant</button>
       </div>
     </div>
+
+    <EditResourceModal 
+      v-if="editModalVisible"
+      :isVisible="editModalVisible"
+      :resource="selectedResourceForEdit"
+      :editableFields="getEditableFields()"
+      :resourceType="localSelectedResource"
+      :editResourceMethod="emitEditResource"
+      :modalTitle="`Éditer ${localSelectedResource}`"
+      @edit="emitEditResource"
+      @close="closeEditModal"
+    />
   </div>
 </template>
 
 <script>
 import DeleteButton from '../../../challengesRequirement/deleteButton.vue';
+import EditResourceModal from '../../../challengesRequirement/editResourceModal.vue';
 
 export default {
   components: {
     DeleteButton,
+    EditResourceModal,
   },
   props: {
     availableResources: {
@@ -108,6 +125,8 @@ export default {
       },
       currentPage: 1,
       itemsPerPage: 5,
+      editModalVisible: false,
+      selectedResourceForEdit: null,
     };
   },
   computed: {
@@ -147,11 +166,35 @@ export default {
       }
       return this.valueTransformations[value] || value;
     },
-    editResource(resource) {
-      this.$emit('edit', resource);
+    canEditResource(resource) {
+      if (this.localSelectedResource === 'Utilisateurs') return true;
+      if (this.localSelectedResource === 'Commandes') return true;
+      if (this.localSelectedResource === 'Factures') return true;
+      if (this.localSelectedResource === 'Adresses') return true;
+      if (this.localSelectedResource === 'Contacts') return true;
+      if (this.localSelectedResource === 'Categories') return true;
+      return false;
     },
-    deleteResource(id) {
-      this.$emit('delete', id);
+    canDeleteResource(resource) {
+      if (this.localSelectedResource === 'Utilisateurs') return true;
+      if (this.localSelectedResource === 'Commandes') return true;
+      if (this.localSelectedResource === 'Factures') return true;
+      if (this.localSelectedResource === 'Adresses') return true;
+      if (this.localSelectedResource === 'Contacts') return true;
+      if (this.localSelectedResource === 'Categories') return true;
+      return false;
+    },
+    openEditModal(resource) {
+      this.selectedResourceForEdit = { ...resource };
+      this.editModalVisible = true;
+    },
+    closeEditModal() {
+      this.editModalVisible = false;
+      this.selectedResourceForEdit = null;
+    },
+    emitEditResource(updatedResource) {
+      this.$emit('edit', updatedResource);
+      this.closeEditModal();
     },
     emitResourceChange() {
       this.$emit('resourceChange', this.localSelectedResource);
@@ -166,6 +209,17 @@ export default {
       if (this.currentPage < this.totalPages) {
         this.currentPage++;
       }
+    },
+    getEditableFields() {
+      const fields = {
+        Utilisateurs: ['nom', 'prenom', 'email', 'role'],
+        Commandes: ['dateCommande', 'total', 'trackingNumber'],
+        Factures: ['dateFacturation', 'total'],
+        Adresses: ['voie', 'codePostal', 'ville', 'rue'],
+        Contacts: ['subject', 'message'],
+        Categories: ['description'],
+      };
+      return fields[this.localSelectedResource] || [];
     },
   },
   watch: {

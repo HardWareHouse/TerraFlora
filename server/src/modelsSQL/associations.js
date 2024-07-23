@@ -13,6 +13,7 @@ import MethodePaiement from './MethodePaiement.js';
 import Image from './Image.js';
 import Panier_Produits from './Panier_Produits.js';
 import DeletedUser from './DeletedUser.js';
+import TempReservation from './TempReservation.js';
 
 // Associations
 
@@ -67,3 +68,9 @@ Paiement.belongsTo(Facture, { foreignKey: 'factureId', targetKey: 'id' });
 // Paiement associations
 MethodePaiement.hasMany(Paiement, { foreignKey: 'methodePaiementId', sourceKey: 'id' });
 Paiement.belongsTo(MethodePaiement, { foreignKey: 'methodePaiementId', targetKey: 'id' });
+
+User.hasMany(TempReservation, { foreignKey: 'userId', sourceKey: 'id' });
+TempReservation.belongsTo(User, { foreignKey: 'userId', targetKey: 'id' });
+
+Produit.hasMany(TempReservation, { foreignKey: 'produitId', sourceKey: 'id' });
+TempReservation.belongsTo(Produit, { foreignKey: 'produitId', targetKey: 'id' });

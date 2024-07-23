@@ -27,6 +27,10 @@ const templateIds = {
   preferenceUpdate: 5,
   alertStock: 6,
   noStock: 7,
+  newProduct: 8,
+  restockProduct: 9,
+  changingPrice: 10,
+  newsletter: 11
 };
 
 export async function sendConfirmationEmail(user, token) {
@@ -142,6 +146,69 @@ export async function sendAlertEmailNoStock(user, alertMessage) {
 
   sendSmtpEmail.to = [{ email: user.email, name: user.nom }];
   sendSmtpEmail.templateId = templateIds.alertStock;
+  sendSmtpEmail.params = {
+    FULLNAME: user.nom,
+    stock: alertMessage,
+  };
+
+  try {
+    await apiInstance.sendTransacEmail(sendSmtpEmail);
+  } catch (error) {
+    if (error instanceof brevo.HttpError) {
+      console.log('HttpError statusCode', error.statusCode);
+      console.log('HttpError body', error.body);
+    }
+    throw error;
+  }
+}
+
+export async function sendAlertEmailNewProduct(user, alertMessage) {
+  const sendSmtpEmail = new brevo.SendSmtpEmail();
+
+  sendSmtpEmail.to = [{ email: user.email, name: user.nom }];
+  sendSmtpEmail.templateId = templateIds.newProduct;
+  sendSmtpEmail.params = {
+    FULLNAME: user.nom,
+    stock: alertMessage,
+  };
+
+  try {
+    await apiInstance.sendTransacEmail(sendSmtpEmail);
+  } catch (error) {
+    if (error instanceof brevo.HttpError) {
+      console.log('HttpError statusCode', error.statusCode);
+      console.log('HttpError body', error.body);
+    }
+    throw error;
+  }
+}
+
+export async function sendAlertEmailRestockProduct(user, alertMessage) {
+  const sendSmtpEmail = new brevo.SendSmtpEmail();
+
+  sendSmtpEmail.to = [{ email: user.email, name: user.nom }];
+  sendSmtpEmail.templateId = templateIds.restockProduct;
+  sendSmtpEmail.params = {
+    FULLNAME: user.nom,
+    stock: alertMessage,
+  };
+
+  try {
+    await apiInstance.sendTransacEmail(sendSmtpEmail);
+  } catch (error) {
+    if (error instanceof brevo.HttpError) {
+      console.log('HttpError statusCode', error.statusCode);
+      console.log('HttpError body', error.body);
+    }
+    throw error;
+  }
+}
+
+export async function sendAlertEmailPriceChange(user, alertMessage) {
+  const sendSmtpEmail = new brevo.SendSmtpEmail();
+
+  sendSmtpEmail.to = [{ email: user.email, name: user.nom }];
+  sendSmtpEmail.templateId = templateIds.changingPrice;
   sendSmtpEmail.params = {
     FULLNAME: user.nom,
     stock: alertMessage,
