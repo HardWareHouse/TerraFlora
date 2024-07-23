@@ -323,5 +323,21 @@
       en configurant votre navigateur Internet ou en utilisant des outils tiers
       vous permettant de désactiver certains types de cookies.
     </p>
+    <div id="script-container" ref="scriptContainer"></div>
   </div>
 </template>
+<script>
+export default {
+  name: "PrivacyPolicy",
+  mounted() {
+    const scriptContainer = this.$refs.scriptContainer;
+    const script = document.createElement("script");
+    script.type = "text/javascript";
+    script.charset = "UTF-8";
+    script.dataset.cookiescriptreport = "report";
+    script.src =
+      "//report.cookie-script.com/r/547e7e036c6a1b0d9155bee9e5f53a35.js";
+    scriptContainer.appendChild(script);
+  },
+};
+</script>
