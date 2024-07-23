@@ -28,7 +28,7 @@ jobs:
             nvm use 20.15.1
             npm install
             VITE_API_URL=${{ secrets.VITE_API_URL }} VITE_STRIPE_PUBLISHABLE_KEY=${{ secrets.VITE_STRIPE_PUBLISHABLE_KEY }} VITE_LA_POSTE_API_KEY=${{ secrets.VITE_LA_POSTE_API_KEY }} npm run build
-            mv /home/aria/TerraFlora/client/dist /var/www/html/
+            sudo mv /home/aria/TerraFlora/client/dist /var/www/html/
 
 
   deployBackend:
