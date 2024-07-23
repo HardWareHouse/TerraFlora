@@ -109,7 +109,6 @@ export const useInvoice = () => {
         loading, 
         fetchInvoices, 
         createInvoice, 
-        updateInvoice,
         deleteInvoice
     };
 }

@@ -119,7 +119,6 @@ export const useContact = () => {
     loading,
     fetchContacts,
     deleteContact,
-    updateContact,
     sendContactMessage,
     isEmailAddressValid,
   };

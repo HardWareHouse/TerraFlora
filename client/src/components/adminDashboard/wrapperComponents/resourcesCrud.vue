@@ -97,24 +97,13 @@ export default {
       this.loading = true;
       try {
         if (this.selectedResource === "Utilisateurs") {
-          const { updateUser } = useUser();
-          await updateUser(updatedResource);
-        } else if (this.selectedResource === "Adresses") {
-          const { updateAddress } = useAddress();
-          await updateAddress(updatedResource);
-        } else if (this.selectedResource === "Commandes") {
-          const { updateOrder } = useOrder();
-          await updateOrder(updatedResource);
-        } else if (this.selectedResource === "Contacts") {
-          const { updateContact } = useContact();
-          await updateContact(updatedResource);
-        } else if (this.selectedResource === "Categories") {
+          const { updateUserByAdmin } = useUser();
+          await updateUserByAdmin(updatedResource.id, updatedResource);
+        } 
+        else if (this.selectedResource === "Categories") {
           const { updateCategorie } = useCategorie();
           await updateCategorie(updatedResource);
-        } else if (this.selectedResource === "Factures") {
-          const { updateInvoice } = useInvoice();
-          await updateInvoice(updatedResource);
-        }
+        } 
         this.resourcesData[this.selectedResource] = this.resourcesData[this.selectedResource].map((resource) =>
           resource.id === updatedResource.id ? updatedResource : resource
         );
@@ -130,19 +119,24 @@ export default {
         if (this.selectedResource === "Utilisateurs") {
           const { deleteUser } = useUser();
           await deleteUser(id);
-        } else if (this.selectedResource === "Adresses") {
+        } 
+        else if (this.selectedResource === "Adresses") {
           const { deleteAddress } = useAddress();
           await deleteAddress(id);
-        } else if (this.selectedResource === "Commandes") {
+        } 
+        else if (this.selectedResource === "Commandes") {
           const { deleteOrder } = useOrder();
           await deleteOrder(id);
-        } else if (this.selectedResource === "Contacts") {
+        } 
+        else if (this.selectedResource === "Contacts") {
           const { deleteContact } = useContact();
           await deleteContact(id);
-        } else if (this.selectedResource === "Categories") {
+        } 
+        else if (this.selectedResource === "Categories") {
           const { deleteCategorie } = useCategorie();
           await deleteCategorie(id);
-        } else if (this.selectedResource === "Factures") {
+        } 
+        else if (this.selectedResource === "Factures") {
           const { deleteInvoice } = useInvoice();
           await deleteInvoice(id);
         }

@@ -103,7 +103,55 @@ export const updateUserById = async (id, data) => {
     fieldsToUpdate.password = data.password;
 
   if (Object.keys(fieldsToUpdate).length === 0) {
-    return res.status(400).json({ error: "No data to update" });
+    return null;
+  }
+
+  Object.assign(user, fieldsToUpdate);
+  await user.save();
+
+  await UserMongo.findByIdAndUpdate(
+    id,
+    { $set: fieldsToUpdateMongo },
+    { new: true }
+  );
+
+  return getUserById(id);
+};
+
+export const adminUpdateUserById = async (id, data) => {
+  const user = await UserSQL.findByPk(id);
+  if (!user) return null;
+
+  const fieldsToUpdate = {};
+  const fieldsToUpdateMongo = {};
+
+  if (data.email && data.email !== user.email) {
+    fieldsToUpdate.email = data.email;
+    fieldsToUpdateMongo.email = data.email;
+  }
+
+  if (data.nom && data.nom !== user.nom) {
+    fieldsToUpdate.nom = data.nom;
+    fieldsToUpdateMongo.nom = data.nom;
+  }
+
+  if (data.prenom && data.prenom !== user.prenom) {
+    fieldsToUpdate.prenom = data.prenom;
+    fieldsToUpdateMongo.prenom = data.prenom;
+  }
+
+  if (data.telephone && data.telephone !== user.telephone) {
+    fieldsToUpdate.telephone = data.telephone;
+    fieldsToUpdateMongo.telephone = data.telephone;
+  }
+
+  if (data.role && data.role !== user.role) {
+    fieldsToUpdate.role = data.role;
+    fieldsToUpdateMongo.role = data.role;
+  }
+
+  if (Object.keys(fieldsToUpdate).length === 0) {
+    return null;
   }
 
   Object.assign(user, fieldsToUpdate);

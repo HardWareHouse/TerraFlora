@@ -113,7 +113,6 @@ export const useOrder = () => {
         fetchOrders,
         fetchOrderById,
         createOrder,
-        updateOrder,
         deleteOrder,
     };
     };
