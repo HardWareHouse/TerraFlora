@@ -104,7 +104,7 @@ export const updateUser = async (req, res) => {
 
       const existingUserWithEmail = await userService.getUserByEmail(email);
       if (existingUserWithEmail && existingUserWithEmail.id !== id) {
-        return res.status(409).json({ error: "Email already in use" });
+        return res.status(409).json({ error: "Error" });
       }
 
       const updatedUserData = {
@@ -136,7 +136,7 @@ export const updateUser = async (req, res) => {
 
       const existingUserWithEmail = await userService.getUserByEmail(email);
       if (existingUserWithEmail && existingUserWithEmail.id !== id) {
-        return res.status(409).json({ error: "Email already in use" });
+        return res.status(409).json({ error: "Error" });
       }
 
       if (password && !isPasswordValid(password)) {
