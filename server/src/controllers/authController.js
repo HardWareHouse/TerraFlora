@@ -13,22 +13,22 @@ export const login = async (req, res) => {
     const user = await authService.findUserByEmail(email);
 
     if (!user) {
-      return res.status(401).json({ message: 'Invalid email or password' });
+      return res.status(401).json({ message: 'Email ou mot de passe invalide.' });
     }
 
     if (!user.isVerified) {
-      return res.status(401).json({ message: 'Account not verified. Please verify your account to log in.' });
+      return res.status(401).json({ message: 'Compte non vérifié. Veuillez vérifier votre compte pour vous connecter.' });
     }
 
     const isMatch = await comparePasswords(password, user.password);
 
     if (!isMatch) {
-      return res.status(401).json({ message: 'Invalid email or password' });
+      return res.status(401).json({ message: 'Email ou mot de passe invalide.' });
     }
 
     if (isPasswordExpired(user.lastUpdatedPassword)) {
       await authService.handlePasswordReset(user);
-      return res.status(401).json({ message: 'Your password has expired. A reset link has been sent to your email.' });
+      return res.status(401).json({ message: 'Votre mot de passe a expiré. Un lien de réinitialisation a été envoyé à votre adresse e-mail.' });
     }
 
     const loginToken = authService.generateToken({ id: user.id }, process.env.LOGIN_JWT_KEY, '1h');
@@ -189,14 +189,80 @@ export const resetPassword = async (req, res) => {
 export const resetPasswordPage = (req, res) => {
   const { token } = req.params;
   res.send(`
-    <form action="/auth/reset-password/${token}" method="POST">
-      <input type="hidden" name="token" value="${token}" />
-      <label for="password">New Password:</label>
-      <input type="password" id="password" name="password" required>
-      <label for="password_cfg">Confirm New Password:</label>
-      <input type="password" id="password_cfg" name="password_cfg" required>
-      <button type="submit">Reset Password</button>
-    </form>
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <title>Réinitialisation du mot de passe</title>
+      <style>
+        body {
+          font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+          background-color: #f4f4f4;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          height: 100vh;
+          margin: 0;
+        }
+        .container {
+          background-color: #fff;
+          padding: 20px;
+          box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+          border-radius: 8px;
+          width: 100%;
+          max-width: 400px;
+          text-align: center;
+        }
+        h1 {
+          color: #333;
+          margin-bottom: 20px;
+          font-size: 24px;
+        }
+        form {
+          display: flex;
+          flex-direction: column;
+        }
+        label {
+          margin-bottom: 5px;
+          color: #555;
+          text-align: left;
+        }
+        input {
+          margin-bottom: 15px;
+          padding: 10px;
+          border: 1px solid #ddd;
+          border-radius: 4px;
+          font-size: 16px;
+        }
+        button {
+          padding: 10px;
+          background-color: #dc3545;
+          border: none;
+          color: white;
+          border-radius: 4px;
+          cursor: pointer;
+          font-size: 16px;
+        }
+        button:hover {
+          background-color: #c82333;
+        }
+      </style>
+    </head>
+    <body>
+      <div class="container">
+        <h1>Réinitialisez votre mot de passe</h1>
+        <form action="/auth/reset-password/${token}" method="POST">
+          <input type="hidden" name="token" value="${token}" />
+          <label for="password">Nouveau mot de passe:</label>
+          <input type="password" id="password" name="password" required>
+          <label for="password_cfg">Confirmation du mot de passe:</label>
+          <input type="password" id="password_cfg" name="password_cfg" required>
+          <button type="submit">Réinitialiser</button>
+        </form>
+      </div>
+    </body>
+    </html>
   `);
 };
 
@@ -210,7 +276,7 @@ export const loginLimiter = rateLimit({
     const user = await authService.findUserByEmail(email);
 
     if (!user) {
-      return res.status(401).json({ message: 'Invalid email or password' });
+      return res.status(401).json({ message: 'Email ou mot de passe invalide.' });
     }
 
     if (!loginAttempts[email]) {
@@ -223,7 +289,7 @@ export const loginLimiter = rateLimit({
       user.isBlocked = true;
       await user.save();
       await authService.handleAccountBlocked(user);
-      return res.status(403).json({ message: 'Too many login attempts. Account blocked.' });
+      return res.status(403).json({ message: 'Trop de tentatives de connexion. Votre compte a été bloqué.' });
     }
 
     next();

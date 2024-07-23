@@ -37,7 +37,7 @@ const handleSubmit = async () => {
         const response = await axios.post('http://localhost:8000/auth/forgot-password', {
             email: email.value
         })
-        success.value = 'If an account with that email exists, a password reset link has been sent.'
+        success.value = 'Si un compte avec cette adresse e-mail existe, un lien de réinitialisation du mot de passe a été envoyé.'
         error.value = ''
     } catch (err) {
         error.value = err.response?.data?.error || 'An error occurred.'

@@ -1,7 +1,7 @@
 import Produit from "../modelsSQL/Produit.js";
 import Image from "../modelsSQL/Image.js";
 import StockHistory from "../modelsSQL/StockHistory.js";
-import Categorie from "../modelsSQL/Categorie.js"; // Import du modèle Categorie
+import Categorie from "../modelsSQL/Categorie.js";
 import { Op } from "sequelize";
 import validator from "validator";
 import path from "path";

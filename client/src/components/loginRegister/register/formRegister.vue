@@ -1,7 +1,7 @@
 <template>
   <div class=" flex items-center justify-center my-20">
     <div class="container p-8 space-y-8 bg-white rounded-lg shadow-md">
-      <h2 class="text-3xl font-semibold text-center text-gray-900">Register</h2>
+      <h2 class="text-3xl font-semibold text-center text-gray-900">Inscription</h2>
       <form class="mt-8 space-y-6" @submit.prevent="handleSubmit">
         <div class="space-y-4">
           <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
@@ -26,24 +26,24 @@
                 placeholder="Email" />
             </div>
             <div>
-              <label for="email_cfg" class="sr-only">Confirm Email</label>
+              <label for="email_cfg" class="sr-only">Confirmation email</label>
               <input v-model="email_cfg" id="email_cfg" name="email_cfg" type="email" required
                 class="relative block w-full px-3 py-3 text-[14px] bg-gray-100 text-gray-900 placeholder-gray-500 border border-gray-300 focus:outline-none sm:text-sm"
-                placeholder="Confirm Email" />
+                placeholder="Confirmation email" />
             </div>
           </div>
           <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
             <div>
-              <label for="password" class="sr-only">Password</label>
+              <label for="password" class="sr-only">Mot de passe</label>
               <input v-model="password" id="password" name="password" type="password" required
                 class="relative block w-full px-3 py-3 text-[14px] bg-gray-100 text-gray-900 placeholder-gray-500 border border-gray-300 focus:outline-none sm:text-sm"
-                placeholder="Password" />
+                placeholder="Mot de passe" />
             </div>
             <div>
-              <label for="password_cfg" class="sr-only">Confirm Password</label>
+              <label for="password_cfg" class="sr-only">Confirmation mot de passe</label>
               <input v-model="password_cfg" id="password_cfg" name="password_cfg" type="password" required
                 class="relative block w-full px-3 py-3 text-[14px] bg-gray-100 text-gray-900 placeholder-gray-500 border border-gray-300 focus:outline-none sm:text-sm"
-                placeholder="Confirm Password" />
+                placeholder="Confirmation du mot de passe" />
             </div>
           </div>
           <div>
@@ -55,7 +55,7 @@
           <div class="flex flex-wrap-reverse justify-around items-center lg:justify-start">
               <input v-model="haveConsented" id="haveConsented" name="haveConsented" type="checkbox"
                 class="w-4 h-4 text-red-600 border-gray-300 rounded focus:ring-red-500" />
-              <label for="haveConsented" class="ml-2 text-sm text-gray-900">I consent to the terms and conditions</label>
+              <label for="haveConsented" class="ml-2 text-sm text-gray-900">J'accepte les termes et conditions de Terra Flora</label>
           </div>
               <label for="haveConsented" class="ml-2 text-sm text-gray-900">Je veux recevoir les mails : </label>
             <div class="flex justify-around lg:justify-start">
@@ -86,7 +86,7 @@
         <div>
           <button type="submit"
             class="relative flex justify-center px-4 py-2 text-md font-medium text-white bg-red-600 border border-transparent group hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500">
-            Register
+            S'inscrire
           </button>
         </div>
         <div v-if="success" class="text-green-500">{{ success }}</div>

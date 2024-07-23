@@ -63,7 +63,7 @@
         }"
         class="text-white font-bold py-2 px-4 rounded"
       >
-        &laquo; Précédant
+        &laquo; Précédent
       </button>
       <button
         :disabled="!hasNextPage"
