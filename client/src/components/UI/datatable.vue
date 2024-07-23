@@ -48,8 +48,10 @@
         Suivant
       </button>
     </div>
-    <div class="mt-4 container" v-if="showCSVButton">
+    <div class="mt-4 container w-full flex justify-between" v-if="showCSVButton">
       <button @click="exportToCSV" class="px-4 py-2 bg-green-500 text-white rounded">Exporter en CSV</button>
+      <button @click="reserveCart" class="px-4 py-2 bg-blue-500 text-white rounded">Réserver le panier pour 15 min </button>
+      
     </div>
   </div>
 </template>
@@ -57,6 +59,7 @@
 <script setup>
 import { ref, computed, watch } from 'vue';
 import { useCartStore } from '../../pinia/cart.js';
+import instance from '../../axios.js';
 
 const props = defineProps({
   data: Array,
@@ -73,6 +76,18 @@ const sortKey = ref('');
 const sortOrder = ref(false);
 const currentPage = ref(1);
 const itemsPerPage = ref(5);
+
+const reserveCart = async () => {
+  try {
+    const response = await instance.post('cart/reserve', {
+      userId: cartStore.userId
+    });
+    alert('Panier réservé avec succès!');
+  } catch (error) {
+    console.error('Error reserving cart:', error);
+    alert('Erreur lors de la réservation du panier.');
+  }
+};
 
 // Initialiser searchQuery pour chaque colonne
 props.columns.forEach(col => {
