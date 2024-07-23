@@ -95,6 +95,7 @@ import { ref, onMounted } from "vue";
 import axios from "axios";
 import instance from "../../axios.js";
 import { useAuthStore } from "../../pinia/auth.js";
+import { useCartStore } from "../../pinia/cart.js";
 
 export default {
   name: "SuccessPage",
@@ -105,6 +106,7 @@ export default {
     const customerDetails = ref(null);
     const shippingDetails = ref(null);
     const invoiceUrl = ref(null);
+    const cartStore = useCartStore();
 
     onMounted(async () => {
       const sessionId = route.query.session_id;
@@ -139,7 +141,6 @@ export default {
               prix: ((cartItems.value[i].amount_total / 100) / cartItems.value[i].quantity).toFixed(2).toString(),
             });
           }
-          const total = cartTotal.value;
 
           // Extract and set customer details
           customerDetails.value = session.customer_details;
@@ -155,13 +156,20 @@ export default {
             invoiceUrl.value = response.data.hosted_invoice_url;
           }
 
+          if(sessionResponse) {
+            await cartStore.subtractStock();
+            await cartStore.clearCart();
+          }
+          
           const authStore = useAuthStore();
-          const response =await instance.post("/orders", {
+          const response = await instance.post("/orders", {
             userId: authStore.id, 
             total: cartTotal.value,
             productArray: productArray,
             invoiceUrl: invoiceUrl.value,
           });
+
+          console.log(response.status);
 
           if (response.status === 200) {
             console.log("Order created successfully");

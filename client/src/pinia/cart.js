@@ -103,14 +103,26 @@ export const useCartStore = defineStore('cart', {
                 console.error('Error removing product from cart:', error);
             }
         },
-        clearCart() {
-            this.items = [];
-            this.cartId = null;
+        async clearCart() {
+            const authStore = useAuthStore();
+            this.userId = authStore.id;
+            if (this.cartId) {
+                try {
+                    await instance.delete(`cart/${this.userId}`);
+                    this.items = [];
+                    this.cartId = null;
+                } catch (error) {
+                    console.error('Error clearing cart:', error);
+                }
+            }
         },
         async subtractStock() {
             try {
                 const response = await instance.post('product/subtract-stock', {
-                    items: this.items
+                    items: this.items.map(item => ({
+                        id: item.id,
+                        quantity: item.Panier_Produits.quantity
+                    }))
                 });
                 console.log('Stock updated successfully:', response.data);
             } catch (error) {

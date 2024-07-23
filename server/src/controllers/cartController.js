@@ -39,7 +39,6 @@ export const getCart = async (req, res) => {
   }
 };
 
-
 // Créer un panier
 export const createCart = async (req, res) => {
   const { userId, produits } = req.body;
@@ -82,7 +81,6 @@ export const createCart = async (req, res) => {
   }
 };
 
-// Mettre à jour un panier ou ajouter un produit à un panier existant
 // Mettre à jour un panier ou ajouter un produit à un panier existant
 export const updateCart = async (req, res) => {
   const { userId, produits } = req.body;
@@ -158,7 +156,7 @@ export const deleteCart = async (req, res) => {
     }
 
     await cart.destroy();
-    res.status(204).json({ error: "Panier supprimé avec succès" });
+    res.status(204).json({ message: "Panier supprimé avec succès" });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
@@ -213,8 +211,6 @@ export const deleteProductFromCart = async (req, res) => {
   }
 };
 
-
-
 // Réserver le panier
 export const reserveCart = async (req, res) => {
   const { userId } = req.body;
@@ -262,7 +258,6 @@ export const reserveCart = async (req, res) => {
     await cart.setProduits([]);
 
     console.log(`Cart reserved for user ${userId}`);
-    
 
     res.status(200).json({ message: "Cart reserved successfully" });
   } catch (error) {
