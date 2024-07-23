@@ -4,15 +4,6 @@
       <div class="text-[13px] text-gray-600 leading-none">
         Bienvenue sur Terra Flora
       </div>
-      <div class="flex items-center space-x-4">
-        <div class="flex items-center space-x-1 text-[13px] text-gray-600 leading-none border-l border-gray-200">
-          Langue:
-          <select v-model="language" class="text-[13px] text-gray-600 leading-none focus:outline-none">
-            <option value="fr">Français</option>
-            <option value="en">English</option>
-          </select>
-        </div>
-      </div>
     </div>
     <p class="border-t border-gray-200 w-full"></p>
     <div class="container mx-auto flex items-center justify-around px-4 lg:justify-between">
