@@ -31,9 +31,9 @@
               <td class="p-3 border border-gray-200 lg:p-4">{{ invoice.statutPaiement }}</td>
               <td class="p-3 border border-gray-200 lg:p-4">{{ invoice.total }} €</td>
               <td class="p-3 border border-gray-200 lg:p-4">
-                <router-link to="/basket" class="bg-red-600 text-white px-3 py-3 rounded-lg">
-                  <i class="bi bi-cloud-download"></i>
-                </router-link>
+                <a :href="invoice.invoiceUrl" target="_blank" class="bg-red-600 text-white px-3 py-3 rounded-lg cursor-pointer">
+                   <i class="bi bi-cloud-download"></i>
+                </a>
               </td>
             </tr>
           </tbody>

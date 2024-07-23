@@ -47,56 +47,39 @@ export const getAllInvoices = async (req, res) => {
   }
 };
 
-// Créer une facture
+// Doit être mis à jour 
 export const createInvoice = async (req, res) => {
-  const { userId, panierId, total } = req.body;
+  const { numero, userId, commandeId, total, invoiceUrl } = req.body;
   const user = req.user;
 
-  if (!userId || !panierId || !total) {
+  if (!numero || !userId || !commandeId || !total || !invoiceUrl) {
     return res.status(400).json({ error: "User ID, Cart ID and Total are required" });
   }
-  
-  if (!isValidUUID(userId)) {
-    return res.status(400).json({ error: "Invalid UUID format" });
-  }
 
-  if (userId !== user.id && user.role !== "ROLE_ADMIN") {
+  if (userId !== user.id) {
     return res.status(403).json({ error: "Unauthorized" });
   }
 
   try {
-    const numero = Math.floor(Math.random() * 1000000).toString();
-    const dateFacturation = new Date();
-    const datePaiementDue = new Date();
-    datePaiementDue.setDate(datePaiementDue.getDate() + 30);
-    const statutPaiement = "En attente";
+    const invoice = await invoiceService.createInvoice({ numero, userId, commandeId, total, invoiceUrl });
+    if (!invoice) {
+      return res.status(404).json({ error: "Invoice not found" });
+    }
 
-    newInvoice = await invoiceService.createInvoice({
-      userId,
-      numero,
-      dateFacturation,
-      datePaiementDue,
-      statutPaiement,
-      total
-    });
-    res.status(201).json(newInvoice);
+    res.status(201).json(invoice);
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
 };
 
-// Mettre à jour une facture
+// Doit être mis à jour 
 export const updateInvoice = async (req, res) => {
   const { id } = req.params;
-  const { userId, panierId, total } = req.body;
+  const { numero, statutPaiement, dateFacturation, datePaiementDue, total, invoiceUrl } = req.body;
   const user = req.user;
 
   if (!id || !isValidUUID(id)) {
     return res.status(400).json({ error: "Invalid or missing invoice ID" });
-  }
-
-  if (!userId || !panierId || !total) {
-    return res.status(400).json({ error: "User ID, Cart ID and Total are required" });
   }
 
   try {
@@ -106,8 +89,8 @@ export const updateInvoice = async (req, res) => {
     }
 
     if (invoice.user._id !== user.id && user.role !== "ROLE_ADMIN") return res.status(403).json({ error: "Unauthorized" });
-    
-    const updatedInvoice = await invoiceService.updateInvoiceById(id, { userId, panierId, total });
+
+    const updatedInvoice = await invoiceService.updateInvoiceById(id, { numero, statutPaiement, dateFacturation, datePaiementDue, total, invoiceUrl });
     if (!updatedInvoice) {
       return res.status(404).json({ error: "Invoice not found" });
     }
@@ -118,7 +101,7 @@ export const updateInvoice = async (req, res) => {
   }
 };
 
-// Supprimer une facture
+// Doit être mis à jour 
 export const deleteInvoice = async (req, res) => {
   const { id } = req.params;
   const user = req.user;
@@ -134,12 +117,13 @@ export const deleteInvoice = async (req, res) => {
     }
 
     if (invoice.user._id !== user.id && user.role !== "ROLE_ADMIN") return res.status(403).json({ error: "Unauthorized" });
-    
+
     const deletedInvoice = await invoiceService.deleteInvoiceById(id);
     if (!deletedInvoice) {
       return res.status(404).json({ error: "Invoice not found" });
     }
-    res.status(204).end();
+
+    res.status(204).json();
   } catch (error) {
     res.status(500).json({ error: error.message });
   }

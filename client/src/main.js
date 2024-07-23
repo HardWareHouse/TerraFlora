@@ -5,6 +5,8 @@ import router from './router';
 import Toast from 'vue-toastification';
 import 'vue-toastification/dist/index.css';
 import './style.css';
+import AOS from 'aos';
+import 'aos/dist/aos.css'; 
 
 const pinia = createPinia();
 
@@ -24,9 +26,11 @@ const toastOptions = {
   icon: true,
   rtl: false
 };
+AOS.init();
 
 app.use(router);
 app.use(pinia);
+app.use(AOS);
 app.use(Toast, toastOptions);
 
 app.mount('#app');

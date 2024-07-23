@@ -1,5 +1,5 @@
 <template>
-  <div class="product-list-container p-4 flex-1">
+  <div class="w-full lg:product-list-container p-4 flex-1">
     <div class="flex justify-between items-center mb-4">
       <div class="flex space-x-2">
         <button

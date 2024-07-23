@@ -2,11 +2,13 @@
   <div class="product-detail-container max-w-7xl mx-auto py-8" v-if="product.nom">
     <div class="flex flex-col lg:flex-row">
       <div class="product-images lg:w-1/2 p-4">
-        <img
-          :src="getImageUrl(product.Images[0]?.imageUrl)"
-          alt="Product Image"
-          class="w-full h-96 object-cover rounded"
-        />
+        <div class="product-image-wrapper flex items-center justify-center h-80 overflow-hidden rounded">
+          <img
+            :src="getImageUrl(product.Images[0]?.imageUrl)"
+            alt="Product Image"
+            class="max-w-full max-h-full object-contain"
+          />
+        </div>
       </div>
       <div class="product-info lg:w-1/2 p-4">
         <h1 class="text-3xl font-bold mb-4">{{ product.nom }}</h1>
@@ -144,6 +146,20 @@ const addToCart = () => {
 .product-detail-container {
   max-width: 1200px;
   margin: 0 auto;
+}
+
+.product-image-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 80%; /* Ajuster la hauteur selon vos besoins */
+  overflow: hidden;
+}
+
+.product-image-wrapper img {
+  max-height: 100%;
+  max-width: 100%;
+  object-fit: contain;
 }
 
 .quantity input {

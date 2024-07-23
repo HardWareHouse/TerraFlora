@@ -14,6 +14,7 @@ async function insertOrUpdateFactureInMongo(factureSQL) {
         dateFacturation: factureSQL.dateFacturation,
         datePaiementDue: factureSQL.datePaiementDue,
         total: factureSQL.total,
+        invoiceUrl: factureSQL.invoiceUrl,
         user: {
             _id: factureSQL.userId,
             nom: factureSQL.User.nom,

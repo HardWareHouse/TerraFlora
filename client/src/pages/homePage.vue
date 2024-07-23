@@ -1,10 +1,10 @@
 <template>
   <carousel />
-  <banner-section />
-  <SearchOverlay v-if="showSearch" @close="showSearch = false" />
-  <top-seller />
-  <banner-section-bottom />
-  <new-product/>
+  <banner-section data-aos="flip-up" />
+  <SearchOverlay data-aos="fade-left" v-if="showSearch" @close="showSearch = false" />
+  <top-seller data-aos="fade-right"/>
+  <banner-section-bottom data-aos="flip-down" />
+  <new-product data-aos="fade-left"/>
   <br>
   <br>
 </template>

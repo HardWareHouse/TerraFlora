@@ -9,6 +9,7 @@ const invoiceSchema = z.object({
     dateFacturation: z.string(),
     total: z.number(),
     datePaiementDue: z.string().nullable(),
+    invoiceUrl: z.string().optional(),
 });
 
 export const useInvoice = () => {
