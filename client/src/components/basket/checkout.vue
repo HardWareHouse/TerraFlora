@@ -46,7 +46,7 @@ const subTotal = computed(() => {
 const shipping = ref(10.99);
 
 const vat = computed(() => {
-  return (subTotal.value * 0.10).toFixed(2);
+  return (subTotal.value * 0.1).toFixed(2);
 });
 
 const total = computed(() => {
@@ -62,12 +62,17 @@ const createCheckoutSession = async () => {
       quantity: item.Panier_Produits.quantity,
     }));
 
-    const response = await axios.post("http://localhost:8000/stripe/create-checkout-session", {
-      lineItems,
-    });
+    const response = await axios.post(
+      "http://localhost:8000/stripe/create-checkout-session",
+      {
+        lineItems,
+      }
+    );
 
     const sessionId = response.data.id;
-    const stripe = await loadStripe(`${import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY}`);
+    const stripe = await loadStripe(
+      `${import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY}`
+    );
 
     await stripe.redirectToCheckout({ sessionId });
   } catch (error) {

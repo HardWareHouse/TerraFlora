@@ -89,7 +89,7 @@
       >
         <p class="text-sm text-gray-600">
           © 2024 <span class="font-semibold">Terra Flora</span> Made with ❤️ by
-          <span class="text-red-500">LlamasScripters</span>
+          <a class="text-red-500" href="https://github.com/LlamasScripters/TerraFlora">LlamasScripters</a>
         </p>
         <div class="flex space-x-4">
           <a href="#" class="text-gray-600 hover:text-gray-900">
