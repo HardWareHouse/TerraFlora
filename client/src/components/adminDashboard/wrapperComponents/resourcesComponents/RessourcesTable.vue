@@ -168,10 +168,10 @@ export default {
     },
     canEditResource(resource) {
       if (this.localSelectedResource === 'Utilisateurs') return true;
-      if (this.localSelectedResource === 'Commandes') return true;
-      if (this.localSelectedResource === 'Factures') return true;
-      if (this.localSelectedResource === 'Adresses') return true;
-      if (this.localSelectedResource === 'Contacts') return true;
+      if (this.localSelectedResource === 'Commandes') return false;
+      if (this.localSelectedResource === 'Factures') return false;
+      if (this.localSelectedResource === 'Adresses') return false;
+      if (this.localSelectedResource === 'Contacts') return false;
       if (this.localSelectedResource === 'Categories') return true;
       return false;
     },
@@ -212,11 +212,7 @@ export default {
     },
     getEditableFields() {
       const fields = {
-        Utilisateurs: ['nom', 'prenom', 'email', 'role'],
-        Commandes: ['dateCommande', 'total', 'trackingNumber'],
-        Factures: ['dateFacturation', 'total'],
-        Adresses: ['voie', 'codePostal', 'ville', 'rue'],
-        Contacts: ['subject', 'message'],
+        Utilisateurs: ['nom', 'prenom', 'email', 'telephone', 'role'],
         Categories: ['description'],
       };
       return fields[this.localSelectedResource] || [];

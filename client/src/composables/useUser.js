@@ -32,6 +32,19 @@ const updateUserSchema = userSchema.omit({
     path: ["confirmPassword"],
 });
 
+const updateUserByAdminSchema = z.object({
+    nom: z.string()
+      .min(2, { message: "Le nom doit contenir au moins 2 caractères." })
+      .max(50, { message: "Le nom ne doit pas dépasser 50 caractères." }),
+    prenom: z.string()
+      .min(2, { message: "Le prénom doit contenir au moins 2 caractères." })
+      .max(50, { message: "Le prénom ne doit pas dépasser 50 caractères." }),
+    email: z.string()
+      .email({ message: "Adresse email invalide." }),
+    telephone: z.string()
+      .regex(/^\+?[0-9\s-]{7,15}$/, { message: "Numéro de téléphone invalide." }),
+    role: z.enum(['ROLE_USER', 'ROLE_STORE_KEEPER'], { message: "Rôle invalide." })
+  });
 
 export const useUser = () => {
     const user = ref(null);
@@ -117,6 +130,42 @@ export const useUser = () => {
         }
     };
 
+    const updateUserByAdmin = async (userId, updatedUser) => {
+        loading.value = true;
+        try {
+          const validatedData = updateUserByAdminSchema.parse(updatedUser);
+          
+          const dataToUpdate = {
+            nom: validatedData.nom,
+            prenom: validatedData.prenom,
+            email: validatedData.email,
+            telephone: validatedData.telephone,
+            role: validatedData.role,
+          };
+      
+          const response = await instance.put(`users/${userId}`, dataToUpdate);
+          if (!response.data) {
+            console.error('Aucune donnée utilisateur trouvée');
+            return;
+          } else if (response.data.error) {
+            console.error('Erreur lors de la mise à jour de l\'utilisateur:', response.data.error);
+            return;
+          }
+          
+          return true;
+        } catch (error) {
+
+          if (error instanceof z.ZodError) {
+            console.error('Erreurs de validation:', error.errors);
+          } else {
+            console.error('Erreur lors de la mise à jour de l\'utilisateur:', error);
+          }
+        } finally {
+          loading.value = false;
+        }
+      };
+      
+
     // Fonction pour supprimer l'utilisateur par son ID
     const deleteUser = async (userId) => {
         loading.value = true;
@@ -168,6 +217,7 @@ export const useUser = () => {
         fetchUser,
         fetchUsers,
         updateUser,
+        updateUserByAdmin,
         deleteUser,
         isPasswordValid,
         isEmailAddressValid,

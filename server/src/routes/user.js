@@ -9,7 +9,7 @@ import { authenticate, authorizeAdmin } from "../middlewares/authMiddleware.js";
 
 const router = Router();
 
-router.get("/", getAllUsers);
+router.get("/", authenticate, authorizeAdmin, getAllUsers);
 router.get("/:id", authenticate, getUser);
 router.put("/:id", authenticate, updateUser);
 router.delete("/:id", authenticate, authorizeAdmin, deleteUser);

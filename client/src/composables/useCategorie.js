@@ -100,6 +100,7 @@ export const useCategorie = () => {
             loading.value = false;
         }
     };  
+    
 
     return { 
         categorie, 
