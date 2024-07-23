@@ -1,6 +1,6 @@
 <template>
   <div class="fixed inset-0 z-50 flex items-center justify-end bg-gray-800 bg-opacity-50">
-    <div class="relative w-full h-full max-w-72 p-6 bg-white shadow-lg lg:max-w-sm">
+    <div data-aos="fade-left" class="relative w-full h-full max-w-72 p-6 bg-white shadow-lg lg:max-w-sm">
       <div class="absolute top-0 right-full p-2 bg-red-700">
         <i class="bi bi-x-lg cursor-pointer p-1" style="font-size: 1.5rem; color: white;" @click.prevent="$emit('close')"></i>
       </div>

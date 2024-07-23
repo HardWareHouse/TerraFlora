@@ -183,7 +183,23 @@
       éventuellement le Service seront corrigées.
     </p>
 
-    <h2 class="text-xl font-semibold mb-4">SECTION 6 – DROIT DE RÉTRACTION</h2>
+    <h2 class="text-xl font-semibold mb-4">SECTION 6 – LIVRAISON</h2>
+
+    <p class="mb-4">
+      Terra Flora offre un service de livraison. Lors de l’achat en ligne,
+      diverses informations sur le client et le destinataire de la commande sont
+      demandées telles que le nom et le numéro de téléphone pour les joindre.
+      Ces données sont partagée avec notre prestataire (La Poste) afin
+      d'effectuer la livrasion de votre commande. Lors des fêtes annuelles
+      telles que la St-Valentin, la fête des mères et Noël (liste non
+      exhaustive), Terra Flora ne peut pas garantir la plage horaire de
+      livraison. Les conditions climatiques et routières peuvent également
+      occasionner certains changements à l’horaire de livraison (retard ou
+      avance). Dans de telles occasions, le client devra accepter un certain
+      délai.
+    </p>
+
+    <h2 class="text-xl font-semibold mb-4">SECTION 7 – DROIT DE RÉTRACTION</h2>
 
     <p class="mb-4">
       Pour toute commande de produits périssables, conformément à l’article L
@@ -191,8 +207,20 @@
       être exercé. Sont concernés les produits floraux qui, de par leur nature
       périssable, sont exclus du droit de rétractation.
     </p>
+
     <h2 class="text-xl font-semibold mb-4">
-      SECTION 7 – EXACTITUDE DE LA FACTURATION ET DES INFORMATIONS DE COMPTE
+      SECTION 8 - RETOUR DE PRODUITS PÉRISSABLES
+    </h2>
+    <p class="mb-4">
+      Toutes les ventes de produits périssables, plantes naturelles et fleurs
+      coupées (incluant bouquets, arrangements et accessoires floraux, etc.)
+      sont finales. Toutefois, si à la réception de votre produit vous
+      constantez qu'il n'est pas dans un état correct, nous vous invitons à nous
+      contacter et à nous envoyer des photos à l’appui ainsi qu’une preuve
+      d’achat.
+    </p>
+    <h2 class="text-xl font-semibold mb-4">
+      SECTION 9 – EXACTITUDE DE LA FACTURATION ET DES INFORMATIONS DE COMPTE
     </h2>
 
     <p class="mb-4">
@@ -219,7 +247,7 @@
       transactions et vous contacter en cas de besoin.
     </p>
 
-    <h2 class="text-xl font-semibold mb-4">SECTION 8 – OUTILS FACULTATIFS</h2>
+    <h2 class="text-xl font-semibold mb-4">SECTION 10 – OUTILS FACULTATIFS</h2>
 
     <p class="mb-4">
       Nous sommes susceptibles de vous fournir l'accès à des outils tiers que
@@ -250,7 +278,7 @@
       fonctionnalités seront aussi assujettis aux présentes Conditions
       d'utilisation.
     </p>
-    <h2 class="text-xl font-semibold mb-4">ARTICLE 9 – LIENS DE TIERS</h2>
+    <h2 class="text-xl font-semibold mb-4">ARTICLE 11 – LIENS DE TIERS</h2>
 
     <p class="mb-4">
       Certains contenus, produits et services accessibles via notre Service
@@ -276,7 +304,7 @@
       produits de tiers doivent être adressées à ces mêmes tiers.
     </p>
     <h2 class="text-xl font-semibold mb-4">
-      ARTICLE 10 – COMMENTAIRES, RETOURS D'EXPÉRIENCE ET AUTRES SOUMISSIONS
+      ARTICLE 12 – COMMENTAIRES, RETOURS D'EXPÉRIENCE ET AUTRES SOUMISSIONS
     </h2>
 
     <p class="mb-4">
@@ -319,7 +347,7 @@
     </p>
 
     <h2 class="text-xl font-semibold mb-4">
-      ARTICLE 11 – INFORMATIONS PERSONNELLES
+      ARTICLE 13 – INFORMATIONS PERSONNELLES
     </h2>
 
     <p class="mb-4">
@@ -331,7 +359,7 @@
       pour consulter notre Politique de Confidentialité.
     </p>
     <h2 class="text-xl font-semibold mb-4">
-      ARTICLE 12 – ERREURS, INEXACTITUDES ET OMISSIONS
+      ARTICLE 14 – ERREURS, INEXACTITUDES ET OMISSIONS
     </h2>
 
     <p class="mb-4">
@@ -357,7 +385,7 @@
       sur tout site web connexe ont été modifiées ou mises à jour.
     </p>
     <h2 class="text-xl font-semibold mb-4">
-      ARTICLE 13 – UTILISATIONS INTERDITES
+      ARTICLE 15 – UTILISATIONS INTERDITES
     </h2>
 
     <p class="mb-4">
@@ -410,7 +438,7 @@
       d'utilisation.
     </p>
     <h2 class="text-xl font-semibold mb-4">
-      ARTICLE 14 – EXCLUSION DE GARANTIES ET LIMITATION DE RESPONSABILITÉ
+      ARTICLE 16 – EXCLUSION DE GARANTIES ET LIMITATION DE RESPONSABILITÉ
     </h2>
 
     <p class="mb-4">
@@ -460,7 +488,7 @@
       maximale permise par la loi.
     </p>
 
-    <h2 class="text-xl font-semibold mb-4">ARTICLE 15 – INDEMNISATION</h2>
+    <h2 class="text-xl font-semibold mb-4">ARTICLE 17 – INDEMNISATION</h2>
 
     <p class="mb-4">
       Vous acceptez d’indemniser, de défendre et de tenir LlamaScripters et
@@ -473,7 +501,7 @@
       auxquels elles font référence, ou à votre violation de quelconques lois ou
       droits d’un tiers.
     </p>
-    <h2 class="text-xl font-semibold mb-4">ARTICLE 16 – DISSOCIABILITÉ</h2>
+    <h2 class="text-xl font-semibold mb-4">ARTICLE 18 – DISSOCIABILITÉ</h2>
 
     <p class="mb-4">
       Dans le cas où une quelconque disposition des présentes Conditions
@@ -484,7 +512,7 @@
       l’applicabilité des autres dispositions.
     </p>
 
-    <h2 class="text-xl font-semibold mb-4">ARTICLE 17 – RÉSILIATION</h2>
+    <h2 class="text-xl font-semibold mb-4">ARTICLE 19 – RÉSILIATION</h2>
 
     <p class="mb-4">
       Les obligations et responsabilités engagées par les parties avant la date
@@ -507,7 +535,7 @@
     </p>
 
     <h2 class="text-xl font-semibold mb-4">
-      ARTICLE 18 – INTÉGRALITÉ DE L’ACCORD
+      ARTICLE 20 – INTÉGRALITÉ DE L’ACCORD
     </h2>
 
     <p class="mb-4">
@@ -528,7 +556,7 @@
       interprétée en défaveur de la partie rédactrice.
     </p>
 
-    <h2 class="text-xl font-semibold mb-4">ARTICLE 19 – LOI APPLICABLE</h2>
+    <h2 class="text-xl font-semibold mb-4">ARTICLE 21 – LOI APPLICABLE</h2>
 
     <p class="mb-4">
       Les présentes Conditions d’utilisation, ainsi que tout accord distinct par
@@ -537,7 +565,7 @@
     </p>
 
     <h2 class="text-xl font-semibold mb-4">
-      ARTICLE 20 – MODIFICATIONS APPORTÉES AUX CONDITIONS D’UTILISATION
+      ARTICLE 22 – MODIFICATIONS APPORTÉES AUX CONDITIONS D’UTILISATION
     </h2>
 
     <p class="mb-4">
@@ -555,7 +583,7 @@
       apportées aux présentes Conditions d'utilisation, vous acceptez celles-ci.
     </p>
 
-    <h2 class="text-xl font-semibold mb-4">ARTICLE 21 – COORDONNÉES</h2>
+    <h2 class="text-xl font-semibold mb-4">ARTICLE 23 – COORDONNÉES</h2>
 
     <p class="mb-4">
       Les questions relatives aux Conditions d’utilisation doivent nous être

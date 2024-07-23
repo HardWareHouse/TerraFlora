@@ -2,8 +2,8 @@
   <Breadcrumbs />
   <div class="shop-page max-w-7xl mx-auto">
     <div class="flex flex-col-reverse  lg:flex-row">
-      <Filters @filter="applyFilter" class="w-1/4" />
-      <ProductList :filters="filters" class="w-3/4" />
+      <Filters data-aos="fade-right" @filter="applyFilter" class="w-1/4" />
+      <ProductList data-aos="fade-left" :filters="filters" class="w-3/4" />
     </div>
   </div>
 </template>
