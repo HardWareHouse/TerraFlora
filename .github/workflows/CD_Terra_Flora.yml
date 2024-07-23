@@ -14,7 +14,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v2
 
-      - name: executing remote ssh commands using password
+      - name: executing remote ssh commands 
         uses: appleboy/ssh-action@v1.0.3
         with:
           host: ${{ secrets.HOST }}
@@ -22,7 +22,7 @@ jobs:
           key: ${{ secrets.KEY }}
           port: ${{ secrets.PORT }}
           script: |
-                  cd client
+                  cd /home/aria/TerraFlora/client
                   git pull
                   npm install
                   VITE_API_URL=${{ secrets.VITE_API_URL }} VITE_STRIPE_PUBLISHABLE_KEY=${{ secrets.VITE_STRIPE_PUBLISHABLE_KEY }} VITE_LA_POSTE_API_KEY=${{ secrets.VITE_LA_POSTE_API_KEY }} npm run build
@@ -36,7 +36,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v2
 
-      - name: executing remote ssh commands using password
+      - name: executing remote ssh commands
         uses: appleboy/ssh-action@v1.0.3
         with:
           host: ${{ secrets.HOST }}
@@ -44,7 +44,7 @@ jobs:
           key: ${{ secrets.KEY }}
           port: ${{ secrets.PORT }}
           script: |
-                  cd server
+                  cd /home/aria/TerraFlora/server
                   git pull
                   npm install 
                   pm2 start --node-args="--env-file=.env" src/index.js
