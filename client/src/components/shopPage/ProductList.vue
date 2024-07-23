@@ -26,7 +26,15 @@
       </div>
     </div>
 
-    <div v-if="viewMode === 'grid'" class="product-list grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+    <!-- Aucun produit disponible -->
+    <div v-if="filteredProducts.length === 0" class="flex flex-col items-center justify-center h-96 bg-gray-100 border-2 border-dashed border-gray-300 rounded-lg p-6">
+      <i class="bi bi-emoji-frown text-6xl text-gray-400 mb-4"></i>
+      <h2 class="text-2xl font-bold text-gray-700 mb-2">Aucun produit trouvé</h2>
+      <p class="text-gray-500">Pas de produits disponibles, veuillez changer vos filtres.</p>
+    </div>
+
+    <!-- Vue en grille -->
+    <div v-if="viewMode === 'grid' && filteredProducts.length > 0" class="product-list grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
       <div v-for="product in paginatedProducts" :key="product.id"
         class="product border p-4 rounded hover:shadow-lg transition-shadow relative" @click="goToProductDetail(product)">
         <div class="product-image relative">
@@ -48,14 +56,15 @@
         </div>
         <div class="product-info mt-4 text-center">
           <h3 class="text-lg font-semibold">{{ product.nom }}</h3>
-          <p class="text-gray-500">${{ product.prix }}</p>
+          <p class="text-gray-500">{{ product.prix }} €</p>
           <p v-if="product.stock <= product.stockThreshold && product.stock > 0" class="text-yellow-500 text-sm">Il reste très peu de produits en stock</p>
           <p v-if="product.stock === 0" class="text-red-600 text-sm">En rupture de stock</p>
         </div>
       </div>
     </div>
 
-    <div v-else class="product-list space-y-6">
+    <!-- Vue en liste -->
+    <div v-if="viewMode === 'list' && filteredProducts.length > 0" class="product-list space-y-6">
       <div v-for="product in paginatedProducts" :key="product.id"
         class="product flex border p-4 rounded hover:shadow-lg transition-shadow" @click="goToProductDetail(product)">
         <div class="product-image relative w-1/3">
@@ -84,7 +93,7 @@
       </div>
     </div>
 
-    <Pagination :totalItems="filteredProducts.length" v-model:modelValue="currentPage" :itemsPerPage="itemsPerPage" />
+    <Pagination v-if="filteredProducts.length > 0" :totalItems="filteredProducts.length" v-model:modelValue="currentPage" :itemsPerPage="itemsPerPage" />
   </div>
 </template>
 
