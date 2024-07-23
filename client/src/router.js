@@ -2,6 +2,7 @@ import { createRouter, createWebHistory } from "vue-router";
 import { useAuthStore } from "./pinia/auth.js";
 import { useCartStore } from "./pinia/cart.js";
 import Admin from "./pages/adminDashboardPage.vue";
+import Comptable from "./pages/comptablePage.vue";
 import Home from "./pages/homePage.vue";
 import Shop from "./pages/shopPage.vue";
 import Wishlist from "./pages/wishlistPage.vue";
@@ -34,6 +35,12 @@ const routes = [
     name: "Admin",
     component: Admin,
     meta: { requiresAuth: true, roles: ["ROLE_ADMIN"] },
+  },
+  {
+    path: "/comptable",
+    name: "Comptable",
+    component: Comptable, 
+    meta: { requiresAuth: true, roles: ["ROLE_COMPTABLE"] },
   },
   {
     path: "/shop",
