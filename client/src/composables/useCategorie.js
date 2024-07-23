@@ -78,7 +78,7 @@ export const useCategorie = () => {
     };
 
     // Doit être modifié pour correspondre à la structure de contact
-    const updateCategorie = async (updatedCategorie) => {
+    const updateCategorie = async (userId, updatedCategorie) => {
         loading.value = true;
         try {
             const validatedData = categorieSchema.parse(updatedCategorie);
@@ -86,13 +86,16 @@ export const useCategorie = () => {
                 console.error('Données de catégorie invalides');
                 return;
             }
-            const response = await instance.put(`categories/${validatedData.id}`);
+            const response = await instance.put(`categories/${userId}`, validatedData);
             if (!response.data) {
                 console.error('Aucune donnée catégorie trouvée');
                 return;
+            } else if (response.data.error) {
+                console.error('Erreur lors de la mise à jour de la catégorie:', response.data.error);
+                return;
             }
-            const index = categories.value.findIndex((categorie) => categorie.id === response.data.id);
-            categories.value[index] = categorieSchema.parse(response.data);
+
+            return true;
         }
         catch (error) {
             console.error('Erreur lors de la mise à jour de la catégorie:', error);

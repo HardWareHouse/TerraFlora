@@ -7,7 +7,7 @@ import {
   deleteProductFromCart,
   reserveCart
 } from '../controllers/cartController.js';
-import { authenticate, authorizeAdmin } from '../middlewares/authMiddleware.js';
+import { authenticate } from '../middlewares/authMiddleware.js';
 
 const router = Router();
 

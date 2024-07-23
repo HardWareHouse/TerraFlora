@@ -102,7 +102,7 @@ export default {
         } 
         else if (this.selectedResource === "Categories") {
           const { updateCategorie } = useCategorie();
-          await updateCategorie(updatedResource);
+          await updateCategorie(updatedResource.id, updatedResource);
         } 
         this.resourcesData[this.selectedResource] = this.resourcesData[this.selectedResource].map((resource) =>
           resource.id === updatedResource.id ? updatedResource : resource

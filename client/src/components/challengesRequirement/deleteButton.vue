@@ -3,32 +3,19 @@
     <button @click="openModal" :class="buttonClass">
       <slot>Supprimer</slot>
     </button>
-    <div
-      v-if="isModalOpen"
-      class="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-75"
-    >
+    <div v-if="isModalOpen" class="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-75">
       <div class="bg-white p-6 rounded-lg shadow-lg text-center">
         <p class="mb-4 text-lg">{{ confirmationMessage }}</p>
         <div class="flex justify-center space-x-4">
-          <button
-            @click="confirmDelete"
-            :disabled="isLoading"
-            class="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700 disabled:opacity-50"
-          >
+          <button @click="confirmDelete" :disabled="isLoading" class="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700 disabled:opacity-50">
             Confirmer
           </button>
-          <button
-            @click="closeModal"
-            :disabled="isLoading"
-            class="px-4 py-2 bg-gray-300 text-gray-700 rounded hover:bg-gray-400 disabled:opacity-50"
-          >
+          <button @click="closeModal" :disabled="isLoading" class="px-4 py-2 bg-gray-300 text-gray-700 rounded hover:bg-gray-400 disabled:opacity-50">
             Annuler
           </button>
         </div>
         <div v-if="isLoading" class="mt-4 text-gray-600">Chargement...</div>
-        <div v-if="errorMessage" class="mt-4 text-red-500">
-          {{ errorMessage }}
-        </div>
+        <div v-if="errorMessage" class="mt-4 text-red-500">{{ errorMessage }}</div>
       </div>
     </div>
   </div>

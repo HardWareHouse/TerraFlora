@@ -88,19 +88,7 @@ export const useInvoice = () => {
 
     // Doit être modifié pour correspondre à la structure de contact
     const deleteInvoice = async (id) => {
-        loading.value = true;
-        try {
-            const response = await instance.delete(`invoices/${id}`);
-            if (!response.data) {
-                console.error('Aucune donnée facture trouvée');
-                return;
-            }
-            invoices.value = invoices.value.filter((invoice) => invoice.id !== id);
-        } catch (error) {
-            console.error('Error deleting invoice:', error);
-        } finally {
-            loading.value = false;
-        }
+        console.log(id);
     }
 
     return { 

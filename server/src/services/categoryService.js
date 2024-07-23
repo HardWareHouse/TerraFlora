@@ -47,9 +47,15 @@ export const createCategory = async (categoryData) => {
 export const updateCategory = async (id, updateData) => {
   const category = await CategorieSQL.findByPk(id);
   if (category) {
-    await category.update(updateData);
-    await CategorieMongo.updateOne({ _id: id }, updateData);
-    return true;
+    const fildtoUpdate = {};
+    if (updateData.nom) fildtoUpdate.nom = updateData.nom;
+    if (updateData.description) fildtoUpdate.description = updateData.description;
+
+    if (Object.keys(fildtoUpdate).length > 0) {
+      await category.update(fildtoUpdate);
+      await CategorieMongo.updateOne({ _id: id }, fildtoUpdate);
+      return true;
+    } else return {message: "No data to update"};
   }
   return false;
 };

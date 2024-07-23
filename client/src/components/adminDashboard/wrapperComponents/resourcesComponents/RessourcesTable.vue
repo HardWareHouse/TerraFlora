@@ -18,15 +18,13 @@
           <tr v-for="resource in paginatedResources" :key="resource.id" class="border-b border-gray-200">
             <td v-for="key in resourceKeys" :key="key" class="py-2 px-4">{{ transformValue(resource[key], key) }}</td>
             <td class="py-2 px-4 flex items-center space-x-2">
-              <!-- Vérification des conditions d'affichage du bouton d'édition -->
               <button v-if="canEditResource(resource)" @click="openEditModal(resource)" class="inline-flex items-center justify-center px-4 py-2 bg-blue-500 text-white rounded hover:text-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50">
                 <i class="bi bi-pencil-square mr-2"></i>
                 <span class="hidden md:inline">Modifier</span>
               </button>
-              <!-- Vérification des conditions d'affichage du bouton de suppression -->
-              <DeleteButton 
+              <DeleteButton
                 v-if="canDeleteResource(resource)"
-                :onConfirm="() => deleteResource(resource.id)" 
+                :onConfirm="() => deleteResource(resource.id)"
                 buttonClass="inline-flex items-center justify-center px-4 py-2 bg-red-500 text-white rounded hover:text-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-opacity-50"
                 confirmationMessage="Êtes-vous sûr de vouloir supprimer cette ressource ?"
               >
@@ -213,9 +211,16 @@ export default {
     getEditableFields() {
       const fields = {
         Utilisateurs: ['nom', 'prenom', 'email', 'telephone', 'role'],
-        Categories: ['description'],
+        Categories: ['nom', 'description'],
       };
       return fields[this.localSelectedResource] || [];
+    },
+    async deleteResource(resourceId) {
+      try {
+        await this.$emit('delete', resourceId);
+      } catch (error) {
+        console.error('Erreur lors de la suppression de la ressource:', error);
+      }
     },
   },
   watch: {

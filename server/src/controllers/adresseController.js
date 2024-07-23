@@ -131,7 +131,7 @@ export const deleteAddress = async (req, res) => {
       return res.status(404).json({ error: "Address not found" });
     }
 
-    if (address.user._id !== user.id) return res.status(403).json({ error: "Unauthorized" });
+    if (address.user._id !== user.id && user.role !== 'ROLE_ADMIN') return res.status(403).json({ error: "Unauthorized" });
     
     const deleteAddress = await addressService.deleteAddressById(id);
     if (!deleteAddress) {

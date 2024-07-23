@@ -96,14 +96,7 @@ export const useOrder = () => {
     
     // A modifier pour correspondre à la structure de la commande
     const deleteOrder = async (orderId) => {
-        loading.value = true;
-        try {
-        const response = await instance.delete(`order/${orderId}`);
-        } catch (error) {
-        console.error('Error deleting order:', error);
-        } finally {
-        loading.value = false;
-        }
+        console.log(orderId);
     };
     
     return {
