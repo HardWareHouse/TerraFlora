@@ -23,48 +23,46 @@
     </div>
 
     <!-- Formulaire de modification ou d'ajout d'adresse -->
-    <form class="mt-4" v-if="editMode" @submit.prevent="updateTheAddress">
-      <div class="flex flex-col space-y-2">
-        <input v-model="formData.numero" type="text" placeholder="Numéro" required class="px-4 py-2 border border-gray-300 rounded">
-        <p v-if="errors.numero" class="text-red-500 text-sm">{{ errors.numero }}</p>
+    <form class="mt-6 space-y-4" v-if="editMode" @submit.prevent="updateTheAddress">
+      <input v-model="formData.numero" type="text" placeholder="Numéro" required class="w-full px-4 py-2 border border-white rounded focus:outline-none focus:ring-2 focus:ring-white">
+      <p v-if="errors.numero" class="text-red-500 text-sm">{{ errors.numero }}</p>
 
-        <select v-model="formData.voie" required class="px-4 py-2 border border-gray-300 rounded">
-          <option value="" disabled selected>Choisissez une voie</option>
-          <option value="allée">Allée</option>
-          <option value="avenue">Avenue</option>
-          <option value="boulevard">Boulevard</option>
-          <option value="chemin">Chemin</option>
-          <option value="cours">Cours</option>
-          <option value="impasse">Impasse</option>
-          <option value="passage">Passage</option>
-          <option value="place">Place</option>
-          <option value="quai">Quai</option>
-          <option value="route">Route</option>
-          <option value="rue">Rue</option>
-          <option value="square">Square</option>
-          <option value="voie">Voie</option>
-        </select>
-        <input v-model="formData.rue" type="text" placeholder="Rue" required class="px-4 py-2 border border-gray-300 rounded">
-        <p v-if="errors.rue" class="text-red-500 text-sm">{{ errors.rue }}</p>
+      <select v-model="formData.voie" required class="w-full px-4 py-2 border border-white rounded focus:outline-none focus:ring-2 focus:ring-white">
+        <option value="" disabled selected>Choisissez une voie</option>
+        <option value="allée">Allée</option>
+        <option value="avenue">Avenue</option>
+        <option value="boulevard">Boulevard</option>
+        <option value="chemin">Chemin</option>
+        <option value="cours">Cours</option>
+        <option value="impasse">Impasse</option>
+        <option value="passage">Passage</option>
+        <option value="place">Place</option>
+        <option value="quai">Quai</option>
+        <option value="route">Route</option>
+        <option value="rue">Rue</option>
+        <option value="square">Square</option>
+        <option value="voie">Voie</option>
+      </select>
+      <input v-model="formData.rue" type="text" placeholder="Rue" required class="w-full px-4 py-2 border border-white rounded focus:outline-none focus:ring-2 focus:ring-white">
+      <p v-if="errors.rue" class="text-red-500 text-sm">{{ errors.rue }}</p>
 
-        <input v-model="formData.ville" type="text" placeholder="Ville" required class="px-4 py-2 border border-gray-300 rounded">
-        <p v-if="errors.ville" class="text-red-500 text-sm">{{ errors.ville }}</p>
+      <input v-model="formData.ville" type="text" placeholder="Ville" required class="w-full px-4 py-2 border border-white rounded focus:outline-none focus:ring-2 focus:ring-white">
+      <p v-if="errors.ville" class="text-red-500 text-sm">{{ errors.ville }}</p>
 
-        <input v-model="formData.codePostal" type="text" placeholder="Code Postal" required class="px-4 py-2 border border-gray-300 rounded">
-        <p v-if="errors.codePostal" class="text-red-500 text-sm">{{ errors.codePostal }}</p>
+      <input v-model="formData.codePostal" type="text" placeholder="Code Postal" required class="w-full px-4 py-2 border border-white rounded focus:outline-none focus:ring-2 focus:ring-white">
+      <p v-if="errors.codePostal" class="text-red-500 text-sm">{{ errors.codePostal }}</p>
 
-        <div class="flex items-center space-x-4">
-          <label for="isBillingAddress" class="flex items-center space-x-2">
-            <input v-model="formData.isBillingAddress" type="checkbox" id="isBillingAddress" class="form-checkbox">
-            <span>Adresse de facturation ?</span>
-          </label>
-          <label for="isDeliveryAddress" class="flex items-center space-x-2">
-            <input v-model="formData.isDeliveryAddress" type="checkbox" id="isDeliveryAddress" class="form-checkbox">
-            <span>Adresse de livraison ?</span>
-          </label>
-        </div>
+      <div class="flex space-x-4">
+        <label for="isBillingAddress" class="flex items-center space-x-2">
+          <input v-model="formData.isBillingAddress" type="checkbox" id="isBillingAddress" class="form-checkbox">
+          <span>Adresse de facturation ?</span>
+        </label>
+        <label for="isDeliveryAddress" class="flex items-center space-x-2">
+          <input v-model="formData.isDeliveryAddress" type="checkbox" id="isDeliveryAddress" class="form-checkbox">
+          <span>Adresse de livraison ?</span>
+        </label>
       </div>
-      <button type="submit" class="mt-4 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">Enregistrer</button>
+      <button type="submit" class="w-full py-2 bg-red-500 text-white rounded hover:bg-red-700">Enregistrer</button>
     </form>
     <p v-if="successMessage" class="mt-4 text-green-500">{{ successMessage }}</p>
     <p v-if="errorMessage" class="mt-4 text-red-500">{{ errorMessage }}</p>
