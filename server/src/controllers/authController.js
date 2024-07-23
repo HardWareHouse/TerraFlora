@@ -89,7 +89,7 @@ export const register = async (req, res) => {
     const existingUser = await authService.findUserByEmail(email);
 
     if (existingUser) {
-      return res.status(400).json({ msg: "L'email existe déjà" });
+      return res.status(400).json({ msg: "Erreur lors de l'inscription" });
     }
 
     const newUser = await authService.createUser({
