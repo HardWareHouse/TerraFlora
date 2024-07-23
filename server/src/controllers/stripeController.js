@@ -101,17 +101,15 @@ export const createProduct = async (req, res) => {
 export const updatePrice = async (req, res) => {
   const { id, nom, prix, description, priceId } = req.body;
   try {
-    // Update the product details
     const products = await stripe.products.search({
       query: `active:'true' AND name:'${nom}'`,
     });
 
     const productId = products.data[0].id;
-    // Create a new price for the product
 
     const newPrice = await stripe.prices.create({
       unit_amount: prix * 100,
-      currency: "eur", // Specify your currency
+      currency: "eur",
       product: `${productId}`,
     });
 
@@ -120,7 +118,6 @@ export const updatePrice = async (req, res) => {
       description: description || "",
       name: nom,
     });
-    // Optionally, deactivate the old price
     await stripe.prices.update(priceId, {
       active: false,
     });
@@ -141,17 +138,27 @@ export const fulfillCheckout = async (sessionId) => {
   console.log("checkoutSession", checkoutSession.line_items.data);
 };
 
-// Fetch balance transactions
 export const getBalanceTransactions = async (req, res) => {
   try {
-    const transactions = await stripe.charges.list();
-    res.json(transactions);
+    const { limit = 10, starting_after, ending_before } = req.query;
+    const params = {
+      limit: parseInt(limit),
+      ...(starting_after && { starting_after }),
+      ...(ending_before && { ending_before }),
+    };
+
+    const transactions = await stripe.charges.list(params);
+    console.log(transactions);
+
+    res.json({
+      data: transactions.data,
+      has_more: transactions.has_more,
+    });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
 };
 
-// Issue a refund
 export const issueRefund = async (req, res) => {
   const { transactionId } = req.body;
   try {
@@ -162,9 +169,8 @@ export const issueRefund = async (req, res) => {
   }
 };
 
-// Create payment link
 export const createPaymentLink = async (req, res) => {
-  const { lineItems } = req.body; // Expecting an array of { priceId, quantity }
+  const { lineItems } = req.body;
   try {
     const paymentLink = await stripe.paymentLinks.create({
       payment_method_types: ["card"],
