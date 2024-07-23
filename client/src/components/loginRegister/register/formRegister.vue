@@ -1,5 +1,5 @@
 <template>
-  <div class=" flex items-center justify-center my-20">
+  <div class="flex items-center justify-center my-20">
     <div class="container p-8 space-y-8 bg-white rounded-lg shadow-md">
       <h2 class="text-3xl font-semibold text-center text-gray-900">Inscription</h2>
       <form class="mt-8 space-y-6" @submit.prevent="handleSubmit">
@@ -47,10 +47,11 @@
             </div>
           </div>
           <div>
-            <label for="telephone" class="sr-only">Telephone</label>
+            <label for="telephone" class="sr-only">Téléphone</label>
             <input v-model="telephone" id="telephone" name="telephone" type="text" required
+              @input="validateTelephone"
               class="relative block w-full px-3 py-3 text-[14px] bg-gray-100 text-gray-900 placeholder-gray-500 border border-gray-300 focus:outline-none sm:text-sm"
-              placeholder="Telephone" />
+              placeholder="Téléphone" />
           </div>
           <div class="flex flex-wrap-reverse justify-around items-center lg:justify-start">
               <input v-model="haveConsented" id="haveConsented" name="haveConsented" type="checkbox"
@@ -60,26 +61,26 @@
               <label for="haveConsented" class="ml-2 text-sm text-gray-900">Je veux recevoir les mails : </label>
             <div class="flex justify-around lg:justify-start">
                 <div class="flex flex-wrap-reverse justify-around items-center">
-                  <input v-model="wantsMailNewProduct" id="haveConsented" name="haveConsented" type="checkbox"
+                  <input v-model="wantsMailNewProduct" id="wantsMailNewProduct" name="wantsMailNewProduct" type="checkbox"
                   class="w-4 h-4 text-red-600 border-gray-300 rounded focus:ring-red-500" />
-                  <label for="haveConsented" class="ml-2 text-sm text-gray-900">de nouveaux produits</label>
+                  <label for="wantsMailNewProduct" class="ml-2 text-sm text-gray-900">de nouveaux produits</label>
               </div>
               <div class="flex flex-wrap-reverse justify-around items-center lg:ml-10">
-                <input v-model="wantsMailRestockProduct" id="haveConsented" name="haveConsented" type="checkbox"
+                <input v-model="wantsMailRestockProduct" id="wantsMailRestockProduct" name="wantsMailRestockProduct" type="checkbox"
                 class="w-4 h-4 text-red-600 border-gray-300 rounded focus:ring-red-500" />
-                <label for="haveConsented" class="ml-2 text-sm text-gray-900">de restock de produit</label>
+                <label for="wantsMailRestockProduct" class="ml-2 text-sm text-gray-900">de restock de produit</label>
               </div>
             </div>
             <div class="flex justify-around lg:justify-start" >
               <div class="flex flex-wrap-reverse justify-around items-center">
-                  <input v-model="wantsMailChangingPrice" id="haveConsented" name="haveConsented" type="checkbox"
+                  <input v-model="wantsMailChangingPrice" id="wantsMailChangingPrice" name="wantsMailChangingPrice" type="checkbox"
                   class="w-4 h-4 text-red-600 border-gray-300 rounded focus:ring-red-500" />
-                  <label for="haveConsented" class="ml-2 text-sm text-gray-900">de changement de prix</label>
+                  <label for="wantsMailChangingPrice" class="ml-2 text-sm text-gray-900">de changement de prix</label>
               </div> 
               <div class="flex flex-wrap-reverse justify-around items-center lg:ml-8">
-                  <input v-model="wantsMailNewsletter" id="haveConsented" name="haveConsented" type="checkbox"
+                  <input v-model="wantsMailNewsletter" id="wantsMailNewsletter" name="wantsMailNewsletter" type="checkbox"
                     class="w-4 h-4 text-red-600 border-gray-300 rounded focus:ring-red-500" />
-                  <label for="haveConsented" class="ml-2 text-sm text-gray-900">de newsletter</label>
+                  <label for="wantsMailNewsletter" class="ml-2 text-sm text-gray-900">de newsletter</label>
               </div>
             </div>
         </div>
@@ -118,6 +119,16 @@ const wantsMailNewsletter = ref(false)
 const error = ref('')
 const success = ref('')
 
+const validateTelephone = (event) => {
+  const input = event.target.value.replace(/\D/g, '');
+  if (input.length > 0 && input[0] !== '0') {
+    error.value = 'Le numéro de téléphone doit commencer par 0.';
+  } else {
+    error.value = '';
+  }
+  telephone.value = input.slice(0, 10);
+}
+
 const handleSubmit = async () => {
   if (email.value !== email_cfg.value) {
       error.value = 'Emails do not match.'
@@ -127,6 +138,12 @@ const handleSubmit = async () => {
 
   if (password.value !== password_cfg.value) {
       error.value = 'Passwords do not match.'
+      success.value = ''
+      return
+  }
+
+  if (telephone.value.length !== 10) {
+      error.value = 'Le numéro de téléphone doit contenir 10 chiffres.'
       success.value = ''
       return
   }
