@@ -1,5 +1,5 @@
 <template>
-  <div class="w-full lg:filters p-6 border-r border-gray-300 bg-gray-50">
+  <div class="w-full lg:filters p-6 border-r border-gray-300 bg-gray-50 lg:w-max">
     <h2 class="text-xl font-bold mb-6 text-gray-800">Categories</h2>
     <ul class="space-y-3">
       <li v-for="category in categories" :key="category.id" class="flex items-center space-x-2">
