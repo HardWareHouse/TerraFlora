@@ -274,7 +274,7 @@
     <p class="mb-4">
       Pour exercer vos droits, veuillez remplir le
       <a
-        href="rgpd/demande_droits.pdf"
+        href="demande_droits.pdf"
         download="demande_droits.pdf"
         class="underline text-blue-500"
         >formulaire de demande</a
