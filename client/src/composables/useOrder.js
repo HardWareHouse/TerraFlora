@@ -56,42 +56,9 @@ export const useOrder = () => {
         }
     };
     
-    
-    // A modifier pour correspondre à la structure de la commande
-    const createOrder = async (newOrder) => {
-        loading.value = true;
-        try {
-        const validatedData = orderSchema.parse(newOrder);
-        if (!validatedData) {
-            console.error('Invalid order data');
-            return;
-        }
-    
-        const response = await instance.post('order', validatedData);
-        } catch (error) {
-        console.error('Error creating order:', error);
-        } finally {
-        loading.value = false;
-        }
-    };
-    
     // A modifier pour correspondre à la structure de la commande
     const updateOrder = async (orderId, updatedOrder) => {
-        loading.value = true;
-        try {
-        const validatedData = orderSchema.parse(updatedOrder);
-        if (!validatedData) {
-            console.error('Invalid order data');
-            return;
-        }
-    
-        const response = await instance.put(`order/${orderId}`, validatedData);
-
-        } catch (error) {
-        console.error('Error updating order:', error);
-        } finally {
-        loading.value = false;
-        }
+        console.log(orderId);
     };
     
     // A modifier pour correspondre à la structure de la commande
@@ -105,7 +72,6 @@ export const useOrder = () => {
         loading,
         fetchOrders,
         fetchOrderById,
-        createOrder,
         deleteOrder,
     };
     };
