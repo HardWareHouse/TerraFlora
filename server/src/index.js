@@ -50,10 +50,13 @@ server.use(
         ...helmet.contentSecurityPolicy.getDefaultDirectives()
       },
     },
+    crossOriginResourcePolicy: { policy: "cross-origin" },
     xssFilter: true
   })
 );
 console.log(process.env.FRONT_URL);
+
+
 // routes
 server.use("/users", userRouter);
 server.use("/auth", authRouter);
@@ -65,11 +68,16 @@ server.use("/address", adresseRoutes);
 server.use("/product", produitRouter);
 server.use("/categories", categorieRoutes);
 server.use("/emailPreferences", emailPreferenceRoutes);
-server.use("/uploads", express.static(path.join("src/uploads")));
 server.use("/stripe", stripeRouter);
 server.use("/hello", (req, res, next) => {
   res.sendStatus(200);
 });
+
+server.use("/uploads", express.static(path.join("src/uploads"), {
+  setHeaders: (res, path) => {
+    res.set("Cross-Origin-Resource-Policy", "cross-origin");
+  }
+}));
 
 server.use((err, req, res, next) => {
   console.error("Error encountered:", err.stack);
