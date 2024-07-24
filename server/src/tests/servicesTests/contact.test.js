@@ -105,14 +105,14 @@ describe("contactService", () => {
       expect(ContactSQL.findByPk).toHaveBeenCalledWith(1);
       expect(mockContactSQL.update).toHaveBeenCalled();
       expect(ContactMongo.findByIdAndUpdate).toHaveBeenCalledWith(1, { $set: updatedContact }, { new: true });
-      expect(result).toBe(true);
+      expect(result).toEqual(updatedContact);
     });
   
     it("should return null if contact not found", async () => {
       ContactSQL.findByPk.mockResolvedValue(null);
   
       const result = await contactService.updateContact(1, { subject: "Test" });
-      expect(result).toBe(false);
+      expect(result).toBeNull();
     });
   });
   
