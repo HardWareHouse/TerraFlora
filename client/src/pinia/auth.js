@@ -43,7 +43,7 @@ export const useAuthStore = defineStore('auth', {
         this.success = 'Login successful!';
         this.error = '';
       } catch (err) {
-        this.error = err.response?.data?.error || 'An error occurred.';
+        this.error = err.response.data.message;
         this.success = null;
       }
     },

@@ -16,14 +16,18 @@ export const login = async (req, res) => {
       return res.status(401).json({ message: 'Email ou mot de passe invalide.' });
     }
 
-    if (!user.isVerified) {
-      return res.status(401).json({ message: 'Compte non vérifié. Veuillez vérifier votre compte pour vous connecter.' });
-    }
-
     const isMatch = await comparePasswords(password, user.password);
 
     if (!isMatch) {
       return res.status(401).json({ message: 'Email ou mot de passe invalide.' });
+    }
+
+    if (!user.isVerified) {
+      return res.status(401).json({ message: 'Compte non vérifié. Veuillez vérifier votre compte pour vous connecter.' });
+    }
+
+    if (user.isBlocked) {
+      return res.status(401).json({ message: 'Compte bloqué. Veuillez contacter l\'administrateur pour plus d\'informations.' });
     }
 
     if (isPasswordExpired(user.lastUpdatedPassword)) {
@@ -41,9 +45,6 @@ export const login = async (req, res) => {
       email: user.email,
       telephone: user.telephone,
       role: user.role,
-      haveConsented: user.haveConsented,
-      isBlocked: user.isBlocked,
-      isVerified: user.isVerified,
       lastUpdatedPassword: user.lastUpdatedPassword,
       wantsMailNewProduct: user.wantsMailNewProduct,
       wantsMailRestockProduct: user.wantsMailRestockProduct,
@@ -108,7 +109,14 @@ export const register = async (req, res) => {
       wantsMailNewsletter,
     });
 
-    res.status(201).json({ newUser, msg: "Utilisateur créé avec succès. Veuillez vérifier votre email pour confirmer votre compte." });
+    const userWithoutPassword = {
+      nom: newUser.nom,
+      prenom: newUser.prenom,
+      email: newUser.email,
+      telephone: newUser.telephone
+    };
+
+    res.status(201).json({ userWithoutPassword, msg: "Utilisateur créé avec succès. Veuillez vérifier votre email pour confirmer votre compte." });
   } catch (error) {
     res.status(400).json({ error: error.message });
   }
@@ -122,7 +130,7 @@ export const confirmEmail = async (req, res) => {
     const user = await authService.findUserById(decoded.id);
 
     if (!user) {
-      return res.status(400).json({ msg: "Utilisateur non trouvé." });
+      return res.status(400).json({ msg: "Erreur lors de la confirmation de l'email." });
     }
 
     if (user.isVerified) {
@@ -145,7 +153,7 @@ export const forgotPassword = async (req, res) => {
     const user = await authService.findUserByEmail(email);
 
     if (!user) {
-      return res.status(400).json({ msg: "Utilisateur non trouvé." });
+      return res.status(400).json({ msg: "Erreur lors de la réinitialisation du mot de passe." });
     }
 
     await authService.handlePasswordReset(user);
@@ -173,7 +181,7 @@ export const resetPassword = async (req, res) => {
     const user = await authService.findUserById(decoded.id);
 
     if (!user) {
-      return res.status(400).json({ msg: "Utilisateur non trouvé." });
+      return res.status(400).json({ msg: "Erreur lors de la réinitialisation du mot de passe." });
     }
 
     user.password = password;

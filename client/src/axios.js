@@ -9,6 +9,8 @@ export const instance = axios.create({
   },
 });
 
+const errorResponseDataCode = ['token_expired', 'account_blocked', 'account_not_verified', 'invalid_token'];
+
 instance.interceptors.request.use(
   config => {
     const token = localStorage.getItem('token');
@@ -28,18 +30,7 @@ instance.interceptors.response.use(
   },
   async error => {
     if (error.response) {
-      if (error.response.status === 401 && error.response.data.code === 'token_expired') {
-        const authStore = useAuthStore();
-
-        if (authStore.token) {
-          try {
-            await authStore.logout();
-            router.push({ name: 'login' });
-          } catch (err) {
-            console.error('Error while logging out:', err);
-          }
-        }
-      } else if (error.response.status === 401) {
+      if (error.response.status === 401 || errorResponseDataCode.includes(error.response.data.code)) {
         const authStore = useAuthStore();
 
         if (authStore.token) {
@@ -52,7 +43,6 @@ instance.interceptors.response.use(
         }
       }
     }
-
     return Promise.reject(error);
   }
 );
