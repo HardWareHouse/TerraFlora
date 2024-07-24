@@ -79,9 +79,9 @@ export const createContact = async (req, res) => {
 // Mettre à jour un contact
 export const updateContact = async (req, res) => {
     const { id } = req.params;
-    const { subject, message, email, response } = req.body;
+    const { response } = req.body;
 
-    if (!subject || !message || !email || !response) {
+    if (!response) {
         return res.status(400).json({ error: "Missing required information" });
     }
 
@@ -96,11 +96,15 @@ export const updateContact = async (req, res) => {
         if (!existingContact) {
             return res.status(404).json({ error: "Contact not found" });
         }
-        if (user.id !== existingContact.user._id && user.role !== "ROLE_ADMIN") return res.status(403).json({ error: "Unauthorized" });
+        if(existingContact.isResponded){
+          return res.status(403).json({ error: "Contact already responded" });
+        }
 
-        const contact = await contactService.updateContact(id, data);
-        if (!contact) return res.status(400).json({ error: "Contact not updated" });
-        res.status(200).json(contact);
+        if (user.role !== "ROLE_ADMIN") return res.status(403).json({ error: "Unauthorized" });
+
+        const contact = await contactService.updateContact(id, { response });
+        if (!contact) return res.status(400).json({ message: "Une erreur est survenue lors de la transmission de la réponse" });
+        res.status(200).json({message: "Votre réponse a été transmis avec succès"});
     } catch (error) {
         res.status(500).json({ error: error.message });
     }
@@ -123,6 +127,7 @@ export const deleteContact = async (req, res) => {
 
         const deletedContact = await contactService.deleteContact(id);
         if (!deletedContact) return res.status(400).json({ error: "Contact not deleted" });
+        
         res.status(204).end();
     } catch (error) {
         res.status(500).json({ error: error.message });

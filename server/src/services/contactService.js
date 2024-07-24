@@ -75,18 +75,18 @@ export const createContact = async (data) => {
 };
 
 export const updateContact = async (id, data) => {
-  const { subject, message, email, response } = data;
+  const { response } = data;
   try {
     const contact = await ContactSQL.findByPk(id);
     if (contact) {
-      const isResponded = !!response;
-      const dateResponse = isResponded ? new Date() : null;
-      await contact.update({ subject, message, email, response, isResponded, dateResponse });
-      const updatedContact = { subject, message, email, response, isResponded, dateResponse };
+      const isResponded = true;
+      const dateResponse = new Date();
+      await contact.update({ response, isResponded, dateResponse, status: "traité" });
+      const updatedContact = { response, isResponded, dateResponse, status: "traité" };
       await ContactMongo.findByIdAndUpdate(id, { $set: updatedContact }, { new: true });
-      return getContactWithAlias(id);
+      return true;
     } else {
-      return null;
+      return false;
     }
   } catch (error) {
     throw new Error(error.message);

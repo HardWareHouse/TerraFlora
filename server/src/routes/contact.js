@@ -14,7 +14,7 @@ const router = Router();
 router.get('/', authenticate, authorizeAdmin, getAllContacts);
 router.get('/:id', authenticate, getContact);
 router.post('/', authenticate, isDailyLimitContactExceeded, isMonthlyLimitContactExceeded, createContact);
-router.put('/:id', authenticate, updateContact);
+router.put('/:id', authenticate, authorizeAdmin, updateContact);
 router.delete('/:id', authenticate, authorizeAdmin, deleteContact);
 
 export default router;
