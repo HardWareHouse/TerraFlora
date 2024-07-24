@@ -2,9 +2,11 @@
 import { authenticate, authorizeAdmin, authorizeUser } from "../../middlewares/authMiddleware.js";
 import jwt from "jsonwebtoken";
 import User from "../../modelsSQL/User.js";
+import { isAdminInMongo, blockUserOnSQLAndMongo } from "../../services/authService.js";
 
 jest.mock("jsonwebtoken");
 jest.mock("../../modelsSQL/User.js");
+jest.mock("../../services/authService.js");
 
 describe("authenticate middleware", () => {
   let req, res, next;
@@ -39,12 +41,13 @@ describe("authenticate middleware", () => {
   it("should return 401 if token is invalid", async () => {
     req.header.mockReturnValue("Bearer invalidtoken");
     jwt.verify.mockImplementation(() => {
-      throw new Error("Invalid token");
+      throw { name: "JsonWebTokenError" };
     });
 
     await authenticate(req, res, next);
 
     expect(res.status).toHaveBeenCalledWith(401);
+    expect(res.json).toHaveBeenCalledWith({ code: "invalid_token" });
   });
 
   it("should return 401 if user is not found", async () => {
@@ -65,7 +68,7 @@ describe("authenticate middleware", () => {
     await authenticate(req, res, next);
 
     expect(res.status).toHaveBeenCalledWith(401);
-    expect(res.json).toHaveBeenCalledWith({ message: "Your account has been blocked", code: "account_blocked" });
+    expect(res.json).toHaveBeenCalledWith({ code: "account_blocked" });
   });
 
   it("should return 401 if user is not verified", async () => {
@@ -76,17 +79,17 @@ describe("authenticate middleware", () => {
     await authenticate(req, res, next);
 
     expect(res.status).toHaveBeenCalledWith(401);
-    expect(res.json).toHaveBeenCalledWith({ message: "Account not verified. Please verify your account to log in.", code: "account_not_verified" });
+    expect(res.json).toHaveBeenCalledWith({ code: "account_not_verified" });
   });
 
   it("should call next if authentication is successful", async () => {
     req.header.mockReturnValue("Bearer validtoken");
     jwt.verify.mockReturnValue({ id: 1 });
-    User.findByPk.mockResolvedValue({ id: 1, isBlocked: false, isVerified: true });
+    User.findByPk.mockResolvedValue({ id: 1, isBlocked: false, isVerified: true, role: "ROLE_USER" });
 
     await authenticate(req, res, next);
 
-    expect(req.user).toEqual({ id: 1, isBlocked: false, isVerified: true });
+    expect(req.user).toEqual({ id: 1, isBlocked: false, isVerified: true, role: "ROLE_USER" });
     expect(next).toHaveBeenCalled();
   });
 
@@ -99,18 +102,20 @@ describe("authenticate middleware", () => {
     await authenticate(req, res, next);
 
     expect(res.status).toHaveBeenCalledWith(401);
-    expect(res.json).toHaveBeenCalledWith({ message: "Token expired", code: "token_expired" });
+    expect(res.json).toHaveBeenCalledWith({ code: "token_expired" });
   });
 
-  it("should return 401 if any other error occurs", async () => {
+  it("should block admin if not in MongoDB", async () => {
     req.header.mockReturnValue("Bearer validtoken");
-    jwt.verify.mockImplementation(() => {
-      throw new Error("Some error");
-    });
+    jwt.verify.mockReturnValue({ id: 1 });
+    User.findByPk.mockResolvedValue({ id: 1, isBlocked: false, isVerified: true, role: "ROLE_ADMIN" });
+    isAdminInMongo.mockResolvedValue(true);
 
     await authenticate(req, res, next);
 
+    expect(blockUserOnSQLAndMongo).toHaveBeenCalledWith(1);
     expect(res.status).toHaveBeenCalledWith(401);
+    expect(res.json).toHaveBeenCalledWith({ code: "account_blocked" });
   });
 });
 
