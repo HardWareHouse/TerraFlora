@@ -213,7 +213,8 @@ export const createPaymentLink = async (req, res) => {
       after_completion: {
         type: "redirect",
         redirect: {
-          url: process.env.FRONT_URL + "/success?session_id={CHECKOUT_SESSION_ID}",
+          url:
+            process.env.FRONT_URL + "/success?session_id={CHECKOUT_SESSION_ID}",
         },
       },
       automatic_tax: { enabled: false },
@@ -225,10 +226,10 @@ export const createPaymentLink = async (req, res) => {
 };
 
 export const getSession = async (req, res) => {
+  const { sessionId } = req.params;
+
   try {
-    const session = await stripe.checkout.sessions.retrieve(
-      "cs_test_b1ZewZ4hWfLRrUE8vF0GHNznAYGWifGU1kqBxoKc4QYpsyrlo0xz1roMxx"
-    );
+    const session = await stripe.checkout.sessions.retrieve(sessionId);
 
     res.json(session);
   } catch (error) {
