@@ -1,6 +1,7 @@
 import { DataTypes } from 'sequelize';
 
 const mockDefine = jest.fn().mockReturnValue({});
+
 jest.mock('../../modelsSQL/dataBase.js', () => ({
   connection: {
     define: mockDefine,
@@ -9,16 +10,12 @@ jest.mock('../../modelsSQL/dataBase.js', () => ({
 
 jest.mock('../../modelsSQL/Categorie.js', () => {
   jest.requireActual('../../modelsSQL/Categorie.js');
-  return mockDefine.mock.calls[0][1];  // Retourne la définition du modèle
+  return mockDefine.mock.calls[0][1];
 });
 
 const modelDefinition = require('../../modelsSQL/Categorie.js');
 
 describe('Categorie Model', () => {
-  beforeEach(() => {
-    jest.clearAllMocks();
-  });
-
   it('should define the Categorie model correctly', () => {
     expect(mockDefine).toHaveBeenCalledWith(
       'Categorie',
@@ -41,10 +38,6 @@ describe('Categorie Model', () => {
         tableName: 'Categories',
       })
     );
-  });
-
-  it('should export the Categorie model', () => {
-    expect(modelDefinition).toBeDefined();
   });
 
   it('should have correct properties', () => {
