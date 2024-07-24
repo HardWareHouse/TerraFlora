@@ -67,3 +67,32 @@ export const handlePasswordReset = async (user) => {
 export const handleAccountBlocked = async (user) => {
   await sendAccountBlockedEmail(user);
 };
+
+export const isAdminInMongo = async (id) => {
+  const user = await UserMongo.findById(id);
+  if (user) {
+    return true
+  } else {
+    return false
+  }
+};
+
+export const blockUserOnSQLAndMongo = async (id) => {
+  const user = await UserSQL.findByPk(id);
+  if (!user) {
+    throw new Error("User not found");
+  }
+
+  user.isBlocked = true;
+  await user.save();
+
+  const userMongo = await UserMongo.findById(id);
+  if (!userMongo) {
+    throw new Error("User not found");
+  }
+
+  userMongo.isBlocked = true;
+  await userMongo.save();
+  
+  await sendAccountBlockedEmail(user);
+}
