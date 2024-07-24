@@ -1,10 +1,10 @@
-// middleware.test.js
-import { authenticate, authorizeAdmin, authorizeUser } from "../middlewares/authMiddleware";
+// authMiddleware.test.js
+import { authenticate, authorizeAdmin, authorizeUser } from "../../middlewares/authMiddleware.js";
 import jwt from "jsonwebtoken";
-import User from "../modelsSQL/User";
+import User from "../../modelsSQL/User.js";
 
 jest.mock("jsonwebtoken");
-jest.mock("../modelsSQL/User");
+jest.mock("../../modelsSQL/User.js");
 
 describe("authenticate middleware", () => {
   let req, res, next;
