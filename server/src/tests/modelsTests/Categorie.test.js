@@ -7,7 +7,12 @@ jest.mock('../../modelsSQL/dataBase.js', () => ({
   },
 }));
 
-import Categorie from '../../modelsSQL/Categorie.js';
+jest.mock('../../modelsSQL/Categorie.js', () => {
+  jest.requireActual('../../modelsSQL/Categorie.js');
+  return mockDefine.mock.calls[0][1];  // Retourne la définition du modèle
+});
+
+const modelDefinition = require('../../modelsSQL/Categorie.js');
 
 describe('Categorie Model', () => {
   beforeEach(() => {
@@ -39,23 +44,20 @@ describe('Categorie Model', () => {
   });
 
   it('should export the Categorie model', () => {
-    expect(Categorie).toBeDefined();
+    expect(modelDefinition).toBeDefined();
   });
 
   it('should have correct properties', () => {
-    const [modelName, modelDefinition] = mockDefine.mock.calls[0];
     expect(modelDefinition).toHaveProperty('id');
     expect(modelDefinition).toHaveProperty('nom');
     expect(modelDefinition).toHaveProperty('description');
   });
 
   it('should not allow null for nom', () => {
-    const [modelName, modelDefinition] = mockDefine.mock.calls[0];
     expect(modelDefinition.nom.allowNull).toBe(false);
   });
 
   it('should allow null for description', () => {
-    const [modelName, modelDefinition] = mockDefine.mock.calls[0];
     expect(modelDefinition.description.allowNull).toBe(true);
   });
 });

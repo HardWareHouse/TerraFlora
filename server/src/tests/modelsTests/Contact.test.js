@@ -1,6 +1,5 @@
 import { DataTypes } from 'sequelize';
 
-// Mock de la connexion Sequelize
 const mockDefine = jest.fn().mockReturnValue({});
 jest.mock('../../modelsSQL/dataBase.js', () => ({
   connection: {
@@ -8,13 +7,11 @@ jest.mock('../../modelsSQL/dataBase.js', () => ({
   },
 }));
 
-// Importer le module Contact après avoir défini le mock
 jest.mock('../../modelsSQL/Contact.js', () => {
   jest.requireActual('../../modelsSQL/Contact.js');
-  return mockDefine.mock.calls[0][1];  // Retourne la définition du modèle
+  return mockDefine.mock.calls[0][1]; 
 });
 
-// Importer Contact après les mocks
 const modelDefinition = require('../../modelsSQL/Contact.js');
 
 describe('Contact Model', () => {
