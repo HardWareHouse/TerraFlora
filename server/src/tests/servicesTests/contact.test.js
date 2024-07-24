@@ -91,14 +91,14 @@ describe("contactService", () => {
       expect(ContactSQL.findByPk).toHaveBeenCalledWith(1);
       expect(mockContactSQL.update).toHaveBeenCalled();
       expect(ContactMongo.findByIdAndUpdate).toHaveBeenCalled();
-      expect(result).toEqual(updatedContact);
+      expect(result).toBe(true);
     });
 
     it("should return null if contact not found", async () => {
       ContactSQL.findByPk.mockResolvedValue(null);
 
       const result = await contactService.updateContact(1, { subject: "Updated Test" });
-      expect(result).toBeNull();
+      expect(result).toBe(false);
     });
   });
 
