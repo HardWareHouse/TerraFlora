@@ -114,6 +114,7 @@ export default {
         isDeliveryAddress: 'Adresse de Livraison',
         isBillingAddress: 'Adresse de Facturation',
         description: 'Description',
+        isResponded: 'Repondu'
       },
       valueTransformations: {
         true: 'Oui',
