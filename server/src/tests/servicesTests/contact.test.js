@@ -77,30 +77,45 @@ describe("contactService", () => {
       const mockContactSQL = {
         id: 1,
         subject: "Test",
-        update: jest.fn().mockResolvedValue({ id: 1, subject: "Updated Test" })
+        message: "Message",
+        email: "email@example.com",
+        response: "Response",
+        isResponded: false,
+        dateResponse: null,
+        update: jest.fn().mockResolvedValue(true)
       };
+      
       ContactSQL.findByPk.mockResolvedValue(mockContactSQL);
       
-      const updatedContact = { id: 1, subject: "Updated Test" };
+      const updatedContact = {
+        id: 1,
+        subject: "Test",
+        message: "Message",
+        email: "email@example.com",
+        response: "Response",
+        isResponded: false,
+        dateResponse: null
+      };
+      
       ContactMongo.findByIdAndUpdate.mockResolvedValue(updatedContact);
-      ContactMongo.aggregate = jest.fn().mockResolvedValue([updatedContact]);
-
+      
       const data = { subject: "Updated Test" };
       const result = await contactService.updateContact(1, data);
-
+  
       expect(ContactSQL.findByPk).toHaveBeenCalledWith(1);
       expect(mockContactSQL.update).toHaveBeenCalled();
-      expect(ContactMongo.findByIdAndUpdate).toHaveBeenCalled();
+      expect(ContactMongo.findByIdAndUpdate).toHaveBeenCalledWith(1, { $set: updatedContact }, { new: true });
       expect(result).toEqual(updatedContact);
     });
-
+  
     it("should return null if contact not found", async () => {
       ContactSQL.findByPk.mockResolvedValue(null);
-
-      const result = await contactService.updateContact(1, { subject: "Updated Test" });
+  
+      const result = await contactService.updateContact(1, { subject: "Test" });
       expect(result).toBeNull();
     });
   });
+  
 
   describe("deleteContact", () => {
     it("should delete the contact if found", async () => {
