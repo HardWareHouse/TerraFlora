@@ -36,9 +36,9 @@ const userSchema = new mongoose.Schema(
             default: "ROLE_USER",
             validate: {
                 validator: (role) => {
-                    return role === "ROLE_USER" || role === "ROLE_STORE_KEEPER";
+                    return role === "ROLE_USER" || role === "ROLE_STORE_KEEPER" || role === "ROLE_COMPTABLE";
                 },
-                message: "Role must be ROLE_USER or ROLE_STORE_KEEPER",
+                message: "Role must be ROLE_USER, ROLE_STORE_KEEPER or ROLE_COMPTABLE",
             },
             required: true,
         },
