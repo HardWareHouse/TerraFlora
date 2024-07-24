@@ -131,13 +131,13 @@ const validateTelephone = (event) => {
 
 const handleSubmit = async () => {
   if (email.value !== email_cfg.value) {
-      error.value = 'Emails do not match.'
+      error.value = 'les emails ne correspondent pas.'
       success.value = ''
       return
   }
 
   if (password.value !== password_cfg.value) {
-      error.value = 'Passwords do not match.'
+      error.value = 'Les mots de passe ne correspondent pas.'
       success.value = ''
       return
   }
@@ -163,11 +163,11 @@ const handleSubmit = async () => {
           wantsMailChangingPrice: wantsMailChangingPrice.value,
           wantsMailNewsletter: wantsMailNewsletter.value
       })
-      success.value = response.data.msg || 'Registration successful!'
+      success.value = response.data.msg || 'Inscription réussie. Vous pouvez maintenant vous connecter.'
       error.value = ''
       router.push({ path: '/login' });
   } catch (err) {
-      error.value = err.response?.data?.msg || 'An error occurred.'
+      error.value = err.response?.data?.msg || 'Une erreur est survenue.'
       success.value = ''
   }
 }
