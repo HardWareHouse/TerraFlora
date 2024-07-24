@@ -120,6 +120,7 @@ export default {
         false: 'Non',
         ROLE_USER: 'Utilisateur',
         ROLE_STORE_KEEPER: 'Gestionnaire de Stock',
+        ROLE_COMPTABLE: 'Comptable',
       },
       currentPage: 1,
       itemsPerPage: 5,

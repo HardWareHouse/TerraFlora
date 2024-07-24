@@ -94,7 +94,7 @@ export const updateUser = async (req, res) => {
         return res.status(403).json({ error: "Unauthorized role update" });
       }
 
-      if (!["ROLE_USER", "ROLE_STORE_KEEPER"].includes(role)) {
+      if (!["ROLE_USER", "ROLE_STORE_KEEPER", "ROLE_COMPTABLE"].includes(role)) {
         return res.status(403).json({ error: "Invalid role" });
       }
 

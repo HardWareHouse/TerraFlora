@@ -43,7 +43,7 @@ const updateUserByAdminSchema = z.object({
       .email({ message: "Adresse email invalide." }),
     telephone: z.string()
       .regex(/^\+?[0-9\s-]{7,15}$/, { message: "Numéro de téléphone invalide." }),
-    role: z.enum(['ROLE_USER', 'ROLE_STORE_KEEPER'], { message: "Rôle invalide." })
+    role: z.enum(['ROLE_USER', 'ROLE_STORE_KEEPER', 'ROLE_COMPTABLE'], { message: "Rôle invalide." })
   });
 
 export const useUser = () => {
