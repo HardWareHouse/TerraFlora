@@ -1,8 +1,12 @@
 <script setup>
-import { ref, computed, defineAsyncComponent } from 'vue';
-import { useRouter } from 'vue-router'; 
+import { ref, computed, defineAsyncComponent, onMounted } from 'vue';
+import { RouterLink, useRouter } from 'vue-router'; 
 import { useAuthStore } from '../../pinia/auth.js';
 import { connect } from 'echarts';
+
+onMounted(() => {
+  console.log(authStore.role);
+});
 
 const authStore = useAuthStore();
 const router = useRouter();
@@ -59,6 +63,8 @@ const logout = async () => {
       <div class="w-full md:w-1/4 mb-4 md:mb-0">
         <div class="bg-white shadow-md rounded-lg">
           <div class="myaccount-tab-menu">
+            <RouterLink to="/manage-products" v-if=" authStore.role === 'ROLE_STORE_KEEPER' " class="py-2 px-4 flex items-center black active:bg-red-600 hover:bg-red-600 "><i class="bi bi-clipboard-data"></i>&nbsp; Gestion des produits</RouterLink>
+            <RouterLink to="/comptable" v-if=" authStore.role === 'ROLE_COMPTABLE' " class="py-2 px-4 flex items-center black active:bg-red-600 hover:bg-red-600 "><i class="bi bi-currency-euro"></i>&nbsp; Comptabilité</RouterLink>
             <template v-for="tab in tabs" :key="tab.id">
               <a
                 v-if="tab.id !== 'logout'"
@@ -101,5 +107,8 @@ const logout = async () => {
 }
 .myaccount-tab-menu a:hover {
   color: white !important;
+}
+.black{
+  color: black !important;
 }
 </style>
