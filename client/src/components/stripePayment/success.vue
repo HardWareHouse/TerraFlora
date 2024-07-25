@@ -155,29 +155,26 @@ export default {
           shippingDetails.value = session.shipping_details;
 
           // Extract and set invoice URL
-          if (session.invoice) {
-            const response = await instance.get(
-              import.meta.env.VITE_API_URL + `stripe/invoice/${session.invoice}`
-            );
-            invoiceUrl.value = response.data.hosted_invoice_url;
-          }
-
+          const responseInvoice = await instance.get(
+            import.meta.env.VITE_API_URL + `stripe/invoice/${session.invoice}`
+          );
+          invoiceUrl.value = responseInvoice.data.hosted_invoice_url;
+          
           if (sessionResponse) {
             await cartStore.subtractStock();
             await cartStore.clearCart();
           }
 
           const authStore = useAuthStore();
-          const response = await instance.post("/orders", {
+          const responseCreateOrder = await instance.post("/orders", {
             userId: authStore.id,
             total: cartTotal.value,
             productArray: productArray,
             invoiceUrl: invoiceUrl.value,
           });
 
-          console.log(response.status);
 
-          if (response.status === 200) {
+          if (responseCreateOrder.status === 200) {
             console.log("Order created successfully");
           }
         } catch (error) {

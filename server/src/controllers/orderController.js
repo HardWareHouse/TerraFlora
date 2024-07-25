@@ -43,9 +43,6 @@ export const getAllOrders = async (req, res) => {
       if (!orders) {
         return res.status(404).json({ error: "Orders not found" });
       }
-      if(orders.user._id !== user.id) {
-        return res.status(403).json({ error: "Unauthorized" });
-      }
       
       return res.status(200).json(orders);
     }

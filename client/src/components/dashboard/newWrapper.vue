@@ -1,12 +1,8 @@
 <script setup>
-import { ref, computed, defineAsyncComponent, onMounted } from 'vue';
+import { ref, computed, defineAsyncComponent } from 'vue';
 import { RouterLink, useRouter } from 'vue-router'; 
 import { useAuthStore } from '../../pinia/auth.js';
 import { connect } from 'echarts';
-
-onMounted(() => {
-  console.log(authStore.role);
-});
 
 const authStore = useAuthStore();
 const router = useRouter();
