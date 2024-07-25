@@ -128,8 +128,8 @@
 
 <script>
 import { ref, onMounted } from "vue";
-import axios from "axios";
-import ConfirmationModal from "./confirmationModal.vue"; // Import your modal component
+import ConfirmationModal from "./confirmationModal.vue";
+import instance from "../../axios.js";
 export default {
   name: "AllPayments",
   components: {
@@ -143,7 +143,7 @@ export default {
     const hasNextPage = ref(false);
     const hasPrevPage = ref(false);
     const currentPage = ref(1);
-    const selectedTransactionId = ref(null); // Track selected transaction for refund
+    const selectedTransactionId = ref(null);
 
     const formatTimestamp = (timestamp) => {
       const date = new Date(timestamp * 1000);
@@ -152,8 +152,9 @@ export default {
 
     const fetchBalanceTransactions = async () => {
       try {
-        const response = await axios.get(
-          import.meta.env.VITE_API_URL + `stripe/transactions?limit=${limit.value}&starting_after=${startingAfter.value || ""}&ending_before=${endingBefore.value || ""}`
+        const response = await instance.get(
+          import.meta.env.VITE_API_URL +
+            `stripe/transactions?limit=${limit.value}&starting_after=${startingAfter.value || ""}&ending_before=${endingBefore.value || ""}`
         );
         balanceTransactions.value = response.data.data;
         hasNextPage.value = response.data.has_more;
@@ -184,7 +185,7 @@ export default {
 
     const issueRefund = async (transactionId) => {
       try {
-        const refundResponse = await axios.post(
+        const refundResponse = await instance.post(
           import.meta.env.VITE_API_URL + "stripe/refund",
           { transactionId }
         );
@@ -201,7 +202,9 @@ export default {
 
     const fetchProducts = async () => {
       try {
-        const response = await axios.get(import.meta.env.VITE_API_URL + "product/");
+        const response = await instance.get(
+          import.meta.env.VITE_API_URL + "product/"
+        );
         products.value = response.data;
         products.value.forEach((product) => {
           selectedProducts.value[product.priceId] = 0;
@@ -217,12 +220,11 @@ export default {
         .map(([price, quantity]) => ({ price, quantity }));
 
       try {
-        const response = await axios.post(
+        const response = await instance.post(
           import.meta.env.VITE_API_URL + "stripe/payment-link",
           { lineItems }
         );
         paymentLink.value = response.data.url;
-        console.log(paymentLink.value);
       } catch (error) {
         console.error("Error creating payment link:", error);
       }

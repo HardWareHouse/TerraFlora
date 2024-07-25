@@ -92,8 +92,8 @@
 <script>
 import { useRoute } from "vue-router";
 import { ref, onMounted } from "vue";
-import axios from "axios";
 import instance from "../../axios.js";
+import axios from "axios";
 import { useAuthStore } from "../../pinia/auth.js";
 import { useCartStore } from "../../pinia/cart.js";
 
@@ -114,13 +114,13 @@ export default {
       if (sessionId) {
         try {
           // Fetch session details
-          const sessionResponse = await axios.get(
-           import.meta.env.VITE_API_URL + `stripe/session/${sessionId}`
+          const sessionResponse = await instance.get(
+            import.meta.env.VITE_API_URL + `stripe/session/${sessionId}`
           );
           const session = sessionResponse.data;
 
           // Fetch line items associated with the session
-          const lineItemsResponse = await axios.get(
+          const lineItemsResponse = await instance.get(
             import.meta.env.VITE_API_URL + `stripe/session/${sessionId}/items`
           );
           const lineItems = lineItemsResponse.data;
@@ -138,7 +138,13 @@ export default {
               id: cartItems.value[i].id,
               nom: cartItems.value[i].name,
               quantite: cartItems.value[i].quantity,
-              prix: ((cartItems.value[i].amount_total / 100) / cartItems.value[i].quantity).toFixed(2).toString(),
+              prix: (
+                cartItems.value[i].amount_total /
+                100 /
+                cartItems.value[i].quantity
+              )
+                .toFixed(2)
+                .toString(),
             });
           }
 
@@ -150,20 +156,20 @@ export default {
 
           // Extract and set invoice URL
           if (session.invoice) {
-            const response = await axios.get(
+            const response = await instance.get(
               import.meta.env.VITE_API_URL + `stripe/invoice/${session.invoice}`
             );
             invoiceUrl.value = response.data.hosted_invoice_url;
           }
 
-          if(sessionResponse) {
+          if (sessionResponse) {
             await cartStore.subtractStock();
             await cartStore.clearCart();
           }
-          
+
           const authStore = useAuthStore();
           const response = await instance.post("/orders", {
-            userId: authStore.id, 
+            userId: authStore.id,
             total: cartTotal.value,
             productArray: productArray,
             invoiceUrl: invoiceUrl.value,
@@ -174,7 +180,6 @@ export default {
           if (response.status === 200) {
             console.log("Order created successfully");
           }
-
         } catch (error) {
           console.error("Error fetching session details:", error);
         }
