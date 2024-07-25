@@ -5,7 +5,6 @@ import Admin from "./pages/adminDashboardPage.vue";
 import Comptable from "./pages/comptablePage.vue";
 import Home from "./pages/homePage.vue";
 import Shop from "./pages/shopPage.vue";
-import Wishlist from "./pages/wishlistPage.vue";
 import Dashboard from "./pages/dashboardPage.vue";
 import Basket from "./pages/basketPage.vue";
 import Login from "./pages/login.vue";
@@ -56,17 +55,13 @@ const routes = [
     path: "/orders/:id",
     name: "OrderDetail",
     component: OrderDetail,
+    meta: { requiresAuth: true, roles: ["ROLE_USER", "ROLE_STORE_KEEPER", "ROLE_COMPTABLE"] },
   },
   {
     path: "/manage-products",
     name: "ManageProducts",
     component: ManageProducts,
     meta: { requiresAuth: true, roles: ["ROLE_ADMIN", "ROLE_STORE_KEEPER"] },
-  },
-  {
-    path: "/wishlist",
-    name: "Wishlist",
-    component: Wishlist,
   },
   {
     path: "/dashboard",
@@ -78,6 +73,7 @@ const routes = [
     path: "/basket",
     name: "Basket",
     component: Basket,
+    meta: { requiresAuth: true },
   },
   {
     path: "/login",
@@ -100,6 +96,7 @@ const routes = [
     component: notFound,
   },
   {
+    // Interface non reliée au back
     path: "/checkout",
     name: "Checkout",
     component: Checkout,
@@ -120,6 +117,7 @@ const routes = [
     component: Politique,
   },
   {
+    // Interface non reliée au back
     path: "/contact",
     name: "Contact",
     component: Contact,
@@ -128,17 +126,19 @@ const routes = [
     path: "/stripe",
     name: "Stripe",
     component: AllPayments,
-    meta: { requiresAuth: true, roles: ["ROLE_ADMIN"] },
+    meta: { requiresAuth: true, roles: ["ROLE_ADMIN", "ROLE_COMPTABLE"] },
   },
   {
     path: "/success",
     name: "Success",
     component: success,
+    meta: { requiresAuth: true, roles: ["ROLE_USER", "ROLE_STORE_KEEPER", "ROLE_COMPTABLE"] },
   },
   {
     path: "/cancel",
     name: "Cancel",
     component: Cancel,
+    meta: { requiresAuth: true, roles: ["ROLE_USER", "ROLE_STORE_KEEPER", "ROLE_COMPTABLE"] },
   },
 ];
 
