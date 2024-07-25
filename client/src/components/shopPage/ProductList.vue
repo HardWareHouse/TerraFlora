@@ -101,6 +101,7 @@
 import { ref, computed, watch } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
 import { useCartStore } from '../../pinia/cart.js';
+import { useAuthStore } from '../../pinia/auth.js';
 import { useToast } from 'vue-toastification';
 import Pagination from './Pagination.vue';
 import axios from 'axios';
@@ -111,12 +112,13 @@ const props = defineProps({
 
 const sortBy = ref('relevance');
 const currentPage = ref(1);
-const itemsPerPage = ref(5);
+const itemsPerPage = ref(9);
 const viewMode = ref('grid');
 const products = ref([]);
 const route = useRoute();
 const router = useRouter();
 const cartStore = useCartStore();
+const authStore = useAuthStore();
 const toast = useToast();
 
 const fetchProducts = async () => {
@@ -173,16 +175,20 @@ function goToProductDetail(product) {
 }
 
 function addToCart(product) {
-  const cartItem = cartStore.items.find(item => item.id === product.id);
-  const totalQuantity = cartItem ? cartItem.Panier_Produits.quantity + 1 : 1;
+  if (authStore.isLoggedIn) {
+    const cartItem = cartStore.items.find(item => item.id === product.id);
+    const totalQuantity = cartItem ? cartItem.Panier_Produits.quantity + 1 : 1;
 
-  if (totalQuantity <= product.stock) {
-    cartStore.addToCart(product, 1);
-    toast.success(`${product.nom} a été ajouté au panier.`);
-  } else {
-    toast.error('La quantité totale demandée dépasse le stock disponible');
-  }
+    if (totalQuantity <= product.stock) {
+      cartStore.addToCart(product, 1);
+      toast.success(`${product.nom} a été ajouté au panier.`);
+    } else {
+      toast.error('La quantité totale demandée dépasse le stock disponible');
+    }
+}else {
+  toast.error('Vous devez être connecté pour ajouter des produits au panier');
 }
+};
 </script>
 
 <style scoped>
