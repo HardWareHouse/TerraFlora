@@ -51,31 +51,59 @@ Lien : https://github.com/LlamasScripters/TerraFlora
 
 ### Moussa :
 
-- Dashboard User :
-- Interface
-- CRUD de TOUTE les ressources (SQL et Mongo)
-- Les Middlewares Front et Back
-- Services
-- Helpers
-- Architecture controllers - services - helpers
-- Gestion des rôles Front et Back
-- Dénormalisation SQL -> Mongo
-- Migration Mongo
-- Paramétrage des requêtes avec Axios
-- Gestion du Token
-- Formulaire de contact
-- Gestion des préférences
+ Coté Front:
+ - Totalité du front du Dashboard User :
+ - TOUTE LA PAGE, CES COMPOSANT (sauf la barre de recherche Commande et Facture) et leurs gestion cela inclus :
+  - Menu de navigation, les tableaux, formulaires...etc
 
-- Dashboard Admin :
-- Gestion des ressources
-- Interface Statistiques
-- Gestion du formulaire de contact
-- Suppression User
-- Anonymisation User
+- Totalité du front du Dashboard Admin :
+ - TOUTE LA PAGE, CES COMPOSANTS et leurs gestion :
+  - Menu de navigation avec rédirection vers les deux pages (ces pages ne sont pas faite par moi), les tableaux, formulaires, Statistiques...etc
 
-- Création de Commande après achat Stripe
-- Création auto de Facture via la commande
-- Téléchargement Facture depuis dashboard
+ - Bouton de supression ouvrant une modal de confirmation réutilisable (deleteButton) 
+ - Modal d'édition des ressouces s'adaptant dynamiquement au champs et au requete à soumettre (editResourceModal)
+ - Grosse partie de la gestion du store pinia auth
+ - Création et paramétrage du l'objet axios instance avec inclusion dynamique du token si présent et middleware de gestion des erreurs retourné par l'API
+ - Gestion des accèss dans le router 
+ - Tout les composables (sauf useForm)
+ - Gestion et sécurisation des rôles Front
+ - Création du composant utilisé dans la page Comptable
+
+ Côté back:
+
+ Totalité du back du Dashboard User :
+ - Tableau de bord 
+ - Historique de commande avec rediection vers la page détails commande 
+ - Historique Facture avec possibilité de télechargement de la Facture 
+ - CRUD Adresse du User
+ - Formulaire d'édition du User
+ - Formaulaire de gestion des préferences mails 
+ - Formualaire de Contact
+
+ Totalité du back du Dashboard Admin :
+ - Gestion des ressources (Suppression et/ou edition) avec modal d'édition et bouton de supression avec modal de confirmation
+ - Statistique (donné en dur)
+ - Gestion des contact avec modal pour soumettre une réponse
+
+ - CRUD de TOUTE les ressouces (sauf Produit et Stripe) côté SQL et Mongo
+ - Mise en place de la séparation et création des controllers (80%) - services (90%) - helpers (100%)
+ - Sécurisation de 85 % des routes
+ - Création de tout les middlewares (sauf uploadMiddleware)
+ - Gestion et sécurisation des rôles Back
+ - Création de tout les models Mongo (Sauf Produit) 
+ - Création de tout les fichiers d'insertionMongo (Sauf Produit)
+ - 100% de la Dénormalisation automatique SQL -> Mongo au lancement du serveur avec mise à jour et/ou création des données 
+ - Création de la commande qui permet de lancer la dénormalisation SQL -> Mongo runDataDenormalization
+ - 100% de l'initialisation dynamique des models dans la base au lancement du serveur (Migration Mongo)
+ - Gestion du Token
+ - Formulaire de contact et réponse contact
+ - Gestion des préferences 
+ - Ajout de Cors et Helmet (Avec Aria)
+
+Autres(Front et Back):
+ - Création de commande après achat Stripe
+ - Création auto de Facture via la commande
+ - Supression de User avec Anonymisation auto
 
 ### Jay :
 
