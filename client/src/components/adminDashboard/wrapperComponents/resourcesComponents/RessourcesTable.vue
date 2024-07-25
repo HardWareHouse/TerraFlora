@@ -114,12 +114,14 @@ export default {
         isDeliveryAddress: 'Adresse de Livraison',
         isBillingAddress: 'Adresse de Facturation',
         description: 'Description',
+        isResponded: 'Repondu'
       },
       valueTransformations: {
         true: 'Oui',
         false: 'Non',
         ROLE_USER: 'Utilisateur',
         ROLE_STORE_KEEPER: 'Gestionnaire de Stock',
+        ROLE_COMPTABLE: 'Comptable',
       },
       currentPage: 1,
       itemsPerPage: 5,

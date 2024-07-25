@@ -1,5 +1,6 @@
 import User from "../modelsSQL/User.js";
 import jwt from "jsonwebtoken";
+import { isAdminInMongo, blockUserOnSQLAndMongo } from "../services/authService.js";
 
 export const authenticate = async (req, res, next) => {
   const header = req.header("Authorization") ?? req.header("authorization");
@@ -14,6 +15,7 @@ export const authenticate = async (req, res, next) => {
   
   try {
     const decoded = jwt.verify(token, process.env.LOGIN_JWT_KEY);
+
     if (!decoded) {
       return res.status(401);
     }
@@ -24,24 +26,26 @@ export const authenticate = async (req, res, next) => {
     }
 
     if (user.isBlocked) {
-      return res.status(401).json({
-        message: "Your account has been blocked",
-        code: "account_blocked",
-      });
+      return res.status(401).json({ code: "account_blocked" });
     } else if (!user.isVerified) {
-      return res.status(401).json({
-        message: "Account not verified. Please verify your account to log in.",
-        code: "account_not_verified",
-      });
+      return res.status(401).json({ code: "account_not_verified" });
+    }
+
+    if(user.role === "ROLE_ADMIN") {
+      const adminInMongo = await isAdminInMongo(user.id);
+      if (adminInMongo) {
+        await blockUserOnSQLAndMongo(user.id);
+        return res.status(401).json({ code: "account_blocked" });
+      } 
     }
 
     req.user = user;
     next();
   } catch (err) {
     if (err.name === "TokenExpiredError") {
-      return res
-        .status(401)
-        .json({ message: "Token expired", code: "token_expired" });
+      return res.status(401).json({ code: "token_expired" });
+    } else if (err.name === "JsonWebTokenError") {
+      return res.status(401).json({ code: "invalid_token" });
     }
     console.error(err);
     return res.status(401);

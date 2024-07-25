@@ -13,7 +13,7 @@ const router = Router();
 router.get('/', authenticate, getAllInvoices);
 router.get('/:id', authenticate, getInvoice);
 router.post('/', authenticate, createInvoice);
-router.put('/:id', authenticate, updateInvoice);
+router.put('/:id', authenticate, authorizeAdmin, updateInvoice);
 router.delete('/:id', authenticate, authorizeAdmin, deleteInvoice);
 
 export default router;

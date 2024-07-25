@@ -13,7 +13,7 @@ const router = Router();
 router.get('/', authenticate, getAllOrders);
 router.get('/:id', authenticate, getOrder);
 router.post('/', authenticate, createOrder);
-router.put('/:id', authenticate, updateOrder);
+router.put('/:id', authenticate, authorizeAdmin, updateOrder);
 router.delete('/:id', authenticate, authorizeAdmin, deleteOrder);
 
 export default router;

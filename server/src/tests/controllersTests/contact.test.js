@@ -1,10 +1,9 @@
-// contactController.test.js
-import { getContact } from "../controllers/contactController";
-import * as contactService from "../services/contactService";
-import { isValidUUID } from "../helpers/validatorHelper";
+import { getContact } from "../../controllers/contactController.js";
+import * as contactService from "../../services/contactService.js";
+import { isValidUUID } from "../../helpers/validatorHelper.js";
 
-jest.mock("../services/contactService");
-jest.mock("../helpers/validatorHelper");
+jest.mock("../../services/contactService.js");
+jest.mock("../../helpers/validatorHelper.js");
 
 describe("getContact", () => {
   let req, res, next;
@@ -43,7 +42,7 @@ describe("getContact", () => {
 
   it("should return 403 if user is not authorized", async () => {
     isValidUUID.mockReturnValue(true);
-    contactService.getContactById.mockResolvedValue({ userId: "another-user-id" });
+    contactService.getContactById.mockResolvedValue({ user: { _id: "another-user-id" } });
 
     await getContact(req, res, next);
 
@@ -53,7 +52,7 @@ describe("getContact", () => {
 
   it("should return 200 with contact data if contact is found and user is authorized", async () => {
     isValidUUID.mockReturnValue(true);
-    const contact = { id: "valid-uuid", userId: "user-id" };
+    const contact = { id: "valid-uuid", user: { _id: "user-id" } };
     contactService.getContactById.mockResolvedValue(contact);
 
     await getContact(req, res, next);

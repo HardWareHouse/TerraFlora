@@ -1,8 +1,8 @@
-import { isDailyLimitContactExceeded, isMonthlyLimitContactExceeded } from "../middlewares/contactMiddleware";
-import Contact from "../modelsSQL/Contact";
+import { isDailyLimitContactExceeded, isMonthlyLimitContactExceeded } from "../../middlewares/contactMiddleware";
+import Contact from "../../modelsSQL/Contact";
 import { Op } from "sequelize";
 
-jest.mock("../modelsSQL/Contact");
+jest.mock("../../modelsSQL/Contact");
 
 describe("isDailyLimitContactExceeded middleware", () => {
   let req, res, next;
