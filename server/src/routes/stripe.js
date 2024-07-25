@@ -10,17 +10,18 @@ import {
   getInvoice,
 } from "../controllers/stripeController.js";
 import { createProduct } from "../controllers/stripeController.js";
+import { authenticate, authorizeAdmin } from '../middlewares/authMiddleware.js';
 
 const router = Router();
 
-router.post("/create-checkout-session", createSession);
-router.post("/create-product", createProduct);
-router.post("/update-price", updatePrice);
-router.get("/transactions", getBalanceTransactions);
-router.post("/refund", issueRefund);
-router.post("/payment-link", createPaymentLink);
-router.get("/session/:sessionId", getSession);
-router.get("/session/:sessionId/items", getSessionLineItems);
-router.get("/invoice/:invoiceId", getInvoice);
+router.post("/create-checkout-session", authenticate, createSession);
+router.post("/create-product", authenticate, createProduct);
+router.post("/update-price", authenticate, updatePrice);
+router.get("/transactions", authenticate, getBalanceTransactions);
+router.post("/refund", authenticate, issueRefund);
+router.post("/payment-link", authenticate, authorizeAdmin, createPaymentLink);
+router.get("/session/:sessionId", authenticate, getSession);
+router.get("/session/:sessionId/items", authenticate, getSessionLineItems);
+router.get("/invoice/:invoiceId", authenticate, getInvoice);
 
 export default router;
