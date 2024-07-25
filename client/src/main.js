@@ -13,7 +13,7 @@ const pinia = createPinia();
 const app = createApp(App);
 
 const toastOptions = {
-  position: "top-right",
+  position: "bottom-right",
   timeout: 5000,
   closeOnClick: true,
   pauseOnFocusLoss: true,
