@@ -60,6 +60,22 @@ Lien : https://github.com/LlamasScripters/TerraFlora
 
 ### Aria :
 
+- Toute la partie Auth FRONT et BACK
+- Responsive du site 
+- Envoi d'alerte par mail lors de l'ajout d'un nouveau produit dans une catégorie, d'un restock de produit, d'un changement de prix, inscription à la newsletter et personnalisation des alertes selon les préférences de l'utilisateur
+- Réservation des produits dans le panier pour une durée de 15 minutes avec un cron
+- Mise en production(Via digital ocean, gestion de lien via OVH) du site
+- Configuration de BREVO et des template pour l'envoie de mail
+- Intégration API LAPOSTE
+- sécurisation du VPS
+- Test Unitaires
+- Création page COMPTABLE
+- Création du composant DATABLE
+- Initialisation du PROJET (docker, MongoDB, Sequalize)
+- Création de la BDD 
+- CRUD et sécurisation PRODUIT
+- Creation de la migration des tables SQL (sequalize)
+
 ### Moussa :
 
  Coté Front:
