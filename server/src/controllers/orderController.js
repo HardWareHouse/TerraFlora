@@ -43,6 +43,7 @@ export const getAllOrders = async (req, res) => {
       if (!orders) {
         return res.status(404).json({ error: "Orders not found" });
       }
+      
       return res.status(200).json(orders);
     }
 

@@ -2,7 +2,7 @@
   <div class="w-1/2 mx-auto p-6">
     <div class="bg-white shadow-lg rounded-lg p-8">
       <h1 class="text-3xl font-extrabold mb-6 text-gray-900">
-        Paiement Réussi
+        Paiement Réussi,<br> Veuillez ne pas fermer ou recharger cette page tant que la facture n'est pas visible !
       </h1>
       <p class="mb-6 text-lg text-gray-700">
         Merci pour votre confiance chez TerraFlora !
@@ -91,8 +91,7 @@
 
 <script>
 import { useRoute } from "vue-router";
-import { ref, onMounted } from "vue";
-import axios from "axios";
+import { ref, onMounted, onUnmounted } from "vue";
 import instance from "../../axios.js";
 import { useAuthStore } from "../../pinia/auth.js";
 import { useCartStore } from "../../pinia/cart.js";
@@ -107,77 +106,93 @@ export default {
     const shippingDetails = ref(null);
     const invoiceUrl = ref(null);
     const cartStore = useCartStore();
+    let pollingInterval = null;
 
-    onMounted(async () => {
-      const sessionId = route.query.session_id;
+    const fetchSessionDetails = async (sessionId) => {
+      try {
+        const sessionResponse = await instance.get(
+          import.meta.env.VITE_API_URL + `stripe/session/${sessionId}`
+        );
+        const session = sessionResponse.data;
 
-      if (sessionId) {
-        try {
-          // Fetch session details
-          const sessionResponse = await axios.get(
-           import.meta.env.VITE_API_URL + `stripe/session/${sessionId}`
+        const lineItemsResponse = await instance.get(
+          import.meta.env.VITE_API_URL + `stripe/session/${sessionId}/items`
+        );
+        const lineItems = lineItemsResponse.data;
+        cartItems.value = lineItems.map((item) => ({
+          id: item.id,
+          name: item.description,
+          quantity: item.quantity,
+          amount_total: item.amount_total,
+        }));
+        cartTotal.value = (session.amount_total / 100).toFixed(2);
+
+        const productArray = [];
+        for (let i = 0; i < cartItems.value.length; i++) {
+          productArray.push({
+            id: cartItems.value[i].id,
+            nom: cartItems.value[i].name,
+            quantite: cartItems.value[i].quantity,
+            prix: (
+              cartItems.value[i].amount_total /
+              100 /
+              cartItems.value[i].quantity
+            )
+              .toFixed(2)
+              .toString(),
+          });
+        }
+
+        customerDetails.value = session.customer_details;
+        shippingDetails.value = session.shipping_details;
+
+        const checkInvoice = async () => {
+          const sessionCheckResponse = await instance.get(
+            import.meta.env.VITE_API_URL + `stripe/session/${sessionId}`
           );
-          const session = sessionResponse.data;
+          const updatedSession = sessionCheckResponse.data;
+          if (updatedSession.invoice) {
+            clearInterval(pollingInterval);
 
-          // Fetch line items associated with the session
-          const lineItemsResponse = await axios.get(
-            import.meta.env.VITE_API_URL + `stripe/session/${sessionId}/items`
-          );
-          const lineItems = lineItemsResponse.data;
-          cartItems.value = lineItems.map((item) => ({
-            id: item.id,
-            name: item.description,
-            quantity: item.quantity,
-            amount_total: item.amount_total,
-          }));
-          cartTotal.value = (session.amount_total / 100).toFixed(2);
-
-          const productArray = [];
-          for (let i = 0; i < cartItems.value.length; i++) {
-            productArray.push({
-              id: cartItems.value[i].id,
-              nom: cartItems.value[i].name,
-              quantite: cartItems.value[i].quantity,
-              prix: ((cartItems.value[i].amount_total / 100) / cartItems.value[i].quantity).toFixed(2).toString(),
-            });
-          }
-
-          // Extract and set customer details
-          customerDetails.value = session.customer_details;
-
-          // Extract and set shipping details
-          shippingDetails.value = session.shipping_details;
-
-          // Extract and set invoice URL
-          if (session.invoice) {
-            const response = await axios.get(
-              import.meta.env.VITE_API_URL + `stripe/invoice/${session.invoice}`
+            const responseGetInvoice = await instance.get(
+              import.meta.env.VITE_API_URL + `stripe/invoice/${updatedSession.invoice}`
             );
-            invoiceUrl.value = response.data.hosted_invoice_url;
-          }
+            invoiceUrl.value = responseGetInvoice.data.hosted_invoice_url;
 
-          if(sessionResponse) {
+            const authStore = useAuthStore();
+            const responseCreateOrder = await instance.post("/orders", {
+              userId: authStore.id,
+              total: cartTotal.value,
+              productArray: productArray,
+              invoiceUrl: invoiceUrl.value,
+            });
+
             await cartStore.subtractStock();
             await cartStore.clearCart();
+
+            if (responseCreateOrder.status === 200) {
+              console.log("Order created successfully");
+            }
           }
-          
-          const authStore = useAuthStore();
-          const response = await instance.post("/orders", {
-            userId: authStore.id, 
-            total: cartTotal.value,
-            productArray: productArray,
-            invoiceUrl: invoiceUrl.value,
-          });
+        };
 
-          console.log(response.status);
+        pollingInterval = setInterval(checkInvoice, 5000);
 
-          if (response.status === 200) {
-            console.log("Order created successfully");
-          }
+      } catch (error) {
+        console.error("Error fetching session details:", error);
+      }
+    };
 
-        } catch (error) {
-          console.error("Error fetching session details:", error);
-        }
+    onMounted(() => {
+      const sessionId = route.query.session_id;
+      if (sessionId) {
+        fetchSessionDetails(sessionId);
+      }
+    });
+
+    onUnmounted(() => {
+      if (pollingInterval) {
+        clearInterval(pollingInterval);
       }
     });
 

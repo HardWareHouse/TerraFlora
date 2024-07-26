@@ -30,24 +30,52 @@ Lien : https://github.com/LlamasScripters/TerraFlora
 
 ### Sami :
 
+- Ajout de tables BDD pour les paiements, adresses, et méthodes de paiement
+- Associations et modifications des tables de la base de données
 - Recherche de produits :
 - Recherche utilisateur par nom, description de produit et via URL avec paramètres GET
 - Recherche facettée par nom, catégorie, marque, couleur, taille avec prix minimum et maximum, avec facettes incluses dans l'URL pour partage de recherche
-
-- Gestion d'alerte par mail :
+- Mise en place du front de la boutique avec filtres, styles, vue grille et liste
+- Pagination, breadcrumbs, et tri des produits
+- Affichage des détails du produit avec gestion du panier
+- Ajout des fonctionnalités de panier et de gestion des articles
+- Développement des CRUD pour les produits et catégories
 - Envoi d'alerte par mail lors de l'ajout d'un nouveau produit dans une catégorie, d'un restock de produit, d'un changement de prix, inscription à la newsletter et personnalisation des alertes selon les préférences de l'utilisateur
-
-- Panier avec système de réservation :
 - Réservation des produits dans le panier pour une durée de 15 minutes
-
-- Gestion des stocks :
 - Création d'une page pour les store keepers, avec CRUD des produits, création d'un CRON permettant de vérifier le niveau des stocks qui alertent en cas de stock faible ou rupture de stock
-- Graphique d'évolution des stocks configurable par date de début et de fin
-
+- Graphique d'évolution des stocks configurable avec filtrage par date de début et de fin
+- Import d'images lors de l’ajout de produits
+- Envoi d'alertes par email pour les produits en stock faible ou restockés
 - Historique de commandes et factures :
-- Ajout d'une barre de recherche permettant de rechercher par numéro de commandes/factures
+- Ajout d'une barre de recherche permettant de rechercher par numéro de commandes/factures dans le dashboard utilisateur
+- Correction des erreurs de pagination, ajout multiples de produits, et affichage d'images
+- Validation de la quantité de produits en stock
+- Limitation de l’ajout de produits au panier selon le stock disponible
+- Vidage du panier après un paiement réussi
+- Configuration des en-têtes CORS pour le chargement des images
+- Système de toast pour l’ajout de produits au panier
+- Personnalisation des pages d'erreur et de paiement annulé/refusé
+
+
 
 ### Aria :
+
+- Toute la partie Auth FRONT et BACK
+- Responsive du site 
+- Envoi d'alerte par mail lors de l'ajout d'un nouveau produit dans une catégorie, d'un restock de produit, d'un changement de prix, inscription à la newsletter et personnalisation des alertes selon les préférences de l'utilisateur
+- Réservation des produits dans le panier pour une durée de 15 minutes avec un cron
+- Mise en production(Via digital ocean, gestion de lien via OVH) du site
+- Configuration de BREVO et des template pour l'envoie de mail
+- Intégration API LAPOSTE
+- sécurisation du VPS
+- Test Unitaires
+- Création page COMPTABLE
+- Création du composant DATABLE
+- Initialisation du PROJET (docker, MongoDB, Sequalize)
+- Création de la BDD 
+- CRUD et sécurisation PRODUIT
+- Creation de la migration des tables SQL (sequalize)
+- Creation de CI/CD 
 
 ### Moussa :
 
@@ -59,7 +87,6 @@ Lien : https://github.com/LlamasScripters/TerraFlora
 - Totalité du front du Dashboard Admin :
  - TOUTE LA PAGE, CES COMPOSANTS et leurs gestion :
   - Menu de navigation avec rédirection vers les deux pages (ces pages ne sont pas faite par moi), les tableaux, formulaires, Statistiques...etc
-
  - Bouton de supression ouvrant une modal de confirmation réutilisable (deleteButton) 
  - Modal d'édition des ressouces s'adaptant dynamiquement au champs et au requete à soumettre (editResourceModal)
  - Grosse partie de la gestion du store pinia auth

@@ -6,6 +6,9 @@ const YOUR_DOMAIN = process.env.FRONT_URL;
 export const createSession = async (req, res) => {
   try {
     const { lineItems } = req.body;
+    if (!lineItems) {
+      return res.status(400).json({ error: "Line items are required" });
+    }
 
     const formattedLineItems = lineItems.map((item) => ({
       price: item.price,
@@ -63,18 +66,17 @@ export const createSession = async (req, res) => {
 };
 
 export const createProduct = async (req, res) => {
-  const {
-    nom,
-    description,
-    prix,
-    stock,
-    marque,
-    couleur,
-    taille,
-    isPromotion,
-    pourcentagePromotion,
-    categorieId,
-  } = req.body;
+  const user = req.user;
+  
+  if(user.role !== "ROLE_ADMIN" || user.role !== "ROLE_STORE_KEEPER") {
+    return res.status(403).json({ message: "Unauthorized" });
+  }
+
+  const {nom, description, prix } = req.body;
+  if(!nom || !prix) {
+    return res.status(400).json({ message: "All fields are required" });
+  }
+
   let product = "";
   if (description) {
     product = await stripe.products.create({
@@ -99,7 +101,17 @@ export const createProduct = async (req, res) => {
 };
 
 export const updatePrice = async (req, res) => {
-  const { id, nom, prix, description, priceId } = req.body;
+  const user = req.user;
+  
+  if(user.role !== "ROLE_ADMIN" || user.role !== "ROLE_STORE_KEEPER") {
+    return res.status(403).json({ message: "Unauthorized" });
+  }
+
+  const { nom, prix, description, priceId } = req.body;
+  if(!nom || !prix || !priceId) {
+    return res.status(400).json({ message: "All fields are required" });
+  }
+
   try {
     const products = await stripe.products.search({
       query: `active:'true' AND name:'${nom}'`,
@@ -139,6 +151,12 @@ export const fulfillCheckout = async (sessionId) => {
 };
 
 export const getBalanceTransactions = async (req, res) => {
+  const user = req.user;
+  
+  if(user.role !== "ROLE_ADMIN" || user.role !== "ROLE_STORE_KEEPER") {
+    return res.status(403).json({ message: "Unauthorized" });
+  }
+
   try {
     const { limit = 10, starting_after, ending_before } = req.query;
     const params = {
@@ -160,7 +178,17 @@ export const getBalanceTransactions = async (req, res) => {
 };
 
 export const issueRefund = async (req, res) => {
+  const user = req.user;
+  
+  if(user.role !== "ROLE_ADMIN" || user.role !== "ROLE_STORE_KEEPER") {
+    return res.status(403).json({ message: "Unauthorized" });
+  }
+
   const { transactionId } = req.body;
+  if (!transactionId) {
+    return res.status(400).json({ error: "Transaction ID is required" });
+  }
+  
   try {
     const refund = await stripe.refunds.create({ charge: transactionId });
     res.json(refund);
@@ -170,7 +198,17 @@ export const issueRefund = async (req, res) => {
 };
 
 export const createPaymentLink = async (req, res) => {
+  const user = req.user;
+  
+  if(user.role !== "ROLE_ADMIN") {
+    return res.status(403).json({ message: "Unauthorized" });
+  }
+
   const { lineItems } = req.body;
+  if (!lineItems) {
+    return res.status(400).json({ error: "Line items are required" });
+  }
+
   try {
     const paymentLink = await stripe.paymentLinks.create({
       payment_method_types: ["card"],
@@ -227,6 +265,9 @@ export const createPaymentLink = async (req, res) => {
 
 export const getSession = async (req, res) => {
   const { sessionId } = req.params;
+  if (!sessionId) {
+    return res.status(400).json({ error: "Session ID is required" }); 
+  }
 
   try {
     const session = await stripe.checkout.sessions.retrieve(sessionId);
@@ -239,6 +280,10 @@ export const getSession = async (req, res) => {
 
 export const getSessionLineItems = async (req, res) => {
   const { sessionId } = req.params;
+  if (!sessionId) {
+    return res.status(400).json({ error: "Session ID is required" });
+  }
+
   try {
     const lineItems = await stripe.checkout.sessions.listLineItems(sessionId);
     res.json(lineItems.data);
@@ -249,6 +294,9 @@ export const getSessionLineItems = async (req, res) => {
 
 export const getInvoice = async (req, res) => {
   const { invoiceId } = req.params;
+  if (!invoiceId) {
+    return res.status(400).json({ error: "Invoice ID is required" });
+  }
 
   try {
     const invoice = await stripe.invoices.retrieve(invoiceId);

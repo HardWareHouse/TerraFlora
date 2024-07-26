@@ -36,6 +36,7 @@
 <script setup>
 import { ref, computed } from "vue";
 import { useCartStore } from "../../pinia/cart.js";
+import instance from "../../axios.js";
 
 const cartStore = useCartStore();
 
@@ -50,7 +51,9 @@ const vat = computed(() => {
 });
 
 const total = computed(() => {
-  return (parseFloat(subTotal.value) + 10.99 + parseFloat(vat.value)).toFixed(2);
+  return (parseFloat(subTotal.value) + 10.99 + parseFloat(vat.value)).toFixed(
+    2
+  );
 });
 
 const createCheckoutSession = async () => {
@@ -62,7 +65,7 @@ const createCheckoutSession = async () => {
       quantity: item.Panier_Produits.quantity,
     }));
 
-    const response = await axios.post(
+    const response = await instance.post(
       import.meta.env.VITE_API_URL + "stripe/create-checkout-session",
       {
         lineItems,
@@ -82,7 +85,7 @@ const createCheckoutSession = async () => {
 </script>
 
 <script>
-import axios from "axios";
+import instance from "../../axios.js";
 import { loadStripe } from "@stripe/stripe-js";
 
 export default {
@@ -96,7 +99,7 @@ export default {
           price: item.priceId,
           quantity: item.Panier_Produits.quantity,
         }));
-        const response = await axios.post(
+        const response = await instance.post(
           import.meta.env.VITE_API_URL + "stripe/create-checkout-session",
           { lineItems }
         );

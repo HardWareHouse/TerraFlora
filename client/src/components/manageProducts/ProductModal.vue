@@ -21,7 +21,9 @@
             <span class="text-red-500 text-sm">{{ errors.nom }}</span>
           </div>
           <div class="mb-4 md:col-span-2">
-            <label for="description" class="block text-sm font-medium">Description</label>
+            <label for="description" class="block text-sm font-medium"
+              >Description</label
+            >
             <textarea
               id="description"
               v-model="form.description"
@@ -56,16 +58,25 @@
             <span class="text-red-500 text-sm">{{ errors.stock }}</span>
           </div>
           <div class="mb-4">
-            <label for="stockThreshold" class="block text-sm font-medium">Seuil de Stock</label>
+            <label for="stockThreshold" class="block text-sm font-medium"
+              >Seuil de Stock</label
+            >
             <input
               type="number"
               id="stockThreshold"
               v-model="form.stockThreshold"
-              @input="handleChange('stockThreshold', parseInt($event.target.value, 10))"
+              @input="
+                handleChange(
+                  'stockThreshold',
+                  parseInt($event.target.value, 10)
+                )
+              "
               required
               class="mt-1 p-2 border rounded-md w-full bg-gray-100"
             />
-            <span class="text-red-500 text-sm">{{ errors.stockThreshold }}</span>
+            <span class="text-red-500 text-sm">{{
+              errors.stockThreshold
+            }}</span>
           </div>
           <div class="mb-4">
             <label for="marque" class="block text-sm font-medium">Marque</label>
@@ -86,7 +97,9 @@
             <span class="text-red-500 text-sm">{{ errors.marque }}</span>
           </div>
           <div class="mb-4">
-            <label for="couleur" class="block text-sm font-medium">Couleur</label>
+            <label for="couleur" class="block text-sm font-medium"
+              >Couleur</label
+            >
             <select
               id="couleur"
               v-model="form.couleur"
@@ -121,7 +134,9 @@
             <span class="text-red-500 text-sm">{{ errors.taille }}</span>
           </div>
           <div class="mb-4 flex items-center">
-            <label for="isPromotion" class="block text-sm font-medium mr-2">Promotion</label>
+            <label for="isPromotion" class="block text-sm font-medium mr-2"
+              >Promotion</label
+            >
             <input
               type="checkbox"
               id="isPromotion"
@@ -131,19 +146,30 @@
             />
           </div>
           <div class="mb-4" v-if="form.isPromotion">
-            <label for="pourcentagePromotion" class="block text-sm font-medium">Pourcentage de Promotion</label>
+            <label for="pourcentagePromotion" class="block text-sm font-medium"
+              >Pourcentage de Promotion</label
+            >
             <input
               type="number"
               id="pourcentagePromotion"
               v-model="form.pourcentagePromotion"
-              @input="handleChange('pourcentagePromotion', parseFloat($event.target.value))"
+              @input="
+                handleChange(
+                  'pourcentagePromotion',
+                  parseFloat($event.target.value)
+                )
+              "
               required
               class="mt-1 p-2 border rounded-md w-full bg-gray-100"
             />
-            <span class="text-red-500 text-sm">{{ errors.pourcentagePromotion }}</span>
+            <span class="text-red-500 text-sm">{{
+              errors.pourcentagePromotion
+            }}</span>
           </div>
           <div class="mb-4">
-            <label for="categorieId" class="block text-sm font-medium">Catégorie</label>
+            <label for="categorieId" class="block text-sm font-medium"
+              >Catégorie</label
+            >
             <select
               id="categorieId"
               v-model="form.categorieId"
@@ -152,7 +178,11 @@
               class="mt-1 p-2 border rounded-md w-full bg-gray-100"
             >
               <option value="">Sélectionner une catégorie</option>
-              <option v-for="categorie in categories" :value="categorie.id" :key="categorie.id">
+              <option
+                v-for="categorie in categories"
+                :value="categorie.id"
+                :key="categorie.id"
+              >
                 {{ categorie.nom }}
               </option>
             </select>
@@ -170,56 +200,75 @@
           </div>
         </div>
         <div class="flex justify-end">
-          <button type="button" @click="closeModal" class="bg-gray-500 text-white px-4 py-2 rounded mr-2">
+          <button
+            type="button"
+            @click="closeModal"
+            class="bg-gray-500 text-white px-4 py-2 rounded mr-2"
+          >
             Annuler
           </button>
-          <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded" :disabled="isSubmitting">
+          <button
+            type="submit"
+            class="bg-blue-500 text-white px-4 py-2 rounded"
+            :disabled="isSubmitting"
+          >
             Enregistrer
           </button>
         </div>
-        <div v-if="serverError" class="text-red-500 mt-4">{{ serverError }}</div>
+        <div v-if="serverError" class="text-red-500 mt-4">
+          {{ serverError }}
+        </div>
       </form>
     </div>
   </div>
 </template>
 
 <script setup>
-import { ref, watch, onMounted } from 'vue';
-import axios from 'axios';
-import { z } from 'zod';
-import useForm from '../../composables/useForm.js';
+import { ref, watch, onMounted } from "vue";
+import axios from "axios";
+import instance from "../../axios.js";
+import { z } from "zod";
+import useForm from "../../composables/useForm.js";
 
 const props = defineProps({
   product: Object,
 });
-const emit = defineEmits(['close', 'save']);
+const emit = defineEmits(["close", "save"]);
 
 const initialValues = {
-  nom: '',
-  description: '',
+  nom: "",
+  description: "",
   prix: 0,
   stock: 0,
   stockThreshold: 5,
-  marque: '',
-  couleur: '',
-  taille: '',
+  marque: "",
+  couleur: "",
+  taille: "",
   isPromotion: false,
   pourcentagePromotion: 0,
-  categorieId: '',
+  categorieId: "",
 };
 
 const validationSchema = z.object({
-  nom: z.string().max(50, 'Le nom doit avoir au maximum 50 caractères'),
-  description: z.string().max(250, 'La description doit avoir au maximum 250 caractères'),
-  prix: z.number().min(0, 'Le prix ne peut pas être négatif'),
-  stock: z.number().int().min(0, 'Le stock ne peut pas être négatif'),
-  stockThreshold: z.number().int().min(0, 'Le seuil de stock ne peut pas être négatif'),
-  marque: z.string().nonempty('Veuillez sélectionner une marque'),
-  couleur: z.string().nonempty('Veuillez sélectionner une couleur'),
-  taille: z.string().nonempty('Veuillez sélectionner une taille'),
+  nom: z.string().max(50, "Le nom doit avoir au maximum 50 caractères"),
+  description: z
+    .string()
+    .max(250, "La description doit avoir au maximum 250 caractères"),
+  prix: z.number().min(0, "Le prix ne peut pas être négatif"),
+  stock: z.number().int().min(0, "Le stock ne peut pas être négatif"),
+  stockThreshold: z
+    .number()
+    .int()
+    .min(0, "Le seuil de stock ne peut pas être négatif"),
+  marque: z.string().nonempty("Veuillez sélectionner une marque"),
+  couleur: z.string().nonempty("Veuillez sélectionner une couleur"),
+  taille: z.string().nonempty("Veuillez sélectionner une taille"),
   isPromotion: z.boolean(),
-  pourcentagePromotion: z.number().min(0, 'Le pourcentage de promotion ne peut pas être négatif').optional(),
-  categorieId: z.string().nonempty('Veuillez sélectionner une catégorie'),
+  pourcentagePromotion: z
+    .number()
+    .min(0, "Le pourcentage de promotion ne peut pas être négatif")
+    .optional(),
+  categorieId: z.string().nonempty("Veuillez sélectionner une catégorie"),
 });
 
 const onSubmit = async (values) => {
@@ -228,39 +277,49 @@ const onSubmit = async (values) => {
     formData.append(key, values[key]);
   });
   images.value.forEach((image) => {
-    formData.append('images', image);
+    formData.append("images", image);
   });
 
   if (props.product) {
-    var newPriceId = '';
+    var newPriceId = "";
     if (props.product.prix !== values.prix) {
       const updatePayload = {
         ...props.product,
         prix: values.prix,
       };
-      const response = await axios.post(import.meta.env.VITE_API_URL + 'stripe/update-price', updatePayload);
+      const response = await instance.post(
+        import.meta.env.VITE_API_URL + "stripe/update-price",
+        updatePayload
+      );
       newPriceId = response.data.newPriceId;
     }
 
-    formData.append('newPriceId', newPriceId);
-    await axios.put(import.meta.env.VITE_API_URL + `product/${props.product.id}`, formData, {
-      headers: {
-        'Content-Type': 'multipart/form-data',
-      },
-    });
+    formData.append("newPriceId", newPriceId);
+    await instance.put(
+      import.meta.env.VITE_API_URL + `product/${props.product.id}`,
+      formData,
+      {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      }
+    );
   } else {
-    const response = await axios.post(import.meta.env.VITE_API_URL + 'stripe/create-product', values);
+    const response = await instance.post(
+      import.meta.env.VITE_API_URL + "stripe/create-product",
+      values
+    );
     const priceId = response.data.priceId;
-    formData.append('priceId', priceId);
+    formData.append("priceId", priceId);
 
-    await axios.post(import.meta.env.VITE_API_URL + 'product', formData, {
+    await instance.post(import.meta.env.VITE_API_URL + "product", formData, {
       headers: {
-        'Content-Type': 'multipart/form-data',
+        "Content-Type": "multipart/form-data",
       },
     });
   }
-  emit('save');
-  emit('close');
+  emit("save");
+  emit("close");
 };
 
 const {
@@ -294,15 +353,17 @@ watch(
 
 const fetchCategories = async () => {
   try {
-    const response = await axios.get(import.meta.env.VITE_API_URL + 'categories');
+    const response = await axios.get(
+      import.meta.env.VITE_API_URL + "categories"
+    );
     categories.value = response.data;
   } catch (error) {
-    console.error('Error fetching categories:', error);
+    console.error("Error fetching categories:", error);
   }
 };
 
 const closeModal = () => {
-  emit('close');
+  emit("close");
 };
 
 const handleFileUpload = (event) => {

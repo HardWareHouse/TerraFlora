@@ -47,10 +47,12 @@ import { ref, onMounted, computed } from 'vue';
 import axios from 'axios';
 import { useRouter } from 'vue-router';
 import { useCartStore } from '../../pinia/cart.js';
+import { useAuthStore } from '../../pinia/auth.js';
 import { useToast } from 'vue-toastification';
 
 const products = ref([]);
 const cartStore = useCartStore();
+const authStore = useAuthStore();
 const router = useRouter();
 const toast = useToast();
 
@@ -75,16 +77,20 @@ onMounted(() => {
 const limitedProducts = computed(() => products.value.slice(0, 8));
 
 function addToCart(product) {
-  const cartItem = cartStore.items.find(item => item.id === product.id);
-  const totalQuantity = cartItem ? cartItem.Panier_Produits.quantity + 1 : 1;
+  if (authStore.isLoggedIn) {
+    const cartItem = cartStore.items.find(item => item.id === product.id);
+    const totalQuantity = cartItem ? cartItem.Panier_Produits.quantity + 1 : 1;
 
-  if (totalQuantity <= product.stock) {
-    cartStore.addToCart(product, 1);
-    toast.success(`${product.nom} a été ajouté au panier.`);
-  } else {
-    toast.error('La quantité totale demandée dépasse le stock disponible');
-  }
+    if (totalQuantity <= product.stock) {
+      cartStore.addToCart(product, 1);
+      toast.success(`${product.nom} a été ajouté au panier.`);
+    } else {
+      toast.error('La quantité totale demandée dépasse le stock disponible');
+    }
+}else {
+  toast.error('Vous devez être connecté pour ajouter des produits au panier');
 }
+};
 
 function goToProductDetail(product) {
   if (!product || !product.nom) {

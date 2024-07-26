@@ -79,6 +79,12 @@ export const getAllProducts = async (req, res) => {
 
 // Créer un produit
 export const createProduct = async (req, res) => {
+  const user = req.user;
+
+  if(user.role !== "ROLE_ADMIN" || user.role !== "ROLE_STORE_KEEPER") {
+    return res.status(403).json({ message: "Unauthorized" });
+  }
+
   const transaction = await Produit.sequelize.transaction();
   try {
     const {
@@ -155,7 +161,12 @@ export const createProduct = async (req, res) => {
 
 // Mettre à jour un produit
 export const updateProduct = async (req, res) => {
-  console.log(req.body);
+  const user = req.user;
+
+  if(user.role !== "ROLE_ADMIN" || user.role !== "ROLE_STORE_KEEPER") {
+    return res.status(403).json({ message: "Unauthorized" });
+  }
+
   const transaction = await Produit.sequelize.transaction();
   try {
     const { id } = req.params;
@@ -252,6 +263,12 @@ export const updateProduct = async (req, res) => {
 
 // Supprimer un produit
 export const deleteProduct = async (req, res) => {
+  const user = req.user;
+  
+  if(user.role !== "ROLE_ADMIN" || user.role !== "ROLE_STORE_KEEPER") {
+    return res.status(403).json({ message: "Unauthorized" });
+  }
+  
   try {
     const product = await Produit.findByPk(req.params.id);
     if (product) {
@@ -309,6 +326,12 @@ export const getFilteredProducts = async (req, res) => {
 
 // Récupération de l'historique des stocks
 export const getStockHistory = async (req, res) => {
+  const user = req.user;
+  
+  if(user.role !== "ROLE_ADMIN" || user.role !== "ROLE_STORE_KEEPER") {
+    return res.status(403).json({ message: "Unauthorized" });
+  }
+  
   try {
     const { produitId } = req.params;
     const { startDate, endDate } = req.query;
