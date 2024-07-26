@@ -75,6 +75,7 @@ Lien : https://github.com/LlamasScripters/TerraFlora
 - Création de la BDD 
 - CRUD et sécurisation PRODUIT
 - Creation de la migration des tables SQL (sequalize)
+- Creation de CI/CD 
 
 ### Moussa :
 
@@ -86,11 +87,10 @@ Lien : https://github.com/LlamasScripters/TerraFlora
 - Totalité du front du Dashboard Admin :
  - TOUTE LA PAGE, CES COMPOSANTS et leurs gestion :
   - Menu de navigation avec rédirection vers les deux pages (ces pages ne sont pas faite par moi), les tableaux, formulaires, Statistiques...etc
-
- - Bouton de suppression ouvrant une modal de confirmation réutilisable (deleteButton) 
+ - Bouton de supression ouvrant une modal de confirmation réutilisable (deleteButton) 
  - Modal d'édition des ressouces s'adaptant dynamiquement au champs et au requete à soumettre (editResourceModal)
  - Grosse partie de la gestion du store pinia auth
- - Création et paramétrage de l'objet axios instance avec inclusion dynamique du token si présent et middleware de gestion des erreurs retourné par l'API
+ - Création et paramétrage du l'objet axios instance avec inclusion dynamique du token si présent et middleware de gestion des erreurs retourné par l'API
  - Gestion des accèss dans le router 
  - Tout les composables (sauf useForm)
  - Gestion et sécurisation des rôles Front
@@ -100,12 +100,12 @@ Lien : https://github.com/LlamasScripters/TerraFlora
 
  Totalité du back du Dashboard User :
  - Tableau de bord 
- - Historique de commande avec redirection vers la page détails commande 
+ - Historique de commande avec rediection vers la page détails commande 
  - Historique Facture avec possibilité de télechargement de la Facture 
  - CRUD Adresse du User
  - Formulaire d'édition du User
- - Formulaire de gestion des préferences mails 
- - Formalaire de Contact
+ - Formaulaire de gestion des préferences mails 
+ - Formualaire de Contact
 
  Totalité du back du Dashboard Admin :
  - Gestion des ressources (Suppression et/ou edition) avec modal d'édition et bouton de supression avec modal de confirmation
@@ -127,10 +127,10 @@ Lien : https://github.com/LlamasScripters/TerraFlora
  - Gestion des préferences 
  - Ajout de Cors et Helmet (Avec Aria)
 
-Autres (Front et Back):
+Autres(Front et Back):
  - Création de commande après achat Stripe
  - Création auto de Facture via la commande
- - Suppression de User avec Anonymisation auto
+ - Supression de User avec Anonymisation auto
 
 ### Jay :
 
